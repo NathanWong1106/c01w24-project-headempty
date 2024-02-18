@@ -32,7 +32,6 @@ app.listen(PORT, () => {
 
 app.use(cors());
 
-// Get all notes available
 app.get("/ping", express.json(), async (req, res) => {
   return res.json({ response: "pong" });
 });
