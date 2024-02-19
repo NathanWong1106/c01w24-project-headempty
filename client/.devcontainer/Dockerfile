@@ -22,6 +22,4 @@ COPY . /app
 EXPOSE 3000
 
 # Serve the app
-RUN npm run build
-
-CMD ["npm", "run", "server"]
+CMD ["npm", "start"]
