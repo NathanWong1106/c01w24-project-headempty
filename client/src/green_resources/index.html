@@ -1,0 +1,161 @@
+<html lang="en"><head>
+	<base target="_top">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+	<style>
+		html, body {
+			height: 100%;
+			margin: 0;
+		}
+		.leaflet-container {
+			height: 400px;
+			width: 600px;
+			max-width: 100%;
+			max-height: 100%;
+		}
+	</style>
+
+	
+</head>
+<body>
+    <div>
+        <label for="postal-code">Canadian Postal Code:</label>
+        <input type="text" id="postal-code" name="postal-code">
+        <button onclick="searchCoordinates()">Search</button>
+    </div>
+
+
+<div id="map" style="width: 600px; height: 500px; position: relative; outline-style: none;" class="leaflet-container leaflet-touch leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom" tabindex="0"><div class="leaflet-pane leaflet-map-pane" style="transform: translate3d(0px, -141px, 0px);"><div class="leaflet-pane leaflet-tile-pane"><div class="leaflet-layer " style="z-index: 1; opacity: 1;"><div class="leaflet-tile-container leaflet-zoom-animated" style="z-index: 19; transform: translate3d(0px, 0px, 0px) scale(1);"><img alt="" src="https://tile.openstreetmap.org/13/4093/2723.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(56px, -91px, 0px); opacity: 1;"><img alt="" src="https://tile.openstreetmap.org/13/4094/2723.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(312px, -91px, 0px); opacity: 1;"><img alt="" src="https://tile.openstreetmap.org/13/4093/2724.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(56px, 165px, 0px); opacity: 1;"><img alt="" src="https://tile.openstreetmap.org/13/4094/2724.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(312px, 165px, 0px); opacity: 1;"><img alt="" src="https://tile.openstreetmap.org/13/4092/2723.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-200px, -91px, 0px); opacity: 1;"><img alt="" src="https://tile.openstreetmap.org/13/4095/2723.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(568px, -91px, 0px); opacity: 1;"><img alt="" src="https://tile.openstreetmap.org/13/4092/2724.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-200px, 165px, 0px); opacity: 1;"><img alt="" src="https://tile.openstreetmap.org/13/4095/2724.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(568px, 165px, 0px); opacity: 1;"></div></div></div><div class="leaflet-pane leaflet-overlay-pane"></div><div class="leaflet-pane leaflet-shadow-pane"></div><div class="leaflet-pane leaflet-marker-pane"></div><div class="leaflet-pane leaflet-tooltip-pane"></div><div class="leaflet-pane leaflet-popup-pane"></div><div class="leaflet-proxy leaflet-zoom-animated" style="transform: translate3d(1048050px, 697379px, 0px) scale(4096);"></div></div><div class="leaflet-control-container"><div class="leaflet-top leaflet-left"><div class="leaflet-control-zoom leaflet-bar leaflet-control"><a class="leaflet-control-zoom-in" href="#" title="Zoom in" role="button" aria-label="Zoom in" aria-disabled="false"><span aria-hidden="true">+</span></a><a class="leaflet-control-zoom-out" href="#" title="Zoom out" role="button" aria-label="Zoom out" aria-disabled="false"><span aria-hidden="true">−</span></a></div></div><div class="leaflet-top leaflet-right"></div><div class="leaflet-bottom leaflet-left"></div><div class="leaflet-bottom leaflet-right"><div class="leaflet-control-attribution leaflet-control"><a href="https://leafletjs.com" title="A JavaScript library for interactive maps"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" class="leaflet-attribution-flag"><path fill="#4C7BE1" d="M0 0h12v4H0z"></path><path fill="#FFD500" d="M0 4h12v3H0z"></path><path fill="#E0BC00" d="M0 7h12v1H0z"></path></svg> Leaflet</a> <span aria-hidden="true">|</span> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a></div></div></div></div>
+
+<script>
+	const map = L.map('map').setView([43.784212, -79.183279], 13); // this initializes the map somewhere. In this case is the utsc campus
+
+	const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		maxZoom: 19,
+		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+	}).addTo(map);
+
+    async function searchParksNearby(latitude, longitude) { // it gets the latitude and longitude of the given postal code
+    try {
+        const radius = 5000; //in meters. it's 5000 for testing purposes
+        const url = `https://overpass-api.de/api/interpreter?data=[out:json];node[leisure](around:${radius},${latitude},${longitude});out;`; // where it says leisue it can be changed to other things like natural, etc or subtags like park, etc
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data && data.elements && data.elements.length > 0) {
+            data.elements.forEach(async element => {
+                const parkLatitude = element.lat;
+                const parkLongitude = element.lon;
+                const parkName = element.tags.name || "Unnamed Park"; // We get the name of the park from the Api or we set it as unnamed park
+                const parkDescription = await getWikipediaDescription(parkName); // we use the wikipedia api to get the description of the park
+                const parkImageUrl = await getWikipediaImageUrl(parkName); // same but for the image
+                const parkUrl = await getWikipediaUrl(parkName); // same but for the url (to get more information)
+
+                // We create a marker and add this information to the popup
+                const popupContent = `
+                    <h3>${parkName}</h3>
+                    <p>${parkDescription}</p>
+                    <img src="${parkImageUrl}" alt="Park Image" style="max-width: 100%; height: auto;">
+                    <a href="${parkUrl}" target="_blank">More Info</a>
+                    <button onclick="getDirections('${parkName}')">Get Directions</button>
+                    `; // we add a button to get directions to the park, which connects to the google maps api. we should change this to just redirect to the google maps page
+
+                L.marker([parkLatitude, parkLongitude])
+                    .addTo(map)
+                    .bindPopup(popupContent); // 
+            });
+        } else {
+            alert('No parks found nearby.');
+        }
+    } catch (error) {
+        console.error('Error fetching parks:', error);
+        alert('An error occurred while fetching parks.');
+    }
+}
+
+async function getWikipediaDescription(placeName) { // this function gets the description of the park from the wikipedia api
+    try {
+        const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(placeName)}`;
+        const response = await fetch(url);
+        const data = await response.json();
+        return data.extract;
+    } catch (error) {
+        console.error('Error fetching Wikipedia description:', error);
+        return 'Description not available.';
+    }
+}
+
+async function getWikipediaImageUrl(placeName) {
+    try {
+        const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(placeName)}`;
+        const response = await fetch(url);
+        const data = await response.json();
+        return data.thumbnail ? data.thumbnail.source : '';
+    } catch (error) {
+        console.error('Error fetching Wikipedia image:', error);
+        return '';
+    }
+}
+
+async function getWikipediaUrl(placeName) {
+    try {
+        const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(placeName)}`;
+        const response = await fetch(url);
+        const data = await response.json();
+        return data.content_urls ? data.content_urls.desktop.page : '';
+    } catch (error) {
+        console.error('Error fetching Wikipedia URL:', error);
+        return '';
+    }
+}
+
+async function searchCoordinates() { // we use the postal code to get the coordinates of the place using the openstreetmap api
+    const postalCode = document.getElementById('postal-code').value;
+    try {
+        const url = `https://nominatim.openstreetmap.org/search?postalcode=${postalCode}&country=Canada&format=json`; // its hardcoded to Canada
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (data && data.length > 0) {
+            const firstResult = data[0]; // we get the first result
+            const latitude = firstResult.lat;
+            const longitude = firstResult.lon;
+            //print the coordinates to console
+            console.log('Coordinates:', latitude, longitude);
+
+            map.setView([latitude, longitude], 13); // we set the view of the map to the coordinates we got
+            L.marker([latitude, longitude]).addTo(map); // we add a marker to the map
+            searchParksNearby(latitude, longitude); // we call the function to search for parks nearby
+        } else {
+            alert('No coordinates found for the provided postal code.');
+        }
+    } catch (error) {
+        console.error('Error fetching coordinates:', error);
+        alert('An error occurred while fetching coordinates.');
+    }
+}
+
+function getDirections(placeName) { // this function builds the url to get directions to the park using the google maps api
+            
+            //currently, the link is added below the map when the user presses the button. We should change this to just get the button to redirect to the google maps page
+            const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(placeName)}`;
+            const directionsContainer = document.getElementById('directions-container'); 
+            const directionsLink = document.createElement('a'); 
+            directionsLink.href = googleMapsUrl;
+            directionsLink.textContent = 'Get Directions';
+            directionsContainer.innerHTML = '';
+            directionsContainer.appendChild(directionsLink);
+        }
+</script>
+
+
+<div id="directions-container"></div> 
+
+
+</body></html>
