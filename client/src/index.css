@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --rich-black: #0a0e1aff;
+  --moss-green: #9b9a30ff;
+  --dark-moss-green: #404726ff;
+  --light-blue: #93b7beff;
+  --light-cyan: #d4f5f5ff;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
