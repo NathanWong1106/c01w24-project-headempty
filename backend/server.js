@@ -1,37 +1,24 @@
 import express from "express";
-import { MongoClient, ObjectId } from "mongodb";
 import cors from "cors";
+import { SERVER } from "./constants.js";
+import { userRouter } from "./userService.js";
+import { connectToMongo } from "./database.js";
 
 const app = express();
-const PORT = 4000;
-const mongoURL = "mongodb://127.0.0.1:27017";
-const dbName = "db";
 
-// Connect to MongoDB
-let db;
-
-async function connectToMongo() {
-  const client = new MongoClient(mongoURL);
-
-  try {
-    await client.connect();
-    console.log("Connected to MongoDB");
-
-    db = client.db(dbName);
-  } catch (error) {
-    console.error("Error connecting to MongoDB:", error);
-  }
-}
-
+// Initialize database.js
 connectToMongo();
 
 // Open Port
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+app.listen(SERVER.PORT, () => {
+  console.log(`Server is running on http://localhost:${SERVER.PORT}`);
 });
 
+// Cors and register all services
 app.use(cors());
+app.use("/user", userRouter); // User service - handles registration, login, etc
 
+// Basic test endpoint
 app.get("/ping", express.json(), async (req, res) => {
   return res.json({ response: "pong" });
 });
