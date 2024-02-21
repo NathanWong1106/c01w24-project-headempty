@@ -1,6 +1,6 @@
 const PORT = 4000;
-const path = 'http://localhost:' + PORT;
-const provider_code = 'AA-BB123'; // This should be change after we know unique code
+const path = 'http://localhost:' + PORT; // Need to change this after we know corresponding path
+const provider_code = 'BB-CC234'; // This should be change after we know unique code
 
 
 function CustomizedPDF() {
@@ -22,7 +22,7 @@ function CustomizedPDF() {
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', provider_code + '.pdf');
+      link.setAttribute('download', "PaRx-" + provider_code + '.pdf');
       document.body.appendChild(link);
       link.click();
 
