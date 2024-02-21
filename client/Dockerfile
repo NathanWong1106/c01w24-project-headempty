@@ -12,6 +12,7 @@ COPY package.json /app
 COPY package-lock.json /app
 
 ENV NODE_ENV=production
+ENV DISABLE_ESLINT_PLUGIN=true
 
 # Install dependecies
 # ci won't modify package-lock.json

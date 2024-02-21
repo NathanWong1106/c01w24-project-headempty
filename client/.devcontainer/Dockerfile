@@ -11,6 +11,8 @@ RUN apt update \
 COPY package.json .
 COPY package-lock.json .
 
+ENV DISABLE_ESLINT_PLUGIN=true
+
 # Install dependecies
 # ci won't modify package-lock.json
 RUN npm ci
