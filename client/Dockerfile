@@ -1,4 +1,4 @@
-FROM node:21
+FROM node:21 AS builder
 
 # Create app directory
 WORKDIR /app
@@ -18,12 +18,21 @@ ENV NODE_ENV=production
 RUN npm ci
 
 # Get all the code needed to run the app
-COPY . /app
+COPY . .
 
-# Expose the port the app runs in
-EXPOSE 3000
-
-# Serve the app
+# Build the app
 RUN npm run build
 
-CMD ["npm", "run", "server"]
+# Bundle static assets with nginx
+FROM nginx:1.25.4-alpine AS prod
+
+# Copy built assets from build
+COPY --from=builder /app/build /usr/share/nginx/html
+
+# Add your nginx.conf
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 80
+
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]

@@ -6,7 +6,6 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
-    "serve": "^14.2.1",
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
@@ -14,21 +13,20 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "eslint": "^8.56.0",
-    "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-jest": "^27.9.0",
     "eslint-plugin-jsx-a11y": "^6.8.0",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "jest": "^27.5.1",
     "prettier": "3.2.5"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "server": "serve -l 3000 -s ./build",
-    "prebuild": "rm -rf ./build"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
