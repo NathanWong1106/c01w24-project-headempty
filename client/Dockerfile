@@ -11,6 +11,8 @@ RUN apt update \
 COPY package.json /app
 COPY package-lock.json /app
 
+ENV NODE_ENV=production
+
 # Install dependecies
 # ci won't modify package-lock.json
 RUN npm ci
