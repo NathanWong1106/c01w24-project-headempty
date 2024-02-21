@@ -1,0 +1,10 @@
+version: '3.2'
+
+services:
+  client:
+    container_name: client
+    build: .
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 8080:80
