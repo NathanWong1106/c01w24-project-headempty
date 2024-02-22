@@ -1,7 +1,8 @@
 export const scraperPE = ScraperPE();
 
 class ScraperPE extends BaseScraper {
-    constructor() {
+    constructor(driver) {
+        super(driver);
         this.scrapeUrl = "https://cpspei.alinityapp.com/client/publicdirectory"
     }
 

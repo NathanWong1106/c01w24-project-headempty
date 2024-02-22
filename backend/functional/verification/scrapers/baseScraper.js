@@ -1,10 +1,9 @@
 class BaseScraper {
+    driver;
     scrapeUrl;
 
-    constructor() {
-        if (this.constructor === BaseScraper) {
-            throw new Error("Cannot instantiate abstract class");
-        }
+    constructor(driver) {
+        this.driver = driver
     }
 
     getStatus(prescriber) {

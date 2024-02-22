@@ -1,7 +1,8 @@
 export const scraperON = ScraperON();
 
 class ScraperON extends BaseScraper {
-    constructor() {
+    constructor(driver) {
+        super(driver);
         this.scrapeUrl = "https://doctors.cpso.on.ca/?search=general"
     }
 

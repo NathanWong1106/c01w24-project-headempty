@@ -1,7 +1,8 @@
 export const scraperSK = ScraperSK();
 
 class ScraperSK extends BaseScraper {
-    constructor() {
+    constructor(driver) {
+        super(driver);
         this.scrapeUrl = "https://www.cps.sk.ca/imis/CPSS/Home/CPSS/College_of_Physicians_and_Surgeons_of_Saskatchewan.aspx"
     }
 

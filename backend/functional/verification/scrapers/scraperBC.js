@@ -1,7 +1,8 @@
 export const scraperBC = ScraperBC();
 
 class ScraperBC extends BaseScraper {
-    constructor() {
+    constructor(driver) {
+        super(driver);
         this.scrapeUrl = "https://www.cpsbc.ca/public/registrant-directory"
     }
 

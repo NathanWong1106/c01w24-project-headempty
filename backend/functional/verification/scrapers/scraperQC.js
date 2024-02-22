@@ -1,7 +1,8 @@
 export const scraperQC = ScraperQC();
 
 class ScraperQC extends BaseScraper {
-    constructor() {
+    constructor(driver) {
+        super(driver);
         this.scrapeUrl = "https://www.cmq.org/fr/bottin"
     }
 

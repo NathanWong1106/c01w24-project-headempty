@@ -1,7 +1,8 @@
 export const scraperNS = ScraperNS();
 
 class ScraperNS extends BaseScraper {
-    constructor() {
+    constructor(driver) {
+        super(driver);
         this.scrapeUrl = "https://cpsnsphysiciansearch.azurewebsites.net/"
     }
 
