@@ -8,7 +8,7 @@ function CustomizedPDF() {
   const handleDownload = async () => {
     try {
       // Create Customized PDF
-      await fetch(path + "/createcustomized", {
+      await fetch(path + "/customizedPDF/createcustomized", {
         method: "POST",
         headers: {
             'Content-Type': 'application/json'
@@ -16,8 +16,8 @@ function CustomizedPDF() {
         body: JSON.stringify({ rewrite: provider_code })
       });
 
-      // Download Customized PDF, then remove
-      const response = await fetch(`${path}/downloadCustomized`);
+      // Download Customized PDF
+      const response = await fetch(`${path}/customizedPDF/downloadCustomized`);
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -28,6 +28,8 @@ function CustomizedPDF() {
 
       URL.revokeObjectURL(url);
 
+      // Remove Customized PDF 
+      await fetch(`${path}/customizedPDF/removeCustomized`, {method: "DELETE"});
     } catch (error) {
       console.error('Error:', error);
       alert('An error occurred while downloading the file.');
