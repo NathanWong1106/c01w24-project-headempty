@@ -1,3 +1,4 @@
+import puppeteer from "puppeteer"
 import scraperAB from "./scrapers/scraperAB"
 import scraperBC from "./scrapers/scraperBC"
 import scraperMB from "./scrapers/scraperMB"
@@ -61,13 +62,16 @@ function getScraper(prescriber) {
 }
 
 
-export function verifyPrescribers(inputData) {
+export async function verifyPrescribers(inputData) {
     let unverified = [];
     let verified = []; // probably unnecessary
+
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
     
     for (prescriber of inputData) {
         let scraper = getScraper(prescriber);
-        let isVerified = scraper.getStatus(prescriber);
+        let isVerified = scraper.getStatus(prescriber, page);
 
         // If verified
 
