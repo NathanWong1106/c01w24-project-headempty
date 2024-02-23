@@ -1,14 +1,16 @@
+import SERVER from "../../constants.js"
+
 import puppeteer from "puppeteer"
-import scraperAB from "./scrapers/scraperAB"
-import scraperBC from "./scrapers/scraperBC"
-import scraperMB from "./scrapers/scraperMB"
-import scraperNB from "./scrapers/scraperNB"
-import scraperNL from "./scrapers/scraperNL"
-import scraperNS from "./scrapers/scraperNS"
-import scraperON from "./scrapers/scraperON"
-import scraperPE from "./scrapers/scraperPE"
-import scraperQC from "./scrapers/scraperQC"
-import scraperSK from "./scrapers/scraperSK"
+import ScraperAB from "./scrapers/scraperAB.js"
+import ScraperBC from "./scrapers/scraperBC.js"
+import ScraperMB from "./scrapers/scraperMB.js"
+import ScraperNB from "./scrapers/scraperNB.js"
+import ScraperNL from "./scrapers/scraperNL.js"
+import ScraperNS from "./scrapers/scraperNS.js"
+import ScraperON from "./scrapers/scraperON.js"
+import ScraperPE from "./scrapers/scraperPE.js"
+import ScraperQC from "./scrapers/scraperQC.js"
+import ScraperSK from "./scrapers/scraperSK.js"
 
 const MOCK_INPUT_DATA = [
     {
@@ -37,25 +39,25 @@ const MOCK_INPUT_DATA = [
 function getScraper(prescriber) {
     switch (prescriber.licenceCollege) {
         case "College of Physicians and Surgeons of Alberta":
-            return scraperAB;
+            return ScraperAB;
         case "College of Physicians and Surgeons of British Columbia":
-            return scraperBC;
+            return ScraperBC;
         case "College of Physicians and Surgeons of Manitoba":
-            return scraperMB;
+            return ScraperMB;
         case "College of Physicians and Surgeons of New Brunswick":
-            return scraperNB;
+            return ScraperNB;
         case "College of Physicians and Surgeons of Newfoundland and Labrador":
-            return scraperNL;
+            return ScraperNL;
         case "College of Physicians and Surgeons of Nova Scotia":
-            return scraperNS;
+            return ScraperNS;
         case "College of Physicians and Surgeons of Ontario":
-            return scraperON;
+            return ScraperON;
         case "College of Physicians & Surgeons of Prince Edward Island":
-            return scraperPE;
+            return ScraperPE;
         case "Collège des médecins du Québec":
-            return scraperQC;
+            return ScraperQC;
         case "College of Physicians and Surgeons of Saskatchewan":
-            return scraperSK;
+            return ScraperSK;
         default:
             throw new Error("Unrecognized licensing college");
     }
@@ -66,7 +68,10 @@ export async function verifyPrescribers(inputData) {
     let unverified = [];
     let verified = []; // probably unnecessary
 
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+        headless: true,
+        executablePath: SERVER.PUPPETEER_BROWSER_PATH
+    });
     const page = await browser.newPage();
     
     for (prescriber of inputData) {
