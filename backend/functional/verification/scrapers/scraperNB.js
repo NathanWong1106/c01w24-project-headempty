@@ -1,12 +1,11 @@
 export const scraperNB = ScraperNB();
 
 class ScraperNB extends BaseScraper {
-    constructor(driver) {
-        super(driver);
+    constructor() {
         this.scrapeUrl = "https://cpsnb.alinityapp.com/Client/PublicDirectory"
     }
 
-    getStatus(prescriber) {
+    getStatus(prescriber, driver) {
         // Uses license number, last name, first name
     }
 }

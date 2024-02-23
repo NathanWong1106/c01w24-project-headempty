@@ -1,12 +1,11 @@
 export const scraperMB = ScraperMB();
 
 class ScraperMB extends BaseScraper {
-    constructor(driver) {
-        super(driver);
+    constructor() {
         this.scrapeUrl = "https://member.cpsm.mb.ca/member/profilesearch"
     }
 
-    getStatus(prescriber) {
+    getStatus(prescriber, driver) {
         // Uses last name, first name
     }
 }

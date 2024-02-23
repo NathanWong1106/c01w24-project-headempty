@@ -1,12 +1,11 @@
 export const scraperPE = ScraperPE();
 
 class ScraperPE extends BaseScraper {
-    constructor(driver) {
-        super(driver);
+    constructor() {
         this.scrapeUrl = "https://cpspei.alinityapp.com/client/publicdirectory"
     }
 
-    getStatus(prescriber) {
+    getStatus(prescriber, driver) {
         // Similar to ScrapeNL
         // Uses license number last name, first name
     }

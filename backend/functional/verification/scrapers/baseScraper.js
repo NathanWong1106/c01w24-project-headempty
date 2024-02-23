@@ -1,12 +1,11 @@
 class BaseScraper {
-    driver;
     scrapeUrl;
 
-    constructor(driver) {
-        this.driver = driver
+    constructor() {
+        throw new Error("Abstract Class");
     }
 
-    getStatus(prescriber) {
+    getStatus(prescriber, driver) {
         throw new Error("Method must be implemented by subclass");
     }
 }
