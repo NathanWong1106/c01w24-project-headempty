@@ -1,3 +1,5 @@
+import parseTable from "./utils"
+
 export const scraperAB = ScraperAB();
 
 class ScraperAB extends BaseScraper {
@@ -7,22 +9,27 @@ class ScraperAB extends BaseScraper {
 
     async getStatus(prescriber, driver) {
         // Uses last name, first name
-        // first name id MainContent_physicianSearchView_txtFirstName
-        // last name id MainContent_physicianSearchView_txtLastName
 
-        // output MainContent_physicianSearchView_gvResults
+        await driver.goto("https://search.cpsa.ca/", {waitUntil: 'networkidle2'});
+        await driver.type("#MainContent_physicianSearchView_txtFirstName", prescriber.firstName);
+        await driver.type("#MainContent_physicianSearchView_txtLastName", prescriber.lastName);
 
-        await driver.goto(this.scrapeUrl, {waitUntil: 'networkidle2'});
-        await driver.waitForSelector("#MainContent_physicianSearchView_txtFirstName")
-        await driver.type("#MainContent_physicianSearchView_txtFirstName", prescriber.firstName)
-        await driver.waitForSelector("#MainContent_physicianSearchView_txtLastName")
-        await driver.type("#MainContent_physicianSearchView_txtLastName", prescriber.lastName)
         await driver.click("#MainContent_physicianSearchView_btnSearch")
+        // This waits for the process after button click to fully load
+        await driver.waitForNetworkIdle();
+        
+        // Parse result table as 2D array
+        // TODO: try to optimize to use only columns we need to check
+        const table = await parseTable("#MainContent_physicianSearchView_gvResults > tbody", driver);
 
-        await driver.waitForSelector("#MainContent_physicianSearchView_gvResults")
-        const data = await driver.$$eval("#MainContent_physicianSearchView_gvResults > tbody", (els) => {
-            els
-        });
-        // TODO:
+        for (let row in table) {
+            // Name in first column
+            const name = row[0];
+            if (name.includes(prescriber.firstName) && name.includes(prescriber.lastName)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
