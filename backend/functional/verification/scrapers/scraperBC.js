@@ -12,6 +12,7 @@ export class ScraperBC extends BaseScraper {
     static resultWrapperLocator = ".results-main-wrapper";
     static resultsLocator = ".result-item";
 
+
     static activeStatus = "Practising";
     static inactiveStatuses = [
         "Not licensed for independent practice",
@@ -31,6 +32,9 @@ export class ScraperBC extends BaseScraper {
         // Uses last name, first name
         // Need to first click on advanced search
 
+        const firstNameRegex = new RegExp("\\b" + prescriber.firstName + "\\b");
+        const lastNameRegex = new RegExp("\\b" + prescriber.lastName + "\\b");
+
         await driver.goto(ScraperBC.scrapeUrl, {waitUntil: 'networkidle2'});
         await driver.click(ScraperBC.advancedSearchLocator);
         await driver.type(ScraperBC.firstNameLocator, prescriber.firstName);
@@ -48,8 +52,9 @@ export class ScraperBC extends BaseScraper {
                 const nameElement = ele.getElementsByTagName("a")[0];
                 // Need to remove trailing arrow_forward from a connected span element
                 return nameElement.textContent.trim().replace(/\s*arrow_forward$/, '');
-            })
-            if (name.includes(prescriber.firstName) && name.includes(prescriber.lastName)) {
+            });
+            
+            if (firstNameRegex.test(name) && lastNameRegex.test(name)) {
                 const status = await result.evaluate(ele => {
                     const statusElement = ele.getElementsByClassName("ps-contact__element")[0];
                     // Need to remove leading 'Registration status: '
