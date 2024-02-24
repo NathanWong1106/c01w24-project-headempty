@@ -1,3 +1,5 @@
+import 'dotenv/config'
+
 export const COLLECTIONS = {
     ADMINS: "admins",
     PRESCRIBER: "prescribers",
@@ -7,7 +9,7 @@ export const COLLECTIONS = {
 }
 
 export const SERVER = {
-    PORT: 4000,
-    MONGO_URL: "mongodb://127.0.0.1:27017",
-    DB_NAME: "parx"
+    PORT: process.env.PORT,
+    MONGO_URL: process.env.MONGO_URL,
+    DB_NAME: process.env.DB_NAME
 }
