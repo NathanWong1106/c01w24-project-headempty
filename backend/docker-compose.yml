@@ -15,5 +15,5 @@ services:
     image: mongo:7.0.5
     volumes:
       - ./data:/data/db
-    expose:
-      - 27017
+    ports:
+      - 27017:27017
