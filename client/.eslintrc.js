@@ -33,6 +33,8 @@ module.exports = {
     ],
     "rules": {
         "linebreak-style": ['error', process.platform === 'win32' ? 'windows' : 'unix'],
+        "no-unused-vars": "off",
+        'react/prop-types': ['off'],
         "react/react-in-jsx-scope": "off",
         "react/jsx-uses-react": "off",
     }
