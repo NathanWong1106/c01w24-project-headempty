@@ -17,7 +17,7 @@
 	// The optional 'workspaceFolder' property is the path VS Code should open by default when
 	// connected. This is typically a file mount in .devcontainer/docker-compose.yml
 	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
-	"features": {},
+	"features": {}
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
@@ -33,7 +33,7 @@
 
 	// Uncomment the next line to run commands after the container is created.
 	// This was added to regain ability to npm install and other stuff as non-root user
-	"postCreateCommand": "chown -R pptruser:pptruser /workspaces"
+	// "postCreateCommand": "chown -R pptruser:pptruser /workspaces"
 
 	// Configure tool-specific properties.
 	// "customizations": {},
