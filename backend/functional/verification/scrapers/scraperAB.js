@@ -6,6 +6,9 @@ export class ScraperAB extends BaseScraper {
     static firstNameLocator = "#MainContent_physicianSearchView_txtFirstName";
     static lastNameLocator = "#MainContent_physicianSearchView_txtLastName";
     static searchButtonLocator = "#MainContent_physicianSearchView_btnSearch";
+
+    static matchesTextLocator = "#MainContent_physicianSearchView_ResultsPanel > div.row.resultsHeader > div > h2";
+    static numMatchesRegex = /Results: (\d+) matches/;
     static resultTableLocator = "#MainContent_physicianSearchView_gvResults > tbody";
 
     static headerLocator = ".tabHeader";
@@ -31,10 +34,25 @@ export class ScraperAB extends BaseScraper {
         await driver.click(ScraperAB.searchButtonLocator)
         // This waits for the process after button click to fully load
         await driver.waitForNetworkIdle();
+
+        // Check number of matches
+        const matchesText = await driver.$eval(ScraperAB.matchesTextLocator, ele => ele.textContent);
+        const numMatches = parseInt(matchesText.match(this.numMatchesRegex)[1]);
+        if (numMatches === 0) {
+            // TODO: change to some other logging?
+            console.warn(`No matches for: ${prescriber.firstName} ${prescriber.lastName}`);
+            return null;
+        }
+        else if (numMatches >= 2) {
+            // TODO: change to some other logging?
+            console.warn(`More than 1 match for prescriber: ${prescriber.firstName} ${prescriber.lastName}. Selecting first instance.`);
+        }
         
         // Name available as link in first column of table
         const resultTable = await driver.$(ScraperAB.resultTableLocator);
-        for (const row of await resultTable.$$("tr")) {
+        const rows = await resultTable.$$("tr");
+
+        for (const row of rows) {
             const info = await row.evaluate(ele => {
                 const nameElement = ele.getElementsByTagName("a")[0];
                 const name = nameElement.textContent.trim();
