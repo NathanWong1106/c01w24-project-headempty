@@ -46,7 +46,21 @@ export class ScraperBC extends BaseScraper {
         // Name located in first div of a result, in an 'a' in an h5 3 layers down
         // Status is located in the second div of a result
         const resultWrapper = await driver.$(ScraperBC.resultWrapperLocator);
-        for (const result of await resultWrapper.$$(ScraperBC.resultsLocator)) {
+        const results = await resultWrapper.$$(ScraperBC.resultsLocator);
+
+        // Check if any matches
+        const numMatches = results.length;
+        if (numMatches === 0) {
+            // TODO: change to some other logging?
+            console.warn(`No matches for: ${prescriber.firstName} ${prescriber.lastName}`);
+            return null;
+        }
+        else if (numMatches >= 2) {
+            // TODO: change to some other logging?
+            console.warn(`More than 1 match for prescriber: ${prescriber.firstName} ${prescriber.lastName}. Selecting first instance.`);
+        }
+
+        for (const result of results) {
             const name = await result.evaluate(ele => {
                 const nameElement = ele.getElementsByTagName("a")[0];
                 // Need to remove trailing arrow_forward from a connected span element
