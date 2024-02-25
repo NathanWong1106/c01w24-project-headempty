@@ -62,7 +62,7 @@ export async function verifyPrescribers(inputData) {
     let error = [];
 
     const browser = await puppeteer.launch({
-        headless: false,
+        headless: true,
         executablePath: SERVER.PUPPETEER_BROWSER_PATH
     });
     const page = await browser.newPage();
