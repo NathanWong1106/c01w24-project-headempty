@@ -1,8 +1,9 @@
 import { ACCOUNT_TYPE } from "../../types/userServiceTypes.js";
 import { clearDB, closeConn, connect, insertAdmins, insertPatient, insertPrescriber } from "../utils/dbUtils.js";
 import { genericPatient, genericPrescriber, coordinator, assistant } from "../utils/sampleData.js"
+import { SERVER } from "../../constants.js";
 
-const SERVER_URL = "http://localhost:4000";
+const SERVER_URL = `http://localhost:${SERVER.PORT}`
 
 beforeAll(async () => {
     await connect();
