@@ -1,16 +1,16 @@
-import SERVER from "../../constants.js"
+import SERVER from "../../constants.js";
 
-import puppeteer from "puppeteer"
-import ScraperAB from "./scrapers/scraperAB.js"
-import ScraperBC from "./scrapers/scraperBC.js"
-import ScraperMB from "./scrapers/scraperMB.js"
-import ScraperNB from "./scrapers/scraperNB.js"
-import ScraperNL from "./scrapers/scraperNL.js"
-import ScraperNS from "./scrapers/scraperNS.js"
-import ScraperON from "./scrapers/scraperON.js"
-import ScraperPE from "./scrapers/scraperPE.js"
-import ScraperQC from "./scrapers/scraperQC.js"
-import ScraperSK from "./scrapers/scraperSK.js"
+import puppeteer from "puppeteer";
+import ScraperAB from "./scrapers/scraperAB.js";
+import ScraperBC from "./scrapers/scraperBC.js";
+import ScraperMB from "./scrapers/scraperMB.js";
+import ScraperNB from "./scrapers/scraperNB.js";
+import ScraperNL from "./scrapers/scraperNL.js";
+import ScraperNS from "./scrapers/scraperNS.js";
+import ScraperON from "./scrapers/scraperON.js";
+import ScraperPE from "./scrapers/scraperPE.js";
+import ScraperQC from "./scrapers/scraperQC.js";
+import ScraperSK from "./scrapers/scraperSK.js";
 
 const MOCK_INPUT_DATA = [
     {
@@ -27,7 +27,20 @@ const MOCK_INPUT_DATA = [
         licensingCollege: "Collège des médecins du Québec",
         licenceNumber: "96332",
     }
-]
+];
+
+const scraperMapping = {
+    "College of Physicians and Surgeons of Alberta": ScraperAB,
+    "College of Physicians and Surgeons of British Columbia": ScraperBC,
+    "College of Physicians and Surgeons of Manitoba": ScraperMB,
+    "College of Physicians and Surgeons of New Brunswick": ScraperNB,
+    "College of Physicians and Surgeons of Newfoundland and Labrador": ScraperNL,
+    "College of Physicians and Surgeons of Nova Scotia": ScraperNS,
+    "College of Physicians and Surgeons of Ontario": ScraperON,
+    "College of Physicians & Surgeons of Prince Edward Island": ScraperPE,
+    "Collège des médecins du Québec": ScraperQC,
+    "College of Physicians and Surgeons of Saskatchewan": ScraperSK
+}
 
 /**
  * Returns corresponding scraper to use for a given prescriber.
@@ -37,35 +50,16 @@ const MOCK_INPUT_DATA = [
  * @returns {BaseScraper}
  */
 function getScraper(prescriber) {
-    switch (prescriber.licenceCollege) {
-        case "College of Physicians and Surgeons of Alberta":
-            return ScraperAB;
-        case "College of Physicians and Surgeons of British Columbia":
-            return ScraperBC;
-        case "College of Physicians and Surgeons of Manitoba":
-            return ScraperMB;
-        case "College of Physicians and Surgeons of New Brunswick":
-            return ScraperNB;
-        case "College of Physicians and Surgeons of Newfoundland and Labrador":
-            return ScraperNL;
-        case "College of Physicians and Surgeons of Nova Scotia":
-            return ScraperNS;
-        case "College of Physicians and Surgeons of Ontario":
-            return ScraperON;
-        case "College of Physicians & Surgeons of Prince Edward Island":
-            return ScraperPE;
-        case "Collège des médecins du Québec":
-            return ScraperQC;
-        case "College of Physicians and Surgeons of Saskatchewan":
-            return ScraperSK;
-        default:
-            throw new Error("Unrecognized licensing college");
+    if (!(prescriber.licenceCollege in scraperMapping)) {
+        throw new Error("Unrecognized licensing college");
     }
+    return scraperMapping[prescriber.licenceCollege];
 }
 
 export async function verifyPrescribers(inputData) {
-    let unverified = [];
-    let verified = []; // probably unnecessary
+    let invalid = [];
+    let verified = [];
+    let error = [];
 
     const browser = await puppeteer.launch({
         headless: true,
@@ -77,16 +71,22 @@ export async function verifyPrescribers(inputData) {
         let scraper = getScraper(prescriber);
         let isVerified = scraper.getStatus(prescriber, page);
 
-        // If verified
-
-            // Update their status in DB
-        
-            // Async call to other function to generate code & sign up link 
-
-        // Else add to unverified with reason (and possibly other error handling)
-
+        if (isVerified == null) {
+            // Includes prescribers that could not be found & actual errors when scraping
+            error.push(prescriber);
+        }
+        else if (!isVerified) {
+            invalid.push(prescriber);
+        }
+        else {
+            verified.push(prescriber);
+            // Update db status to verified
+        }
     }
 
-    // Some actions & returns for unverified (and maybe verified?)
-
+    return {
+        verified: verified,
+        invalid: invalid,
+        error: error
+    }
 }
