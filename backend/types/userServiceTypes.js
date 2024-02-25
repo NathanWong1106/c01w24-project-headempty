@@ -39,11 +39,12 @@ export class Patient extends ClientUser {
 }
 
 export class Prescriber extends ClientUser {
-    constructor(email, token, firstName, lastName, language, city, province, address, profession, providerCode, licensingCollege, licenseNumber) {
+    constructor(email, token, firstName, lastName, language, city, province, address, profession, providerCode, licensingCollege, licenseNumber, registered) {
         super(ACCOUNT_TYPE.PRESCRIBER, email, token, firstName, lastName, language, city, province, address);
         this.profession = profession;
         this.providerCode = providerCode;
         this.licensingCollege = licensingCollege;
         this.licenseNumber = licenseNumber;
+        this.registered = registered;
     }
 }

@@ -37,5 +37,6 @@ export const genericPrescriber = {
     "language": "en",
     "city": "Toronto",
     "province": "ON",
-    "address": "1254 Military Trail"
+    "address": "1254 Military Trail",
+    "registered": true
 };

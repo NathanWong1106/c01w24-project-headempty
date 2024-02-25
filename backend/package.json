@@ -4,8 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "NODE_ENV=test && npm start & npm run run-test",
-    "run-test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles --runInBand --forceExit && npm run stop",
+    "test": "cross-env NODE_ENV=test npm start & npm run run-test",
+    "run-test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles --runInBand --forceExit ; npm run stop",
     "start": "node server.js",
     "stop": "pkill --signal SIGINT server",
     "dev": "nodemon server.js"
@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
+    "cross-env": "^7.0.3",
     "jest": "^29.7.0",
     "nodemon": "^3.0.3"
   },

@@ -21,9 +21,8 @@ export async function connectToMongo() {
 
     try {
         await client.connect();
-        console.log("Connected to MongoDB");
-
         db = client.db(SERVER.DB_NAME);
+        console.log(`Connected to MongoDB on ${SERVER.MONGO_URL} to db ${SERVER.DB_NAME}`);
     } catch (error) {
         console.error("Error connecting to MongoDB:", error);
         return null;
@@ -44,7 +43,7 @@ export async function tryLoginAdmin(email, password) {
     if (data) {
         const { email, accountType } = data;
         const admin = new Admin(accountType, email, "");
-        const token = jwt.sign({admin}, process.env.JWT_SECRET, { expiresIn: "1h" });
+        const token = jwt.sign({ admin }, process.env.JWT_SECRET, { expiresIn: "1h" });
 
         admin.token = token;
         return admin;
@@ -67,7 +66,7 @@ export async function tryLoginPatient(email, password) {
     if (data) {
         const { email, firstName, lastName, language, city, province, address } = data;
         const patient = new Patient(email, "", firstName, lastName, language, city, province, address);
-        const token = jwt.sign({patient}, process.env.JWT_SECRET, { expiresIn: "1h" });
+        const token = jwt.sign({ patient }, process.env.JWT_SECRET, { expiresIn: "1h" });
 
         patient.token = token;
         return patient;
@@ -88,9 +87,16 @@ export async function tryLoginPrescriber(email, password) {
     const data = await getUserFromCollectionWithPassword(email, password, db.collection(COLLECTIONS.PRESCRIBER));
 
     if (data) {
-        const { email, firstName, lastName, language, city, province, address, profession, providerCode, licensingCollege, licenseNumber } = data;
-        const prescriber = new Prescriber(email, "", firstName, lastName, language, city, province, address, profession, providerCode, licensingCollege, licenseNumber)
-        const token = jwt.sign({prescriber}, process.env.JWT_SECRET, { expiresIn: "1h" });
+        const { email, firstName, lastName, language, city, province, address, profession, providerCode, licensingCollege, licenseNumber, registered } = data;
+
+        //This could be a prescriber stub, if so, don't allow login
+        if (!registered) {
+            console.log (data)
+            return null;
+        }
+
+        const prescriber = new Prescriber(email, "", firstName, lastName, language, city, province, address, profession, providerCode, licensingCollege, licenseNumber, registered)
+        const token = jwt.sign({ prescriber }, process.env.JWT_SECRET, { expiresIn: "1h" });
 
         prescriber.token = token;
         return prescriber;

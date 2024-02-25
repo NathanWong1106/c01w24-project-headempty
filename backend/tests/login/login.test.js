@@ -107,3 +107,19 @@ test("/user/login - rejects unidentified user", async () => {
     })
     expect(res.status).toBe(401);
 });
+
+test("/user/login - rejects prescriber stub", async () => {
+    let res = await fetch(`${SERVER_URL}/user/login`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            ...genericPrescriber,
+            accountType: ACCOUNT_TYPE.PRESCRIBER,
+            registered: false,
+            password: ""
+        })
+    })
+    expect(res.status).toBe(401);
+});
