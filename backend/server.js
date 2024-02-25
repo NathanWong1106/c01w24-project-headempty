@@ -7,6 +7,9 @@ import dotenvx from "@dotenvx/dotenvx";
 import { privateRouter } from "./routes/samplePrivate.js";
 import { coordinatorRoute, patientRoute, prescriberRoute } from "./middleware/auth.js";
 
+// Give this process an identifiable name so we can kill it
+// after jest tests run.
+process.title = "server";
 
 const app = express();
 

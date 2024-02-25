@@ -1,5 +1,6 @@
-import { ACCOUNT_TYPE } from "../../types/userServiceTypes";
-import { assistant, genericPatient, genericPrescriber, clearDB, closeConn, connect, coordinator, insertAdmins, insertPatient, insertPrescriber } from "../utils/dbUtils";
+import { ACCOUNT_TYPE } from "../../types/userServiceTypes.js";
+import { clearDB, closeConn, connect, insertAdmins, insertPatient, insertPrescriber } from "../utils/dbUtils.js";
+import { genericPatient, genericPrescriber, coordinator, assistant } from "../utils/sampleData.js"
 
 const SERVER_URL = "http://localhost:4000";
 

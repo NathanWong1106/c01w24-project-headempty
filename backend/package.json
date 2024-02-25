@@ -4,8 +4,10 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles",
+    "test": "NODE_ENV=test && npm start & npm run run-test",
+    "run-test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles --runInBand --forceExit && npm run stop",
     "start": "node server.js",
+    "stop": "pkill --signal SIGINT server",
     "dev": "nodemon server.js"
   },
   "author": "",
