@@ -1,7 +1,10 @@
-class ScraperNB extends BaseScraper {
+import { BaseScraper } from "./baseScraper.js";
+import { Page } from "puppeteer";
+
+export class ScraperNB extends BaseScraper {
     static scrapeUrl = "https://cpsnb.alinityapp.com/Client/PublicDirectory";
 
-    getStatus(prescriber, driver) {
+    static async getStatus(prescriber, driver) {
         // Uses license number, last name, first name
     }
 }

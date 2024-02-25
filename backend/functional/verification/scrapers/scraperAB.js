@@ -1,4 +1,3 @@
-import { parseTable } from "./utils.js";
 import { BaseScraper } from "./baseScraper.js";
 import { Page } from "puppeteer";
 

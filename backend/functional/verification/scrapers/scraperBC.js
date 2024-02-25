@@ -1,6 +1,5 @@
 import { BaseScraper } from "./baseScraper.js";
 import { Page } from "puppeteer";
-import { ScraperAB } from "./scraperAB.js";
 
 export class ScraperBC extends BaseScraper {
     static scrapeUrl = "https://www.cpsbc.ca/public/registrant-directory";

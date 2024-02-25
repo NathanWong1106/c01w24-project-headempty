@@ -1,16 +1,16 @@
-import SERVER from "../../constants.js";
+import { SERVER } from "../../constants.js";
 
 import puppeteer from "puppeteer";
-import ScraperAB from "./scrapers/scraperAB.js";
-import ScraperBC from "./scrapers/scraperBC.js";
-import ScraperMB from "./scrapers/scraperMB.js";
-import ScraperNB from "./scrapers/scraperNB.js";
-import ScraperNL from "./scrapers/scraperNL.js";
-import ScraperNS from "./scrapers/scraperNS.js";
-import ScraperON from "./scrapers/scraperON.js";
-import ScraperPE from "./scrapers/scraperPE.js";
-import ScraperQC from "./scrapers/scraperQC.js";
-import ScraperSK from "./scrapers/scraperSK.js";
+import { ScraperAB } from "./scrapers/scraperAB.js";
+import { ScraperBC } from "./scrapers/scraperBC.js";
+import { ScraperMB } from "./scrapers/scraperMB.js";
+import { ScraperNB } from "./scrapers/scraperNB.js";
+import { ScraperNL } from "./scrapers/scraperNL.js";
+import { ScraperNS } from "./scrapers/scraperNS.js";
+import { ScraperON } from "./scrapers/scraperON.js";
+import { ScraperPE } from "./scrapers/scraperPE.js";
+import { ScraperQC } from "./scrapers/scraperQC.js";
+import { ScraperSK } from "./scrapers/scraperSK.js";
 
 const MOCK_INPUT_DATA = [
     {
@@ -50,10 +50,10 @@ const scraperMapping = {
  * @returns {BaseScraper}
  */
 function getScraper(prescriber) {
-    if (!(prescriber.licenceCollege in scraperMapping)) {
+    if (!(prescriber.licensingCollege in scraperMapping)) {
         throw new Error("Unrecognized licensing college");
     }
-    return scraperMapping[prescriber.licenceCollege];
+    return scraperMapping[prescriber.licensingCollege];
 }
 
 export async function verifyPrescribers(inputData) {
@@ -62,27 +62,29 @@ export async function verifyPrescribers(inputData) {
     let error = [];
 
     const browser = await puppeteer.launch({
-        headless: true,
+        headless: false,
         executablePath: SERVER.PUPPETEER_BROWSER_PATH
     });
     const page = await browser.newPage();
     
-    for (prescriber of inputData) {
+    for (const prescriber of inputData) {
         let scraper = getScraper(prescriber);
-        let isVerified = scraper.getStatus(prescriber, page);
+        let isVerified = await scraper.getStatus(prescriber, page);
 
-        if (isVerified == null) {
-            // Includes prescribers that could not be found & actual errors when scraping
-            error.push(prescriber);
+        if (isVerified === true) {
+            verified.push(prescriber);
+            // TODO: Update db status to verified
         }
-        else if (!isVerified) {
+        else if (isVerified === false) {
             invalid.push(prescriber);
         }
         else {
-            verified.push(prescriber);
-            // Update db status to verified
+             // Includes prescribers that could not be found & actual errors when scraping
+             error.push(prescriber);
         }
     }
+
+    await browser.close();
 
     return {
         verified: verified,
