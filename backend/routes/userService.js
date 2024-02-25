@@ -1,6 +1,6 @@
 import express from "express";
 import { tryLoginAdmin, tryLoginPatient, tryLoginPrescriber } from "../database.js";
-import { USERTYPE as ACCOUNT_TYPE } from "../types/userServiceTypes.js";
+import { ACCOUNT_TYPE } from "../types/userServiceTypes.js";
 export const userRouter = express.Router();
 
 /**

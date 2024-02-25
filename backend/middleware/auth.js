@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken"
-import { USERTYPE } from "../types/userServiceTypes.js"
+import { ACCOUNT_TYPE } from "../types/userServiceTypes.js"
 
 export const coordinatorRoute = (req, res, next) => {
     const authHeader = req.headers['authorization']
@@ -8,7 +8,7 @@ export const coordinatorRoute = (req, res, next) => {
     jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
         try {
             user = user.admin;
-            if (!user || err || !user.accountType || user.accountType != USERTYPE.COORDINATOR) 
+            if (!user || err || !user.accountType || user.accountType != ACCOUNT_TYPE.COORDINATOR) 
                 return res.sendStatus(403);
             req.user = user;
             next();
@@ -25,7 +25,7 @@ export const adminRoute = (req, res, next) => {
     jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
         try {
             user = user.admin;
-            if (!user || err || !user.accountType || (user.accountType != USERTYPE.COORDINATOR && user.accountType != USERTYPE.ASSISTANT)) 
+            if (!user || err || !user.accountType || (user.accountType != ACCOUNT_TYPE.COORDINATOR && user.accountType != ACCOUNT_TYPE.ASSISTANT)) 
                 return res.sendStatus(403);
             req.user = user;
             next();
@@ -42,7 +42,7 @@ export const prescriberRoute = (req, res, next) => {
     jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
         try {
             user = user.prescriber;
-            if (!user || err || !user.accountType || user.accountType != USERTYPE.PRESCRIBER) 
+            if (!user || err || !user.accountType || user.accountType != ACCOUNT_TYPE.PRESCRIBER) 
                 return res.sendStatus(403);
             req.user = user;
             next();
@@ -59,7 +59,7 @@ export const patientRoute = (req, res, next) => {
     jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
         try {
             user = user.patient;
-            if (!user || err || !user.accountType || user.accountType != USERTYPE.PATIENT) 
+            if (!user || err || !user.accountType || user.accountType != ACCOUNT_TYPE.PATIENT) 
                 return res.sendStatus(403);
             req.user = user;
             next();

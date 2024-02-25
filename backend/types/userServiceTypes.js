@@ -1,4 +1,4 @@
-export const USERTYPE = {
+export const ACCOUNT_TYPE = {
     ADMIN: "admin",
     COORDINATOR: "coordinator",
     ASSISTANT: "assistant",
@@ -34,13 +34,13 @@ export class Admin extends User {
 
 export class Patient extends ClientUser {
     constructor(email, token, firstName, lastName, language, city, province, address) {
-        super(USERTYPE.PATIENT, email, token, firstName, lastName, language, city, province, address);
+        super(ACCOUNT_TYPE.PATIENT, email, token, firstName, lastName, language, city, province, address);
     }
 }
 
 export class Prescriber extends ClientUser {
     constructor(email, token, firstName, lastName, language, city, province, address, profession, providerCode, licensingCollege, licenseNumber) {
-        super(USERTYPE.PRESCRIBER, email, token, firstName, lastName, language, city, province, address);
+        super(ACCOUNT_TYPE.PRESCRIBER, email, token, firstName, lastName, language, city, province, address);
         this.profession = profession;
         this.providerCode = providerCode;
         this.licensingCollege = licensingCollege;
