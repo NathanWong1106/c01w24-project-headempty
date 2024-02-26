@@ -1,24 +1,18 @@
 import { useState } from "react";
 import { Input, Button, Card, Typography, Select, Option } from "@material-tailwind/react";
-import { loginAndSetStore } from "../api_services/authService";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { login } from "../store/slices/currentUserSlice";
+import { loginUser } from "../apiServices/authService.js";
 
 const LoginPage = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("");
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const doLogin = async (email, password) => {
-        const token = await loginAndSetStore();
-        if (!token) {
-            alert("Couldn't log in");
-        } else {
-            dispatch(login());
-            navigate("/home");
-        }
+        const data = {email, password, accountType:"admin"}
+        dispatch(loginUser(data));
     }
 
     return (
