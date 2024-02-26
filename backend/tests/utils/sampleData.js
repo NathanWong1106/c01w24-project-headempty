@@ -29,7 +29,7 @@ export const genericPrescriber = {
     "licensingCollege": "licensing college",
     "licenseNumber": "license number 1234",
     "profession": "therapist",
-    "providerCode": "ON-JC-1",
+    "providerCode": "ON-JC-001",
     "email": "prescriber1@gmail.com",
     "password": defaultPassword,
     "firstName": "John",
