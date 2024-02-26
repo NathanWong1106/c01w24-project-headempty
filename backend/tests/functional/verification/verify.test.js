@@ -1,5 +1,5 @@
 import { verifyPrescribers } from "../../../functional/verification/verify";
-
+import { jest } from '@jest/globals'
 
 afterEach(() => {
     jest.restoreAllMocks();
