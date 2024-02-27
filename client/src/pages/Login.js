@@ -1,32 +1,47 @@
 import { useState } from "react";
 import { Input, Button, Card, Typography, Select, Option } from "@material-tailwind/react";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../apiServices/authService.js";
+import { ACCOUNT_TYPE } from "../apiServices/types/userServiceTypes.js";
+import { ClosableAlert } from "../components/ClosableAlert.js";
+import { ROUTES } from "../routing/RouteConstants.js";
 
 const LoginPage = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("");
-    // const navigate = useNavigate();
+    const [accountType, setAccountType] = useState("");
+    const [showAlert, setShowAlert] = useState(false);
+
+    // Mapping of client string to api type
+    const accountTypes = {
+        "Prescriber": ACCOUNT_TYPE.PRESCRIBER,
+        "Patient": ACCOUNT_TYPE.PATIENT,
+        "Administrator": ACCOUNT_TYPE.ADMIN
+    }
+    const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const doLogin = async (email, password) => {
-        const data = {email, password, accountType:"admin"}
-        dispatch(loginUser(data));
+        const data = { email, password, accountType: accountTypes[accountType] }
+        try {
+            await dispatch(loginUser(data)).unwrap();
+            navigate(ROUTES.HOME);
+        } catch (err) {
+            setShowAlert(true);
+        }
     }
 
     return (
-        <div className="flex flex-row min-h-screen justify-center items-center">
-            <Card color="transparent" shadow={false}>
+        <div className="flex flex-col h-screen justify-center items-center">
+            <Card className="absolute" color="transparent" shadow={false}>
                 <Typography variant="h4">
                     Login
                 </Typography>
                 <form className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96">
                     <div className="mb-1 flex flex-col gap-6">
-                        <Select label="I am a(n)">
-                            <Option>Prescriber</Option>
-                            <Option>Patient</Option>
-                            <Option>Administrator</Option>
+                        <Select onChange={el => { setAccountType(el) }} label="I am a(n)">
+                            {Object.keys(accountTypes).map(str => <Option value={str} key={str}>{str}</Option>)}
                         </Select>
                         <Typography variant="h6" className="-mb-3">
                             Your Email
@@ -61,6 +76,9 @@ const LoginPage = () => {
                     </Button>
                 </form>
             </Card>
+            <div className="mb-16 absolute bottom-0">
+                <ClosableAlert text="Couldn't login. Check that all fields are correct, then try again." open={showAlert} onDismiss={() => setShowAlert(false)} />
+            </div>
         </div>
     )
 }

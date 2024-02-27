@@ -11,9 +11,17 @@ export const currentUserSlice = createSlice({
         token: "",
 
         // User specific information (e.g. provider code)
-        auxInfo: {}
+        auxInfo: {},
     },
-    reducers: {},
+    reducers: {
+        logoutUser(state, action) {
+            state.loggedIn = false;
+            state.accountType = "";
+            state.email = "";
+            state.token = "";
+            state.auxInfo = {};
+        }
+    },
 
     // For more context visit:
     // https://blog.logrocket.com/handling-user-authentication-redux-toolkit/#handling-asynchronous-functions-extrareducers
@@ -24,14 +32,14 @@ export const currentUserSlice = createSlice({
                 state.accountType = action.payload.accountType;
                 state.token = action.payload.token;
                 state.email = action.payload.email;
-
                 state.auxInfo = action.payload;
-
             })
             .addCase(loginUser.rejected, (state, action) => {
-                console.log(action.error);
+                //Currently, do nothing
             })
     }
 })
+
+export const { logoutUser } = currentUserSlice.actions;
 
 export default currentUserSlice.reducer;
