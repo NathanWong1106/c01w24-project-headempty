@@ -68,6 +68,7 @@ export async function verifyPrescribers(inputData) {
     const page = await browser.newPage();
     
     for (const prescriber of inputData) {
+        console.debug(`Verifying: ${prescriber.firstName} ${prescriber.lastName}`);
         let scraper = getScraper(prescriber);
         let isVerified = await scraper.getStatus(prescriber, page);
 
