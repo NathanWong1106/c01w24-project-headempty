@@ -29,12 +29,14 @@ export class ScraperAB extends BaseScraper {
             const lastNameRegex = new RegExp("\\b" + prescriber.lastName + "\\b");
 
             await driver.goto(ScraperAB.scrapeUrl, {waitUntil: 'networkidle2'});
+            
+            // Original input preserved after leaving site, must clear input first before enter
+            await driver.waitForSelector(ScraperAB.firstNameLocator);
+            await driver.$eval(ScraperAB.firstNameLocator, ele => ele.value = "");
             await driver.type(ScraperAB.firstNameLocator, prescriber.firstName);
+            await driver.$eval(ScraperAB.lastNameLocator, ele => ele.value = "");
             await driver.type(ScraperAB.lastNameLocator, prescriber.lastName);
-            await driver.goto(ScraperAB.scrapeUrl, {waitUntil: 'networkidle2'});
-            await driver.type(ScraperAB.firstNameLocator, prescriber.firstName);
-            await driver.type(ScraperAB.lastNameLocator, prescriber.lastName);
-
+            
             await driver.click(ScraperAB.searchButtonLocator)
             // This waits for the process after button click to fully load
             await driver.waitForNetworkIdle();

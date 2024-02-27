@@ -65,10 +65,13 @@ export async function verifyPrescribers(inputData) {
         headless: true,
         executablePath: SERVER.PUPPETEER_BROWSER_PATH
     });
-    const page = await browser.newPage();
     
     for (const prescriber of inputData) {
         console.debug(`Verifying: ${prescriber.firstName} ${prescriber.lastName}`);
+        const page = await browser.newPage();
+        // 
+        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36')
+        
         let scraper = getScraper(prescriber);
         let isVerified = await scraper.getStatus(prescriber, page);
 
@@ -83,6 +86,7 @@ export async function verifyPrescribers(inputData) {
              // Includes prescribers that could not be found & actual errors when scraping
              error.push(prescriber);
         }
+        await page.close();
     }
 
     await browser.close();

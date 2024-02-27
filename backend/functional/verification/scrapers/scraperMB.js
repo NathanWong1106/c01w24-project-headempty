@@ -32,10 +32,12 @@ export class ScraperMB extends BaseScraper {
 
         try {
             await driver.goto(ScraperMB.scrapeUrl, {waitUntil: 'networkidle2'});
+            
+            await driver.waitForSelector(ScraperMB.firstNameLocator);
             await driver.type(ScraperMB.firstNameLocator, prescriber.firstName);
             await driver.type(ScraperMB.lastNameLocator, prescriber.lastName);
 
-            await driver.click(ScraperMB.searchButtonLocator)
+            await driver.click(ScraperMB.searchButtonLocator);
             await driver.waitForNetworkIdle();
 
             // Result table is the first table with classes 'table table-borderless table-sm'
