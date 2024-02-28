@@ -30,12 +30,14 @@ export class ScraperBC extends BaseScraper {
     static async getStatus(prescriber, driver) {
         // Uses last name, first name
         // Need to first click on advanced search
-
+        
         try {
             const firstNameRegex = new RegExp("\\b" + prescriber.firstName + "\\b");
             const lastNameRegex = new RegExp("\\b" + prescriber.lastName + "\\b");
 
             await driver.goto(ScraperBC.scrapeUrl, {waitUntil: 'networkidle2'});
+
+            await driver.waitForSelector(ScraperBC.advancedSearchLocator);
             await driver.click(ScraperBC.advancedSearchLocator);
             await driver.type(ScraperBC.firstNameLocator, prescriber.firstName);
             await driver.type(ScraperBC.lastNameLocator, prescriber.lastName);
@@ -76,7 +78,7 @@ export class ScraperBC extends BaseScraper {
                         const statusElement = ele.getElementsByClassName("ps-contact__element")[0];
                         // Need to remove leading 'Registration status: '
                         return statusElement.textContent.trim().replace(/Registration status:\s*/, '');
-                    })
+                    });
                     if (status === ScraperBC.activeStatus) {
                         return true;
                     }
@@ -91,6 +93,7 @@ export class ScraperBC extends BaseScraper {
             }
         } catch (e) {
             console.error(`Error trying to verify: ${prescriber.firstName} ${prescriber.lastName}. ${e}`);
+            return null;
         }
 
         console.warn(`Not found in matches: ${prescriber.firstName} ${prescriber.lastName}.`)

@@ -29,9 +29,14 @@ export class ScraperAB extends BaseScraper {
             const lastNameRegex = new RegExp("\\b" + prescriber.lastName + "\\b");
 
             await driver.goto(ScraperAB.scrapeUrl, {waitUntil: 'networkidle2'});
+            
+            // Original input preserved after leaving site, must clear input first before enter
+            await driver.waitForSelector(ScraperAB.firstNameLocator);
+            await driver.$eval(ScraperAB.firstNameLocator, ele => ele.value = "");
             await driver.type(ScraperAB.firstNameLocator, prescriber.firstName);
+            await driver.$eval(ScraperAB.lastNameLocator, ele => ele.value = "");
             await driver.type(ScraperAB.lastNameLocator, prescriber.lastName);
-
+            
             await driver.click(ScraperAB.searchButtonLocator)
             // This waits for the process after button click to fully load
             await driver.waitForNetworkIdle();
@@ -74,7 +79,7 @@ export class ScraperAB extends BaseScraper {
                     const headerElement = await driver.$(ScraperAB.headerLocator);
                     const name = await headerElement.evaluate(ele => {
                         return ele.getElementsByTagName("h2")[0].textContent.trim();
-                    })
+                    });
                     
                     // If invalid then '(Inactive)' is to the right of name
                     if (name.includes(ScraperAB.invalidStatus)) {
@@ -85,9 +90,10 @@ export class ScraperAB extends BaseScraper {
             }
         } catch (e) {
             console.error(`Error trying to verify: ${prescriber.firstName} ${prescriber.lastName}. ${e}`);
+            return null;
         }
 
-        console.warn(`Not found in matches: ${prescriber.firstName} ${prescriber.lastName}.`)
+        console.warn(`Not found in matches: ${prescriber.firstName} ${prescriber.lastName}.`);
         return null;
     }
 }
