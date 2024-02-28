@@ -74,6 +74,10 @@ export class ScraperON extends BaseScraper {
                 else if (strongText.includes(ScraperON.validStatus)) {
                     return true;
                 }
+                else {
+                    console.warn(`status is ${strongText}`);
+                    return null;
+                }
             }
         } catch (e) {
             console.error(`Error trying to verify: ${prescriber.firstName} ${prescriber.lastName}. ${e}`);
