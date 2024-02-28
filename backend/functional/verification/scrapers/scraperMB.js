@@ -12,14 +12,7 @@ export class ScraperMB extends BaseScraper {
 
     static noMatchesText = "There are no entries.";
 
-    // TODO: confirm statuses
-    static validStatuses = [
-        "Regulated Member",
-        "Regulated Associate Member"
-    ];
-    // Seen a lot of 'Regulated Member - Retired Physician' which I think should be invalid.
-    // This invalid status overrides valid status
-    static invalidStatus = "Retired";
+    static validStatus = "Regulated Member";
 
     /**
      * 
@@ -94,18 +87,10 @@ export class ScraperMB extends BaseScraper {
                     });
 
                     // Status string contains chain of tags
-                    if (status.includes(ScraperMB.invalidStatus)) {
-                        return false;
-                    }
-                    else if (ScraperMB.validStatuses.some(vStatus => status.includes(vStatus))) {
+                    if (status.includes(ScraperMB.validStatus)) {
                         return true;
                     }
                     else {
-                        console.log(
-                            `Unseen status (neither retired, nor regulated): ${status} for 
-                            ${prescriber.firstName} ${prescriber.lastName}.
-                            Assuming invalid.`
-                        );
                         return false;
                     }
                 }
