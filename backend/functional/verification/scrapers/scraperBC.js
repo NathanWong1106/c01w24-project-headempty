@@ -36,6 +36,8 @@ export class ScraperBC extends BaseScraper {
             const lastNameRegex = new RegExp("\\b" + prescriber.lastName + "\\b");
 
             await driver.goto(ScraperBC.scrapeUrl, {waitUntil: 'networkidle2'});
+
+            await driver.waitForSelector(ScraperBC.advancedSearchLocator);
             await driver.click(ScraperBC.advancedSearchLocator);
             await driver.type(ScraperBC.firstNameLocator, prescriber.firstName);
             await driver.type(ScraperBC.lastNameLocator, prescriber.lastName);

@@ -7,19 +7,12 @@ export class ScraperMB extends BaseScraper {
     static lastNameLocator = "#main-page > div > div > div > div > div.purpleBorder > div.m-1 > div.row > div > form > div:nth-child(1) > div.col-md-9 > input";
     static firstNameLocator = "#main-page > div > div > div > div > div.purpleBorder > div.m-1 > div.row > div > form > div:nth-child(2) > div.col-md-9 > input";
     static searchButtonLocator = "#main-page > div > div > div > div > div.purpleBorder > div.m-1 > div.row > div > form > div:nth-child(8) > div.p-2 > input";
-    
+
     static tableLocator = ".table.table-borderless.table-sm";
 
     static noMatchesText = "There are no entries.";
 
-    // TODO: confirm statuses
-    static validStatuses = [
-        "Regulated Member",
-        "Regulated Associate Member"
-    ];
-    // Seen a lot of 'Regulated Member - Retired Physician' which I think should be invalid.
-    // This invalid status overrides valid status
-    static invalidStatus = "Retired";
+    static validStatus = "Regulated Member";
 
     /**
      * 
@@ -31,11 +24,13 @@ export class ScraperMB extends BaseScraper {
         // Uses last name, first name
 
         try {
-            await driver.goto(ScraperMB.scrapeUrl, {waitUntil: 'networkidle2'});
+            await driver.goto(ScraperMB.scrapeUrl, { waitUntil: 'networkidle2' });
+
+            await driver.waitForSelector(ScraperMB.firstNameLocator);
             await driver.type(ScraperMB.firstNameLocator, prescriber.firstName);
             await driver.type(ScraperMB.lastNameLocator, prescriber.lastName);
 
-            await driver.click(ScraperMB.searchButtonLocator)
+            await driver.click(ScraperMB.searchButtonLocator);
             await driver.waitForNetworkIdle();
 
             // Result table is the first table with classes 'table table-borderless table-sm'
@@ -92,18 +87,10 @@ export class ScraperMB extends BaseScraper {
                     });
 
                     // Status string contains chain of tags
-                    if (status.includes(ScraperMB.invalidStatus)) {
-                        return false;
-                    }
-                    else if (ScraperMB.validStatuses.some(vStatus => status.includes(vStatus))) {
+                    if (status.includes(ScraperMB.validStatus)) {
                         return true;
                     }
                     else {
-                        console.log(
-                            `Unseen status (neither retired, nor regulated): ${status} for 
-                            ${prescriber.firstName} ${prescriber.lastName}.
-                            Assuming invalid.`
-                        );
                         return false;
                     }
                 }
