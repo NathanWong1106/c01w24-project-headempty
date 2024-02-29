@@ -1,10 +1,21 @@
 import jsPDF from 'jspdf';
 
-const prescriber_code = "CC-DD234"; // This should be change after we know unique code
+/*
+  On page, include this component as:
+  <CustomizedPDF auxInfo={useSelector(state => state.currentUser.auxInfo)} ></CustomizedPDF>
+*/
 
-function CustomizedPDF() {
+function CustomizedPDF( auxInfo ) {
 
   const handleDownload = async () => {
+    const { accountType, providerCode } = auxInfo.auxInfo;
+
+    /* May require backend verification for type. */
+    if (accountType === "patient"){
+        alert("Patient cannot download customized PDF.");
+        return;
+    }
+
     // Create Customized PDF
     const doc = new jsPDF();
     const margin = 10;
@@ -21,18 +32,17 @@ function CustomizedPDF() {
     doc.text("Health Professional’s Signature", margin, 255);
 
     doc.setFontSize(14);
-    doc.text("Prescription #:  " + prescriber_code + "  –  _________________  –  _________________", margin, 270);
+    doc.text("Prescription #:  " + providerCode + "  –  _________________  –  _________________", margin, 270);
 
     doc.setFontSize(10);
     doc.text("(YYMMDD)", margin+80, 275);
     doc.text("(Patient’s Initials)", margin+130, 275);
-    doc.save("PaRx-" + prescriber_code + ".pdf");
+    doc.save("PaRx-" + providerCode + ".pdf");
   };
 
   return (
     <div>
-      <h1>Download PDF</h1>
-      <button onClick={handleDownload}>Download</button>
+      <button onClick={handleDownload}>Download Customized PDF</button>
     </div>
   );
 }
