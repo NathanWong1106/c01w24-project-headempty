@@ -1,6 +1,10 @@
 import jsPDF from 'jspdf';
 
 /*
+  Requirement on page: 
+  import {useSelector} from "react-redux";
+  import CustomizedPDF from "paths to CustomizedPDF";
+  
   On page, include this component as:
   <CustomizedPDF auxInfo={useSelector(state => state.currentUser.auxInfo)} ></CustomizedPDF>
 */
