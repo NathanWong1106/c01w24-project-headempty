@@ -5,6 +5,7 @@ export class ScraperON extends BaseScraper {
     static scrapeUrl = "https://doctors.cpso.on.ca/?search=general";
     static lastNameLocator = "#txtLastName";
     static firstNameLocator = '#txtFirstName';
+    static CPSONumLocator = '#txtCPSONumberGeneral';
     static searchButtonLocator = '#p_lt_ctl01_pageplaceholder_p_lt_ctl02_CPSO_AllDoctorsSearch_btnSubmit1';
 
     static resultLocator = ".doctor-search-results--result";
@@ -26,6 +27,7 @@ export class ScraperON extends BaseScraper {
             await driver.goto(ScraperON.scrapeUrl, { waitUntil: 'networkidle2' });
             await driver.type(ScraperON.lastNameLocator, prescriber.lastName);
             await driver.type(ScraperON.firstNameLocator, prescriber.firstName);
+            await driver.type(ScraperON.CPSONumLocator, prescriber.CPSONum);
 
             await driver.click(ScraperON.searchButtonLocator)
             await driver.waitForNetworkIdle();
@@ -38,12 +40,6 @@ export class ScraperON extends BaseScraper {
             if (numMatches == 0) {
                 console.warn(`No matches for: ${prescriber.firstName} ${prescriber.lastName}`);
                 return null;
-            }
-            else if (numMatches > 1) {
-                console.warn(
-                    `More than 1 match for prescriber: ${prescriber.firstName} ${prescriber.lastName}.
-                Selecting first instance if multiple fully match.`
-                );
             }
 
             const hTag = await result.$('h3');
