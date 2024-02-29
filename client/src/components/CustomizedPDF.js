@@ -1,9 +1,12 @@
 import jsPDF from 'jspdf';
+import { useState } from "react";
+import { ACCOUNT_TYPE } from "../apiServices/types/userServiceTypes.js";
+import { ClosableAlert } from "./ClosableAlert.js";
 
 /*
   Requirement on page: 
   import {useSelector} from "react-redux";
-  import CustomizedPDF from "paths to CustomizedPDF";
+  import CustomizedPDF from "../components/CustomizedPDF.js";  
   
   On page, include this component as:
   <CustomizedPDF auxInfo={useSelector(state => state.currentUser.auxInfo)} ></CustomizedPDF>
@@ -11,12 +14,16 @@ import jsPDF from 'jspdf';
 
 function CustomizedPDF( auxInfo ) {
 
+  const [showAlert, setShowAlert] = useState(false);
+
+  const err_message = "Sorry, you do not have permission to generate customized PDF.";
+
   const handleDownload = async () => {
     const { accountType, providerCode } = auxInfo.auxInfo;
 
-    /* May require backend verification for type. */
-    if (accountType === "patient"){
-        alert("Patient cannot download customized PDF.");
+    // Verify user type
+    if (accountType === ACCOUNT_TYPE.PATIENT){
+        setShowAlert(true);
         return;
     }
 
@@ -47,6 +54,9 @@ function CustomizedPDF( auxInfo ) {
   return (
     <div>
       <button onClick={handleDownload}>Download Customized PDF</button>
+      <div className="mb-16 absolute bottom-0">
+                <ClosableAlert text={err_message} open={showAlert} onDismiss={() => setShowAlert(false)} />
+            </div>
     </div>
   );
 }
