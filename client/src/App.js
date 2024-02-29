@@ -1,5 +1,4 @@
-import { Navigate, Outlet } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import './App.css';
 import { DrawerWithNavigation } from './components/Drawer';
 import { ROUTES } from './routing/RouteConstants';

@@ -10,7 +10,7 @@ import { ROUTES } from "../routing/RouteConstants.js";
 const LoginPage = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("");
-    const [accountType, setAccountType] = useState("");
+    const [accountType, setAccountType] = useState("Patient");
     const [showAlert, setShowAlert] = useState(false);
 
     // Mapping of client string to api type
@@ -40,7 +40,7 @@ const LoginPage = () => {
                 </Typography>
                 <form className="mt-8 mb-2 w-80 max-w-screen-lg sm:w-96">
                     <div className="mb-1 flex flex-col gap-6">
-                        <Select onChange={el => { setAccountType(el) }} label="I am a(n)">
+                        <Select value={accountType} onChange={el => { setAccountType(el) }} label="I am a(n)">
                             {Object.keys(accountTypes).map(str => <Option value={str} key={str}>{str}</Option>)}
                         </Select>
                         <Typography variant="h6" className="-mb-3">
