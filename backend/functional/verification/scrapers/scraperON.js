@@ -5,10 +5,9 @@ export class ScraperON extends BaseScraper {
     static scrapeUrl = "https://doctors.cpso.on.ca/?search=general";
     static lastNameLocator = "#txtLastName";
     static firstNameLocator = '#txtFirstName';
-    static CPSONumLocator = '#txtCPSONumberGeneral';
+    static licenseNumberLocator = '#txtCPSONumberGeneral';
     static searchButtonLocator = '#p_lt_ctl01_pageplaceholder_p_lt_ctl02_CPSO_AllDoctorsSearch_btnSubmit1';
 
-    static resultLocator = ".doctor-search-results--result";
     static headingLocator = ".doctor-details-heading"
     static doctorInfoLocator = ".doctor-info";
 
@@ -27,41 +26,18 @@ export class ScraperON extends BaseScraper {
             await driver.goto(ScraperON.scrapeUrl, { waitUntil: 'networkidle2' });
             await driver.type(ScraperON.lastNameLocator, prescriber.lastName);
             await driver.type(ScraperON.firstNameLocator, prescriber.firstName);
-            await driver.type(ScraperON.CPSONumLocator, prescriber.CPSONum);
+            await driver.type(ScraperON.licenseNumberLocator, prescriber.licenseNumber);
 
             await driver.click(ScraperON.searchButtonLocator)
             await driver.waitForNetworkIdle();
 
-            // Result table is the first table with classes 'table table-borderless table-sm'
-            const results = await driver.$$(ScraperON.resultLocator);
-            const result = results[0];
+            const doctorDetailsHeading = await driver.$(ScraperON.headingLocator);
 
-            const numMatches = results.length;
-            if (numMatches == 0) {
-                console.warn(`No matches for: ${prescriber.firstName} ${prescriber.lastName}`);
-                return null;
-            }
-
-            const hTag = await result.$('h3');
-            const info = await hTag.evaluate(ele => {
-                const nameElement = ele.getElementsByTagName("a")[0];
-                const name = nameElement.textContent.trim();
-                const link = nameElement.href;
-                return {
-                    name: name,
-                    link: link
-                }
-            });
-
-            if (info.name.includes(prescriber.firstName) && info.name.includes(prescriber.lastName)) {
-                await driver.goto(info.link, { waitUntil: 'networkidle2' });
-
-                const doctorDetailsHeading = await driver.$(ScraperON.headingLocator);
+            if (doctorDetailsHeading !== null) {
                 const doctorInfoDivs = await doctorDetailsHeading.$$(ScraperON.doctorInfoLocator);
                 const firstDoctorInfoDiv = doctorInfoDivs[0];
                 const strongTags = await firstDoctorInfoDiv.$$('strong');
                 const strongTag = strongTags[1];
-
                 const strongText = await driver.evaluate(strongTag => strongTag.textContent, strongTag);
 
                 if (strongText.includes(ScraperON.invalidStatus)) {
@@ -75,13 +51,13 @@ export class ScraperON extends BaseScraper {
                     return null;
                 }
             }
+            else {
+                console.warn(`No matches for: ${prescriber.firstName} ${prescriber.lastName} License Number: ${prescriber.licenseNumber}`);
+                return null;
+            }
         } catch (e) {
-            console.error(`Error trying to verify: ${prescriber.firstName} ${prescriber.lastName}. ${e}`);
+            console.error(`Error trying to verify: ${prescriber.firstName} ${prescriber.lastName} License Number: ${prescriber.licenseNumber}. ${e}`);
             return null;
         }
-
-        console.warn(`Not found in matches: ${prescriber.firstName} ${prescriber.lastName}.`);
-        return null;
-
     }
 }
