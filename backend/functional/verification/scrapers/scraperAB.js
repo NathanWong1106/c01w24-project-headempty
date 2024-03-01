@@ -82,10 +82,7 @@ export class ScraperAB extends BaseScraper {
                     });
                     
                     // If invalid then '(Inactive)' is to the right of name
-                    if (name.includes(ScraperAB.invalidStatus)) {
-                        return false;
-                    }
-                    return true;
+                    return !name.includes(ScraperAB.invalidStatus);
                 }
             }
         } catch (e) {
