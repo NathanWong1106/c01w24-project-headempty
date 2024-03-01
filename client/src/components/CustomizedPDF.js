@@ -52,11 +52,14 @@ function CustomizedPDF( auxInfo ) {
   };
 
   return (
-    <div>
-      <button onClick={handleDownload}>Download Customized PDF</button>
+    <div className="flex flex-col justify-center items-center">
+      <button  
+        className='mt-6 bg-moss-green text-white px-4 py-2 rounded'
+        onClick={handleDownload}>
+        <u>Download Customized PDF</u></button>
       <div className="mb-16 absolute bottom-0">
                 <ClosableAlert text={err_message} open={showAlert} onDismiss={() => setShowAlert(false)} />
-            </div>
+      </div>
     </div>
   );
 }
