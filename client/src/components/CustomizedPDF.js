@@ -15,14 +15,30 @@ import { ClosableAlert } from "./ClosableAlert.js";
 function CustomizedPDF( auxInfo ) {
 
   const [showAlert, setShowAlert] = useState(false);
+  const [errMessage, seterrMessage] = useState('default');
 
-  const err_message = "Sorry, you do not have permission to generate customized PDF.";
+  const messages = {
+    default: "System error",
+    permission: "Sorry, you do not have permission to generate customized PDF.",
+    error: "System error"
+  };
+
+  const getMessage = (type) => {
+    return messages[type] || messages.default;
+  }
 
   const handleDownload = async () => {
+    if (auxInfo === null){
+        seterrMessage('error');
+        setShowAlert(true);
+        return;
+    }
+
     const { accountType, providerCode } = auxInfo.auxInfo;
 
     // Verify user type
     if (accountType === ACCOUNT_TYPE.PATIENT){
+        seterrMessage('permission');
         setShowAlert(true);
         return;
     }
@@ -58,7 +74,7 @@ function CustomizedPDF( auxInfo ) {
         onClick={handleDownload}>
         <u>Download Customized PDF</u></button>
       <div className="mb-16 absolute bottom-0">
-                <ClosableAlert text={err_message} open={showAlert} onDismiss={() => setShowAlert(false)} />
+                <ClosableAlert text={getMessage(errMessage)} open={showAlert} onDismiss={() => setShowAlert(false)} />
       </div>
     </div>
   );
