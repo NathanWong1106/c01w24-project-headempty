@@ -2,6 +2,7 @@ import { BaseScraper } from "./baseScraper.js";
 import { Page } from "puppeteer";
 
 export class ScraperSK extends BaseScraper {
+  
   static scrapeUrl = `https://www.cps.sk.ca/imis/CPSS/Home/CPSS/College_of_Physicians_and_Surgeons_of_Saskatchewan.aspx`;
   static statusLocator = "#ctl01_TemplateBody_WebPartManager1_gwpciNewSummaryDisplayCommon_ciNewSummaryDisplayCommon_Status";
   static activeStatus = "On the Register"; // this messages indicates that the prescriber is active. Anything else indicates that the prescriber is not active.
