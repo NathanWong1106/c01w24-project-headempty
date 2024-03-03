@@ -5,7 +5,7 @@ export class ScraperON extends BaseScraper {
     static scrapeUrl = "https://doctors.cpso.on.ca/?search=general";
     static lastNameLocator = "#txtLastName";
     static firstNameLocator = '#txtFirstName';
-    static licenseNumberLocator = '#txtCPSONumberGeneral';
+    static licenceNumberLocator = '#txtCPSONumberGeneral';
     static searchButtonLocator = '#p_lt_ctl01_pageplaceholder_p_lt_ctl02_CPSO_AllDoctorsSearch_btnSubmit1';
 
     static headingLocator = ".doctor-details-heading"
