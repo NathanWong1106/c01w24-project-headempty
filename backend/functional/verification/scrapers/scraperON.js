@@ -52,7 +52,7 @@ export class ScraperON extends BaseScraper {
                 }
             }
             else {
-                console.warn(`No matches for: ${prescriber.firstName} ${prescriber.lastName} License Number: ${prescriber.licenseNumber}`);
+                console.warn(`No matches for: ${prescriber.firstName} ${prescriber.lastName} License Number: ${prescriber.licenceNumber}`);
                 return null;
             }
         } catch (e) {
