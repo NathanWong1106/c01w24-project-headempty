@@ -3,7 +3,6 @@ import './App.css';
 import { DrawerWithNavigation } from './components/Drawer';
 import { ROUTES } from './routing/RouteConstants';
 
-
 function App() {
   const location = useLocation();
 

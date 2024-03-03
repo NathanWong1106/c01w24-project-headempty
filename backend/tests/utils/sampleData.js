@@ -1,4 +1,4 @@
-import { ACCOUNT_TYPE } from "../../types/userServiceTypes";
+import { ACCOUNT_TYPE } from "../../types/userServiceTypes.js";
 
 export const defaultPassword = "1234";
 

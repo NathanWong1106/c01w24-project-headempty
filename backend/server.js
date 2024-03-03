@@ -37,3 +37,4 @@ app.use("/private", prescriberRoute, privateRouter);
 app.get("/ping", express.json(), async (req, res) => {
   return res.json({ response: "pong" });
 });
+
