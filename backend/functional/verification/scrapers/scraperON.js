@@ -26,7 +26,7 @@ export class ScraperON extends BaseScraper {
             await driver.goto(ScraperON.scrapeUrl, { waitUntil: 'networkidle2' });
             await driver.type(ScraperON.lastNameLocator, prescriber.lastName);
             await driver.type(ScraperON.firstNameLocator, prescriber.firstName);
-            await driver.type(ScraperON.licenseNumberLocator, prescriber.licenseNumber);
+            await driver.type(ScraperON.licenceNumberLocator, prescriber.licenceNumber);
 
             await driver.click(ScraperON.searchButtonLocator)
             await driver.waitForNetworkIdle();
