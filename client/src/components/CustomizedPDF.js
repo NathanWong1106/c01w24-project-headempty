@@ -19,7 +19,7 @@ function CustomizedPDF( auxInfo ) {
 
   const messages = {
     default: "System error",
-    permission: "Sorry, you do not have permission to generate customized PDF.",
+    permission: "Sorry, you do not have permission to generate a customized PDF.",
     error: "System error"
   };
 
