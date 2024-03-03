@@ -1,5 +1,6 @@
 import jsPDF from 'jspdf';
 import { useState } from "react";
+import { Button } from '@material-tailwind/react';
 import { ACCOUNT_TYPE } from "../apiServices/types/userServiceTypes.js";
 import { ClosableAlert } from "./ClosableAlert.js";
 
@@ -68,15 +69,15 @@ function CustomizedPDF( auxInfo ) {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center">
-      <button  
-        className='mt-6 bg-moss-green text-white px-4 py-2 rounded'
+    <>
+      <Button
+        className='bg-moss-green text-white p-4'
         onClick={handleDownload}>
-        <u>Download Customized PDF</u></button>
+        <u>Download Customized PDF</u></Button>
       <div className="mb-16 absolute bottom-0">
-                <ClosableAlert text={getMessage(errMessage)} open={showAlert} onDismiss={() => setShowAlert(false)} />
+        <ClosableAlert text={getMessage(errMessage)} open={showAlert} onDismiss={() => setShowAlert(false)} />
       </div>
-    </div>
+    </>
   );
 }
 
