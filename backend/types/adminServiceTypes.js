@@ -11,7 +11,7 @@ class ClientUserInfo {
 }
 
 /**
- * Currently unused. Used to implement admin patient stuff later.
+ * Currently unused. Used to implement coordinator (shouldn't be used by assistant) patient stuff later.
  */
 export class PatientInfo extends ClientUserInfo {
     constructor(email, firstName, lastName, language, city, province, address) {

@@ -13,12 +13,28 @@ export const adminRouter = express.Router();
  * Needs to be authorized (use middleware adminRoute).
  * 
  * Expected body: {
- *  page: Number
+ *  page: Number (1-indexed)
  *  pageSize: Number
+ *  search: {
+ *      email: String?
+ *      firstName: String?
+ *      lastName: String?
+ *      providerCode: String?
+ *      licensingCollege: String?
+ *      licenseNumber: String?
+ *  }
  * }
  * 
- * Response: List <PrescriberInfo>
+ * Response: { list: PrescriberInfo[] }
  */
 adminRouter.get("/getPaginatedPrescribers", express.json(), async (req, res) => {
-    //TODO
+    try {
+        const { page, pageSize, search } = req.body;
+
+        const retList = await getPaginatedPrescriber(page, pageSize, search);
+
+        return res.status(200).json({ list: retList });
+    } catch (err) {
+        return res.status(500).json({ error: err.message });
+    }
 })
