@@ -23,20 +23,20 @@ export class ScraperAB extends BaseScraper {
      */
     static async getStatus(prescriber, driver) {
         // Uses last name, first name
-        
+
         try {
             const firstNameRegex = new RegExp("\\b" + prescriber.firstName + "\\b");
             const lastNameRegex = new RegExp("\\b" + prescriber.lastName + "\\b");
 
-            await driver.goto(ScraperAB.scrapeUrl, {waitUntil: 'networkidle2'});
-            
+            await driver.goto(ScraperAB.scrapeUrl, { waitUntil: 'networkidle2' });
+
             // Original input preserved after leaving site, must clear input first before enter
             await driver.waitForSelector(ScraperAB.firstNameLocator);
             await driver.$eval(ScraperAB.firstNameLocator, ele => ele.value = "");
             await driver.type(ScraperAB.firstNameLocator, prescriber.firstName);
             await driver.$eval(ScraperAB.lastNameLocator, ele => ele.value = "");
             await driver.type(ScraperAB.lastNameLocator, prescriber.lastName);
-            
+
             await driver.click(ScraperAB.searchButtonLocator)
             // This waits for the process after button click to fully load
             await driver.waitForNetworkIdle();
@@ -55,7 +55,7 @@ export class ScraperAB extends BaseScraper {
                     Selecting first instance if multiple fully match.`
                 );
             }
-            
+
             // Name available as link in first column of table
             const resultTable = await driver.$(ScraperAB.resultTableLocator);
             const rows = await resultTable.$$("tr");
@@ -73,14 +73,14 @@ export class ScraperAB extends BaseScraper {
 
                 // Check first name that matches
                 if (firstNameRegex.test(info.name) && lastNameRegex.test(info.name)) {
-                    await driver.goto(info.link, {waitUntil: 'networkidle2'});
-                    
+                    await driver.goto(info.link, { waitUntil: 'networkidle2' });
+
                     // Name and status located in an h2 inside the 'tabHeader'
                     const headerElement = await driver.$(ScraperAB.headerLocator);
                     const name = await headerElement.evaluate(ele => {
                         return ele.getElementsByTagName("h2")[0].textContent.trim();
                     });
-                    
+
                     // If invalid then '(Inactive)' is to the right of name
                     return !name.includes(ScraperAB.invalidStatus);
                 }
