@@ -10,7 +10,6 @@ export class ScraperNS extends BaseScraper {
 
     static async getStatus(prescriber, driver) {
         // Uses licence number, last name, first name
-        https://cpsnsphysiciansearch.azurewebsites.net/PhysicianDetails.aspx?LicenceNumber=019850
         try {
             const prescriberScrapeUrl = `${ScraperNS.scrapeUrl}PhysicianDetails.aspx?LicenceNumber=${prescriber.licenceNumber.padStart(6, '0')}`;
             await driver.goto(prescriberScrapeUrl, {waitUntil: 'networkidle2'});
