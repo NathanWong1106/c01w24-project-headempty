@@ -7,7 +7,7 @@ export class ScraperMB extends BaseScraper {
     static lastNameLocator = "#main-page > div > div > div > div > div.purpleBorder > div.m-1 > div.row > div > form > div:nth-child(1) > div.col-md-9 > input";
     static firstNameLocator = "#main-page > div > div > div > div > div.purpleBorder > div.m-1 > div.row > div > form > div:nth-child(2) > div.col-md-9 > input";
     static searchButtonLocator = "#main-page > div > div > div > div > div.purpleBorder > div.m-1 > div.row > div > form > div:nth-child(8) > div.p-2 > input";
-    
+
     static tableLocator = ".table.table-borderless.table-sm";
 
     static noMatchesText = "There are no entries.";
@@ -24,8 +24,8 @@ export class ScraperMB extends BaseScraper {
         // Uses last name, first name
 
         try {
-            await driver.goto(ScraperMB.scrapeUrl, {waitUntil: 'networkidle2'});
-            
+            await driver.goto(ScraperMB.scrapeUrl, { waitUntil: 'networkidle2' });
+
             await driver.waitForSelector(ScraperMB.firstNameLocator);
             await driver.type(ScraperMB.firstNameLocator, prescriber.firstName);
             await driver.type(ScraperMB.lastNameLocator, prescriber.lastName);
