@@ -17,7 +17,7 @@ const app = express();
 // Get .env
 dotenvx.config();
 
-// Initialize database.js
+// Initialize dbConnection.js
 await connectToMongo();
 
 // Open Port
