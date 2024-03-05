@@ -23,12 +23,12 @@ export class PatientInfo extends ClientUserInfo {
  * All necessary information for a single prescriber.
  */
 export class PrescriberInfo extends ClientUserInfo {
-    constructor(email, firstName, lastName, language, city, province, address, profession, providerCode, licensingCollege, licenseNumber, registered) {
+    constructor(email, firstName, lastName, language, city, province, address, profession, providerCode, licencingCollege, licenceNumber, registered) {
         super(email, firstName, lastName, language, city, province, address);
         this.profession = profession;
         this.providerCode = providerCode;
-        this.licensingCollege = licensingCollege;
-        this.licenseNumber = licenseNumber;
+        this.licencingCollege = licencingCollege;
+        this.licenceNumber = licenceNumber;
         this.registered = registered;
     }
 }

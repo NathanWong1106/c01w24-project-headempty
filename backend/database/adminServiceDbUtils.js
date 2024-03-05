@@ -25,7 +25,7 @@ function fillPrescriber(x) {
     return new PrescriberInfo(x.email, x.firstName, x.lastName,
         x.language, x.city, x.province,
         x.address, x.profession, x.providerCode,
-        x.licensingCollege, x.licenseNumber, x.registered);
+        x.licencingCollege, x.licenceNumber, x.registered);
 }
 
 /**

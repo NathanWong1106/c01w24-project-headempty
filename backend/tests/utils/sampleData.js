@@ -26,8 +26,8 @@ export const genericPatient = {
 };
 
 export const genericPrescriber = {
-    "licensingCollege": "licensing college",
-    "licenseNumber": "license number 1234",
+    "licencingCollege": "licencing college",
+    "licenceNumber": "licence number 1234",
     "profession": "therapist",
     "providerCode": "ON-JC001",
     "email": "prescriber1@gmail.com",
