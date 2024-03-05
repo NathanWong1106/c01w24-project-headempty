@@ -21,8 +21,8 @@ export const adminRouter = express.Router();
  *      firstName: String?
  *      lastName: String?
  *      providerCode: String?
- *      licensingCollege: String?
- *      licenseNumber: String?
+ *      licencingCollege: String?
+ *      licenceNumber: String?
  *  }
  * }
  * 
