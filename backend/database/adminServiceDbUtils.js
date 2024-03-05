@@ -3,8 +3,8 @@ import { PrescriberInfo } from "../types/adminServiceTypes.js";
 import { getDb } from "./dbConnection.js";
 import paginate from "./pagination.js";
 
-const prescriberSearchFields = ["email", "firstName", "lastName", "providerCode", "licencingCollege", "licenceNumber"];
-const prescriberPatchFields = ["email", "firstName", "lastName", "language", "city", "province", "profession", "licencingCollege", "licenceNumber"];
+const prescriberSearchFields = ["email", "firstName", "lastName", "providerCode", "licensingCollege", "licenceNumber"];
+const prescriberPatchFields = ["email", "firstName", "lastName", "language", "city", "province", "profession", "licensingCollege", "licenceNumber"];
 
 /**
  * Get a page from all prescribers 
@@ -25,7 +25,7 @@ function fillPrescriber(x) {
     return new PrescriberInfo(x.email, x.firstName, x.lastName,
         x.language, x.city, x.province,
         x.address, x.profession, x.providerCode,
-        x.licencingCollege, x.licenceNumber, x.registered);
+        x.licensingCollege, x.licenceNumber, x.registered);
 }
 
 /**
