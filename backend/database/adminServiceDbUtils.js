@@ -3,7 +3,7 @@ import { PrescriberInfo } from "../types/adminServiceTypes.js";
 import { getDb } from "./dbConnection.js";
 import paginate from "./pagination.js";
 
-const prescriberSearchFields = ["email", "firstName", "lastName", "providerCode", "licensingCollege", "licenseNumber"];
+const prescriberSearchFields = ["email", "firstName", "lastName", "providerCode", "licensingCollege", "licenceNumber"];
 const prescriberPatchFields = ["email", "firstName", "lastName", "language", "city", "province", "profession", "licencingCollege", "licenceNumber"];
 
 /**
