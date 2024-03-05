@@ -66,7 +66,8 @@ test("/admin/getPaginatedPrescribers - gets all prescribers paginated, with sear
         search: {
             email: searchEmail,
             providerCode: searchProviderCode,
-            thisFieldShouldBeIgnored: "AHHHHHHHHHH"
+            thisFieldShouldBeIgnored: "AHHHHHHHHHH",
+            password: "this should also be ignored"
         }
     }
 
@@ -77,4 +78,40 @@ test("/admin/getPaginatedPrescribers - gets all prescribers paginated, with sear
     expect(resBody.list.length).toBe(1);
     expect(resBody.list[0].email).toBe(searchEmail);
     expect(resBody.list[0].providerCode).toBe(searchProviderCode);
+})
+
+test("/admin/patchPrescriber - patches correct prescriber and protects providerCode", async () => {
+    await insertPrescribers(20);
+
+    const targetProviderCode = "ON-JC001";
+    const patches = {
+        email: "patchedEmail",
+        profession: "lawyer",
+        providerCode: "provider code can't be changed"
+    }
+    const patchBody = {
+        providerCode: targetProviderCode,
+        patches: patches
+    }
+
+    // Patch prescriber
+    let res = await fetchAsAdmin("/admin/patchPrescriber", "PATCH", patchBody);
+    expect(res.status).toBe(200);
+
+    const getPageBody = {
+        page: 1,
+        pageSize: 20,
+        search: { email: patches.email }
+    }
+
+    // Get resulting list and search for the newly patched prescriber
+    res = await fetchAsAdmin("/admin/getPaginatedPrescribers", "POST", getPageBody);
+    expect(res.status).toBe(200);
+
+    let resBody = await res.json();
+    let retPrescriber = resBody.list[0];
+    expect(resBody.list.length).toBe(1);
+    expect(retPrescriber.email).toBe(patches.email);
+    expect(retPrescriber.profession).toBe(patches.profession);
+    expect(retPrescriber.providerCode).toBe(targetProviderCode);
 })

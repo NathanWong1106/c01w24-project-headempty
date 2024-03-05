@@ -30,8 +30,6 @@ export const clearDB = async (clearAdmins = true) => {
 export const connect = async () => {
     try {
         await client.connect();
-        console.log("Connected to MongoDB");
-
         db = client.db(SERVER.DB_NAME);
     } catch (error) {
         console.error("Error connecting to MongoDB:", error);
@@ -96,6 +94,7 @@ export const insertPrescribers = async (numPrescribers = 20) => {
             email: `prescriber${i}@gmail.com`,
             providerCode: `ON-JC${String(i).padStart(3, '0')}`
         }
+        await insertPrescriber(modifier);
     }
 }
 
