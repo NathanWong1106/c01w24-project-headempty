@@ -11,8 +11,7 @@ export class ScraperON extends BaseScraper {
     static headingLocator = ".doctor-details-heading"
     static doctorInfoLocator = ".doctor-info";
 
-    static validStatus = "Active"
-    static invalidStatus = "Expired";
+    static validStatus = "Active";
 
     /**
      * 
@@ -28,8 +27,8 @@ export class ScraperON extends BaseScraper {
             await driver.type(ScraperON.firstNameLocator, prescriber.firstName);
             await driver.type(ScraperON.licenceNumberLocator, prescriber.licenceNumber);
 
-            await driver.click(ScraperON.searchButtonLocator)
-            await driver.waitForNetworkIdle();
+            await driver.click(ScraperON.searchButtonLocator);
+            await driver.waitForSelector(ScraperON.headingLocator);
 
             const doctorDetailsHeading = await driver.$(ScraperON.headingLocator);
 
@@ -40,23 +39,14 @@ export class ScraperON extends BaseScraper {
                 const strongTag = strongTags[1];
                 const strongText = await driver.evaluate(strongTag => strongTag.textContent, strongTag);
 
-                if (strongText.includes(ScraperON.invalidStatus)) {
-                    return false;
-                }
-                else if (strongText.includes(ScraperON.validStatus)) {
-                    return true;
-                }
-                else {
-                    console.warn(`status is ${strongText}`);
-                    return null;
-                }
+                return strongText.includes(ScraperON.validStatus);
             }
             else {
                 console.warn(`No matches for: ${prescriber.firstName} ${prescriber.lastName} License Number: ${prescriber.licenceNumber}`);
                 return null;
             }
         } catch (e) {
-            console.error(`Error trying to verify: ${prescriber.firstName} ${prescriber.lastName} License Number: ${prescriber.licenseNumber}. ${e}`);
+            console.error(`Error trying to verify: ${prescriber.firstName} ${prescriber.lastName} License Number: ${prescriber.licenceNumber}. ${e}`);
             return null;
         }
     }
