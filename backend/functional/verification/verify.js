@@ -63,7 +63,8 @@ export async function verifyPrescribers(inputData) {
 
     const browser = await puppeteer.launch({
         headless: true,
-        executablePath: SERVER.PUPPETEER_BROWSER_PATH
+        executablePath: SERVER.PUPPETEER_BROWSER_PATH,
+        defaultViewport: null,
     });
     
     for (const prescriber of inputData) {
