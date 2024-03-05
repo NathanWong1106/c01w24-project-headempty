@@ -4,7 +4,7 @@ import { getDb } from "./dbConnection.js";
 import paginate from "./pagination.js";
 
 const prescriberSearchFields = ["email", "firstName", "lastName", "providerCode", "licensingCollege", "licenseNumber"];
-const prescriberPatchFields = ["email", "firstName", "lastName", "language", "city", "province", "profession", "licensingCollege", "licenseNumber"];
+const prescriberPatchFields = ["email", "firstName", "lastName", "language", "city", "province", "profession", "licencingCollege", "licenceNumber"];
 
 /**
  * Get a page from all prescribers 
