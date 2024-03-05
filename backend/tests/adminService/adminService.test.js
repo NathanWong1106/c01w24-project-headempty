@@ -1,0 +1,80 @@
+import { clearDB, closeConn, connect, insertAdmins, insertPrescribers } from "../utils/dbUtils.js";
+import { SERVER } from "../../constants.js";
+import { loginAsDefaultCoordinator } from "../utils/testSessionUtils.js";
+
+const SERVER_URL = `http://localhost:${SERVER.PORT}`;
+let adminToken = null;
+
+const fetchAsAdmin = async (endpoint, method, body) => {
+    return await fetch(`${SERVER_URL}${endpoint}`, {
+        method: method,
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${adminToken}`
+        },
+        body: JSON.stringify(body)
+    })
+}
+
+beforeAll(async () => {
+    await connect();
+    await clearDB(true);
+    await insertAdmins();
+    adminToken = await loginAsDefaultCoordinator();
+
+    if (adminToken === null) {
+        fail('Login failed.');
+    }
+})
+
+beforeEach(async () => {
+    // Clear db (don't clear admin user)
+    await clearDB(false);
+})
+
+afterAll(async () => {
+    await closeConn();
+})
+
+test("/admin/getPaginatedPrescribers - gets all prescribers paginated, no search", async () => {
+    await insertPrescribers(40);
+
+    for (let page = 1; page <= 2; page++) {
+        const body = {
+            page: page,
+            pageSize: 20,
+            search: {}
+        }
+
+        let res = await fetchAsAdmin("/admin/getPaginatedPrescribers", "POST", body);
+        expect(res.status).toBe(200);
+
+        let resBody = await res.json();
+        expect(resBody.list.length).toBe(20);
+    }
+})
+
+test("/admin/getPaginatedPrescribers - gets all prescribers paginated, with search", async () => {
+    await insertPrescribers(20);
+
+    const searchEmail = "prescriber1@gmail.com";
+    const searchProviderCode = "ON-JC001";
+
+    const body = {
+        page: 1,
+        pageSize: 20,
+        search: {
+            email: searchEmail,
+            providerCode: searchProviderCode,
+            thisFieldShouldBeIgnored: "AHHHHHHHHHH"
+        }
+    }
+
+    let res = await fetchAsAdmin("/admin/getPaginatedPrescribers", "POST", body);
+    expect(res.status).toBe(200);
+
+    let resBody = await res.json();
+    expect(resBody.list.length).toBe(1);
+    expect(resBody.list[0].email).toBe(searchEmail);
+    expect(resBody.list[0].providerCode).toBe(searchProviderCode);
+})

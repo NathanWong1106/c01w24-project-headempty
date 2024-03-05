@@ -4,6 +4,7 @@ import { getDb } from "./dbConnection.js";
 import paginate from "./pagination.js";
 
 const prescriberSearchFields = ["email", "firstName", "lastName", "providerCode", "licensingCollege", "licenseNumber"];
+const prescriberPatchFields = ["email", "firstName", "lastName", "language", "city", "province", "profession", "licensingCollege", "licenseNumber"];
 
 /**
  * Get a page from all prescribers 
@@ -13,12 +14,7 @@ const prescriberSearchFields = ["email", "firstName", "lastName", "providerCode"
  * @returns {PrescriberInfo[]} an array of the prescribers
  */
 export async function getPaginatedPrescriber(page, pageSize, search) {
-    let searchObj = {};
-    for (let field of prescriberSearchFields) {
-        if (search[field]) {
-            searchObj[field] = search[field];
-        }
-    }
+    const searchObj = objWithFields(prescriberSearchFields, search);
 
     const collection = getDb().collection(COLLECTIONS.PRESCRIBER);
     const data = await paginate(collection.find(searchObj), page, pageSize).toArray();
@@ -30,4 +26,30 @@ function fillPrescriber(x) {
         x.language, x.city, x.province,
         x.address, x.profession, x.providerCode,
         x.licensingCollege, x.licenseNumber, x.registered);
+}
+
+/**
+ * Patch a single prescriber with patches
+ * @param {string} providerCode provider code of the prescriber
+ * @param {Object} patches fields to patch
+ * @returns {boolean} true if successful, else false
+ */
+export async function patchSinglePrescriber(providerCode, patches) {
+    const patchObj = objWithFields(prescriberPatchFields, patches);
+    const collection = getDb().collection(COLLECTIONS.PRESCRIBER);
+    const data = await collection.updateOne({ providerCode: providerCode }, { $set: patchObj });
+
+    return data.matchedCount === 1;
+}
+
+function objWithFields(fieldsList, referenceObj) {
+    let obj = {};
+
+    for (let field of fieldsList) {
+        if (referenceObj[field]) {
+            obj[field] = referenceObj[field];
+        }
+    }
+
+    return obj;
 }

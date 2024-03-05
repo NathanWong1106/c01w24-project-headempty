@@ -16,8 +16,8 @@ let db;
  * Implicitly creates the necessary collections if they
  * do not already exist.
  */
-export const clearDB = async () => {
-    await db.collection(COLLECTIONS.ADMINS).deleteMany({});
+export const clearDB = async (clearAdmins = true) => {
+    clearAdmins && await db.collection(COLLECTIONS.ADMINS).deleteMany({});
     await db.collection(COLLECTIONS.PATIENT).deleteMany({});
     await db.collection(COLLECTIONS.PRESCRIBER).deleteMany({});
     await db.collection(COLLECTIONS.PATIENT_PRESCRIPTIONS).deleteMany({});
@@ -81,6 +81,22 @@ export const insertPrescriber = async (modifier = {}) => {
     let prescriber = await cryptPassword(objWithModifier(genericPrescriber, modifier));
     await db.collection(COLLECTIONS.PRESCRIBER).insertOne(prescriber);
     return prescriber;
+}
+
+/**
+ * Insert numPrescribers prescribers into the db. 
+ * Each prescriber is generated from the generic prescriber format
+ * with incrementing email "prescriber{i}@gmail.com" and 
+ * padded providerCode "ON-JC{i}"
+ * @param {number} numPrescribers 
+ */
+export const insertPrescribers = async (numPrescribers = 20) => {
+    for (let i = 1; i <= numPrescribers; i++) {
+        const modifier = {
+            email: `prescriber${i}@gmail.com`,
+            providerCode: `ON-JC${String(i).padStart(3, '0')}`
+        }
+    }
 }
 
 /**
