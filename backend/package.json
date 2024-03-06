@@ -7,7 +7,7 @@
     "test": "cross-env NODE_ENV=test npm start & npm run run-test",
     "run-test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles --runInBand --forceExit ; npm run stop",
     "start": "node server.js",
-    "stop": "pkill --signal SIGINT server",
+    "stop": "pkill -15 server",
     "dev": "nodemon server.js"
   },
   "author": "",
@@ -20,7 +20,8 @@
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.3.0",
-    "puppeteer": "^22.2.0"
+    "puppeteer": "^22.2.0",
+    "yup": "^1.3.3"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",

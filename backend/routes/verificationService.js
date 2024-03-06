@@ -3,9 +3,18 @@
  */
 
 import express from "express";
-import { verifyPrescribers } from "../functional/verification/verify";
+import { object, string } from 'yup';
+import { verifyPrescribers } from "../functional/verification/verify.js";
 
 export const verificationRouter = express.Router();
+
+const prescriberDataSchema = object({
+    firstName: string().required(),
+    lastName: string().required(),
+    province: string(),
+    licensingCollege: string().required(),
+    licenceNumber: string().required(),
+})
 
 /**
  * Get and update prescriber statuses.
@@ -29,11 +38,22 @@ export const verificationRouter = express.Router();
 verificationRouter.post("/verifyPrescribers", express.json(), async (req, res) => {
     try {
         const { prescribers } = req.body;
-        if (prescribers === null) {
-            res.status(400).json({ error: "A request to verify prescribers must have a prescriber field as a list of prescriber data." });
+
+        if (prescribers === undefined) {
+            return res.status(400).json({ error: "A request to verify prescribers must have a prescriber field as a list of prescriber data." });
         }
-        const result = await verifyPrescribers(prescribers);
-        return res.status(200).send(result);
+
+        let validData = true;
+        for (const p of prescribers) {
+            validData = validData && await prescriberDataSchema.isValid(p);
+            if (!validData) break;
+        }
+        if (!validData) {
+            return res.status(400).json({ error: "Some objects within the array of prescriber field do not match the prescriber data schema." });
+        }
+
+        const data = await verifyPrescribers(prescribers);
+        return res.status(200).json(data);
     } catch (err) {
         return res.status(500).json({ error: err.message });
     }
