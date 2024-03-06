@@ -1,6 +1,6 @@
 import { MongoClient, Db } from "mongodb";
 import { COLLECTIONS, SERVER } from "../../constants.js"
-import { genericPatient, genericPrescriber, coordinator, assistant } from "./sampleData.js"
+import { genericPatient, genericPrescriber, coordinator, assistant, genericPrescriberForm } from "./sampleData.js"
 import bcrypt from "bcryptjs"
 
 const client = new MongoClient(SERVER.MONGO_URL);
@@ -16,10 +16,10 @@ let db;
  * Implicitly creates the necessary collections if they
  * do not already exist.
  */
-export const clearDB = async (clearAdmins = true) => {
+export const clearDB = async (clearAdmins = true, clearPrescribers = true) => {
     clearAdmins && await db.collection(COLLECTIONS.ADMINS).deleteMany({});
     await db.collection(COLLECTIONS.PATIENT).deleteMany({});
-    await db.collection(COLLECTIONS.PRESCRIBER).deleteMany({});
+    clearPrescribers && await db.collection(COLLECTIONS.PRESCRIBER).deleteMany({});
     await db.collection(COLLECTIONS.PATIENT_PRESCRIPTIONS).deleteMany({});
     await db.collection(COLLECTIONS.PRESCRIBER_PRESCRIPTIONS).deleteMany({});
 }
@@ -97,6 +97,38 @@ export const insertPrescribers = async (numPrescribers = 20) => {
         await insertPrescriber(modifier);
     }
 }
+
+/**
+ * Inserts a prescriber form to the db. If modifier is empty then inserts genericPrescriberForm.
+ * Else, overwrites the specified fields in genericPrescriberForm with the values in 
+ * modifier then inserts the modified prescriberForm.
+ * 
+ * Returns the prescriberForm that was inserted.
+ * @param {Object} modifier optional object to overwrite values in genericPrescriberForm .
+ * @returns {Object} the prescriberForm that was inserted.
+ */
+export const insertPrescriberFrom = async (modifier = {}) => {
+    let prescriberForm = await objWithModifier(genericPrescriberForm, modifier);
+    await db.collection(COLLECTIONS.PRESCRIBER_PRESCRIPTIONS).insertOne(prescriberForm);
+    return prescriberForm;
+}
+
+/**
+ * Insert numPrescribersForm prescribers into the db. 
+ * Each prescriber form is generated from the generic prescriber form format
+ * with incrementing date "2024-12-{i}" and 
+ * padded providerCode "ON-JC001"
+ * @param {number} numPrescriberForms 
+ */
+export const insertPrescriberForms = async (numPrescriberForms = 20) => {
+    for (let i = 1; i <= numPrescriberForms; i++) {
+        const modifier = {
+            date: `2024-12-${i}`
+        }
+        await insertPrescriberFrom(modifier);
+    }
+}
+
 
 /**
  * Returns a clone of obj with the KVP's specified in opts

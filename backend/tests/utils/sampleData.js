@@ -1,3 +1,4 @@
+import { PRESCRIBER_FORM_STATUS } from "../../types/LogForm.js";
 import { ACCOUNT_TYPE } from "../../types/userServiceTypes.js";
 
 export const defaultPassword = "1234";
@@ -39,4 +40,12 @@ export const genericPrescriber = {
     "province": "ON",
     "address": "1254 Military Trail",
     "registered": true
+};
+
+export const genericPrescriberForm = {
+    "providerCode": "ON-JC001",
+    "date": "2024-12-34",
+    "initial": "JC",
+    "prescribed": true,
+    "status": PRESCRIBER_FORM_STATUS.NOT_LOGGED
 };
