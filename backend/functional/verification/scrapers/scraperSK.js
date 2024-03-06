@@ -104,14 +104,7 @@ export class ScraperSK extends BaseScraper {
       
       const status = await driver.$eval(`${ScraperSK.statusLocator}`, el => el.textContent.trim()); //get the status of the prescriber 
 
-      console.log("prescriber Status:", status);
-      console.log("prescriber Info:", prescriberInfo);
-
-      if (status === ScraperSK.activeStatus) { //if the status is active, then I return true
-        return true;
-      } else { //if the status is not active, then I return false
-        return false;
-      }
+      return status === ScraperSK.activeStatus;
     }
   }
 }

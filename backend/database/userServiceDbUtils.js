@@ -62,7 +62,7 @@ export async function tryLoginPrescriber(email, password) {
     const data = await getUserFromCollectionWithPassword(email, password, getDb().collection(COLLECTIONS.PRESCRIBER));
 
     if (data) {
-        const { email, firstName, lastName, language, city, province, address, profession, providerCode, licensingCollege, licenseNumber, registered } = data;
+        const { email, firstName, lastName, language, city, province, address, profession, providerCode, licensingCollege, licenceNumber, registered } = data;
 
         //This could be a prescriber stub, if so, don't allow login
         if (!registered) {
@@ -70,7 +70,7 @@ export async function tryLoginPrescriber(email, password) {
             return null;
         }
 
-        const prescriber = new Prescriber(email, "", firstName, lastName, language, city, province, address, profession, providerCode, licensingCollege, licenseNumber, registered)
+        const prescriber = new Prescriber(email, "", firstName, lastName, language, city, province, address, profession, providerCode, licensingCollege, licenceNumber, registered)
         const token = jwt.sign({ prescriber }, process.env.JWT_SECRET, { expiresIn: "1h" });
 
         prescriber.token = token;

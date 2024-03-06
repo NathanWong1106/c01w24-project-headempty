@@ -11,7 +11,7 @@ class ClientUserInfo {
 }
 
 /**
- * Currently unused. Used to implement admin patient stuff later.
+ * Currently unused. Used to implement coordinator (shouldn't be used by assistant) patient stuff later.
  */
 export class PatientInfo extends ClientUserInfo {
     constructor(email, firstName, lastName, language, city, province, address) {
@@ -23,12 +23,12 @@ export class PatientInfo extends ClientUserInfo {
  * All necessary information for a single prescriber.
  */
 export class PrescriberInfo extends ClientUserInfo {
-    constructor(email, firstName, lastName, language, city, province, address, profession, providerCode, licensingCollege, licenseNumber, registered) {
+    constructor(email, firstName, lastName, language, city, province, address, profession, providerCode, licensingCollege, licenceNumber, registered) {
         super(email, firstName, lastName, language, city, province, address);
         this.profession = profession;
         this.providerCode = providerCode;
         this.licensingCollege = licensingCollege;
-        this.licenseNumber = licenseNumber;
+        this.licenceNumber = licenceNumber;
         this.registered = registered;
     }
 }
