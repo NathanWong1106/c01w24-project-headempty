@@ -7,6 +7,7 @@ import { privateRouter } from "./routes/samplePrivate.js";
 import { adminRoute, coordinatorRoute, patientRoute, prescriberRoute } from "./middleware/auth.js";
 import { connectToMongo } from "./database/dbConnection.js";
 import { adminRouter } from "./routes/adminService.js";
+import { verificationRouter } from "./routes/verificationService.js";
 
 // Give this process an identifiable name so we can kill it
 // after jest tests run.
@@ -33,6 +34,9 @@ app.use("/user", userRouter);
 
 // Admin service
 app.use("/admin", adminRoute, adminRouter);
+
+// Prescriber Verification service
+app.use("/verification", adminRoute, verificationRouter);
 
 // Example endpoint that only accepts prescribers
 app.use("/private", prescriberRoute, privateRouter); 
