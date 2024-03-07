@@ -2,10 +2,8 @@ import { BaseScraper } from "./baseScraper.js";
 import { Page } from "puppeteer";
 
 export class ScraperQC extends BaseScraper {
-    static scrapeUrl = "https://www.cmq.org/fr/bottin";
+    static scrapeUrl = "https://www.cmq.org/fr/bottin/medecins?number=";
     static cookieButtonLocator = "#didomi-notice-agree-button";
-    static licenceNumberLocator = '#number';
-    static searchButtonLocator = '.c-button';
 
     static validStatus = "Inscrit - Actif";
 
@@ -18,13 +16,13 @@ export class ScraperQC extends BaseScraper {
     static async getStatus(prescriber, driver) {
         // Uses license number, last name, first name
         try {
-            await driver.goto(ScraperQC.scrapeUrl, { waitUntil: 'networkidle2' });
-            await driver.click(ScraperQC.cookieButtonLocator);
-            await driver.waitForSelector(ScraperQC.licenceNumberLocator);
-            await driver.type(ScraperQC.licenceNumberLocator, prescriber.licenceNumber);
-
-            const button = await driver.$('button[type="submit"]');
-            await button.click();
+            await driver.goto(ScraperQC.scrapeUrl + prescriber.licenceNumber, { waitUntil: 'networkidle2' });
+            try {
+                await driver.waitForSelector(ScraperQC.cookieButtonLocator, { timeout: 5000 });
+                await driver.click(ScraperQC.cookieButtonLocator);
+            } catch (error) {
+                console.log("no cookie button");
+            }
 
             try {
                 await driver.waitForSelector('table tr.physician-item', { timeout: 5000 });
@@ -35,7 +33,7 @@ export class ScraperQC extends BaseScraper {
                     if (firstRow) {
                         firstRow.click();
                     } else {
-                        console.error('No rows with class "physician-item" found in the table.');
+                        console.warn(`No matches for: ${prescriber.firstName} ${prescriber.lastName} License Number: ${prescriber.licenceNumber}`);
                         return null;
                     }
                 });
