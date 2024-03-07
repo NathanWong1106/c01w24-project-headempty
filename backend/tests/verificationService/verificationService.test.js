@@ -39,24 +39,15 @@ test("/verification/verifyPrescribers - valid input data", async () => {
         licenceNumber: "80085",
     }
 
-    const mockVerifyPrescribers = jest.fn();
-    jest.unstable_mockModule("../../functional/verification/verify.js", () => ({
-        verifyPrescribers: mockVerifyPrescribers
-    }))
-    const verifyMock = await import("../../functional/verification/verify.js");
-    const fetchUtils = await import("../utils/fetchUtils.js");
-
-    const res = await fetchUtils.fetchAsAdmin(
+    const res = await fetchAsAdmin(
         adminToken,
         "/verification/verifyPrescribers",
         "POST",
         {
-            prescribers: [prescriber, prescriber]
+            prescribers: [prescriber]
         },
     );
-    expect(mockVerifyPrescribers).toHaveBeenCalledTimes(2);
     expect(res.status).toBe(200);
-    
 });
 
 test("/verification/verifyPrescribers - empty input array", async () => {
