@@ -3,18 +3,12 @@
  */
 
 import express from "express";
-import { object, string } from 'yup';
 import { verifyPrescribers } from "../functional/verification/verify.js";
+import { prescriberDataSchema } from "../schemas.js";
 
 export const verificationRouter = express.Router();
 
-const prescriberDataSchema = object({
-    firstName: string().required(),
-    lastName: string().required(),
-    province: string(),
-    licensingCollege: string().required(),
-    licenceNumber: string().required(),
-})
+
 
 /**
  * Get and update prescriber statuses.
