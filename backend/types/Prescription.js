@@ -3,20 +3,20 @@ const COMMON_STATUS = {
     COMPLETE_WITH_DISCOVERY_PASS: "Complete with Discovery Pass"
 }
 
-export const PATIENT_FORM_STATUS = {
+export const PATIENT_PRESCRIPTION_STATUS = {
     ...COMMON_STATUS,
     NOT_LOGGED: "Pr not logged yet",
     LOGGED: "Pr logged"
 }
 
-export const PRESCRIBER_FORM_STATUS = {
+export const PRESCRIBER_PRESCRIPTION_STATUS = {
     ...COMMON_STATUS,
     NOT_LOGGED: "Pa not logged yet",
     LOGGED: "Pa logged"
 }
 
 
-class LogForm {
+class LogPrescription {
     constructor(providerCode, date, initial, prescribed, status) {
         this.providerCode = providerCode;
         this.date = date;
@@ -26,14 +26,14 @@ class LogForm {
     }
 }
 
-export class PrescriberForm extends LogForm {
+export class PrescriberPrescription extends LogPrescription {
     constructor(providerCode, date, initial, prescribed, status) {
-        super(providerCode, date, initial, prescribed, status || PRESCRIBER_FORM_STATUS.NOT_LOGGED);
+        super(providerCode, date, initial, prescribed, status || PRESCRIBER_PRESCRIPTION_STATUS.NOT_LOGGED);
     }
 }
 
-export class PatientForm extends LogForm {
+export class PatientPrescription extends LogPrescription {
     constructor(providerCode, date, initial, prescribed, status) {
-        super(providerCode, date, initial, prescribed, status || PATIENT_FORM_STATUS.NOT_LOGGED);
+        super(providerCode, date, initial, prescribed, status || PATIENT_PRESCRIPTION_STATUS.NOT_LOGGED);
     }
 }

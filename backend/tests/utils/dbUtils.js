@@ -1,6 +1,6 @@
 import { MongoClient, Db } from "mongodb";
 import { COLLECTIONS, SERVER } from "../../constants.js"
-import { genericPatient, genericPrescriber, coordinator, assistant, genericPrescriberForm } from "./sampleData.js"
+import { genericPatient, genericPrescriber, coordinator, assistant, genericPrescriberPrescription } from "./sampleData.js"
 import bcrypt from "bcryptjs"
 
 const client = new MongoClient(SERVER.MONGO_URL);
@@ -99,29 +99,29 @@ export const insertPrescribers = async (numPrescribers = 20) => {
 }
 
 /**
- * Inserts a prescriber form to the db. If modifier is empty then inserts genericPrescriberForm.
- * Else, overwrites the specified fields in genericPrescriberForm with the values in 
- * modifier then inserts the modified prescriberForm.
+ * Inserts a prescriber Prescription to the db. If modifier is empty then inserts genericPrescriberPrescription.
+ * Else, overwrites the specified fields in genericPrescriberPrescription with the values in 
+ * modifier then inserts the modified prescriberPrescription.
  * 
- * Returns the prescriberForm that was inserted.
- * @param {Object} modifier optional object to overwrite values in genericPrescriberForm .
- * @returns {Object} the prescriberForm that was inserted.
+ * Returns the prescriberPrescription that was inserted.
+ * @param {Object} modifier optional object to overwrite values in genericPrescriberPrescription .
+ * @returns {Object} the prescriberPrescription that was inserted.
  */
 export const insertPrescriberFrom = async (modifier = {}) => {
-    let prescriberForm = await objWithModifier(genericPrescriberForm, modifier);
-    await db.collection(COLLECTIONS.PRESCRIBER_PRESCRIPTIONS).insertOne(prescriberForm);
-    return prescriberForm;
+    let prescriberPrescription = await objWithModifier(genericPrescriberPrescription, modifier);
+    await db.collection(COLLECTIONS.PRESCRIBER_PRESCRIPTIONS).insertOne(prescriberPrescription);
+    return prescriberPrescription;
 }
 
 /**
- * Insert numPrescribersForm prescribers into the db. 
- * Each prescriber form is generated from the generic prescriber form format
+ * Insert numPrescribersPrescription prescribers into the db. 
+ * Each prescriber Prescription is generated from the generic prescriber Prescription Prescriptionat
  * with incrementing date "2024-12-{i}" and 
  * padded providerCode "ON-JC001"
- * @param {number} numPrescriberForms 
+ * @param {number} numPrescriberPrescriptions 
  */
-export const insertPrescriberForms = async (numPrescriberForms = 20) => {
-    for (let i = 1; i <= numPrescriberForms; i++) {
+export const insertPrescriberPrescriptions = async (numPrescriberPrescriptions = 20) => {
+    for (let i = 1; i <= numPrescriberPrescriptions; i++) {
         const modifier = {
             date: `2024-12-${i}`
         }

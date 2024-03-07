@@ -3,11 +3,11 @@
  */
 
 import express from "express";
-import { getPaginatedPrescriberForm } from "../database/prescriberServiceDbUtils.js";
+import { getPaginatedPrescriberPrescription } from "../database/prescriberServiceDbUtils.js";
 export const prescriberRouter = express.Router();
 
 /**
- * Get a paginated list of all prescription form from prescriber.
+ * Get a paginated list of all prescription prescriptions from prescriber.
  * If search is not defined, defaults to no filter.
  * 
  * Needs to be authorized (use middleware prescriberRoute).
@@ -18,10 +18,10 @@ export const prescriberRouter = express.Router();
  *  providerCode: String
  * }
  * 
- * Response: { list: PrescirberForm[] } | {error: String}
+ * Response: { list: PrescirberPrescription[] } | {error: String}
  * Response Status: 200 - OK, else error
  */
-prescriberRouter.post("/getPaginatedForms", express.json(), async (req, res) => {
+prescriberRouter.post("/getPaginatedPrescriptions", express.json(), async (req, res) => {
     try {
         const { page, pageSize, providerCode } = req.body;
 
@@ -33,7 +33,7 @@ prescriberRouter.post("/getPaginatedForms", express.json(), async (req, res) => 
             return req.status(400).json({ error: "A valid page and pageSize must be provided." })
         }
 
-        const retList = await getPaginatedPrescriberForm(page, pageSize, providerCode);
+        const retList = await getPaginatedPrescriberPrescription(page, pageSize, providerCode);
 
         return res.status(200).json({ list: retList });
     } catch (err) {

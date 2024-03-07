@@ -1,4 +1,4 @@
-import { clearDB, closeConn, connect, insertPrescriberForms, insertPrescribers } from "../utils/dbUtils.js";
+import { clearDB, closeConn, connect, insertPrescriberPrescriptions, insertPrescribers } from "../utils/dbUtils.js";
 import { SERVER } from "../../constants.js";
 import { loginAsDefaultPrescriber } from "../utils/testSessionUtils.js";
 
@@ -37,8 +37,8 @@ afterAll(async () => {
     await closeConn();
 })
 
-test("/prescriber/getPaginatedForms - gets all prescribers paginated form", async () => {
-    await insertPrescriberForms(40);
+test("/prescriber/getPaginatedPrescriptions - gets all prescribers paginated Prescription", async () => {
+    await insertPrescriberPrescriptions(40);
 
     const searchProviderCode = "ON-JC001";
 
@@ -49,7 +49,7 @@ test("/prescriber/getPaginatedForms - gets all prescribers paginated form", asyn
             providerCode: searchProviderCode,
             thisFieldShouldBeIgnored: "AHHHHHHHHHH",
         }
-        let res = await fetchAsPrescriber("/prescriber/getPaginatedForms", "POST", body);
+        let res = await fetchAsPrescriber("/prescriber/getPaginatedPrescriptions", "POST", body);
         expect(res.status).toBe(200);
 
         let resBody = await res.json();
