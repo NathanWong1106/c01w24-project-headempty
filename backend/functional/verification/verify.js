@@ -12,22 +12,7 @@ import { ScraperPE } from "./scrapers/scraperPE.js";
 import { ScraperQC } from "./scrapers/scraperQC.js";
 import { ScraperSK } from "./scrapers/scraperSK.js";
 
-const MOCK_INPUT_DATA = [
-    {
-        firstName: "Alexandra",
-        lastName: "Sylvester",
-        province: "NS",
-        licensingCollege: "College of Physicians and Surgeons of Nova Scotia",
-        licenceNumber: "19314",
-    },
-    {
-        firstName: "Alexia",
-        lastName: "Lam",
-        province: "QC",
-        licensingCollege: "Collège des médecins du Québec",
-        licenceNumber: "96332",
-    }
-];
+import { createPrescriber, updatePrescriberRegistered } from "../../database/verificationServiceDbUtils.js";
 
 const scraperMapping = {
     "College of Physicians and Surgeons of Alberta": ScraperAB,
@@ -89,16 +74,24 @@ export async function verifyPrescribers(inputData) {
     
     for (const prescriber of inputData) {
         console.debug(`Verifying: ${prescriber.firstName} ${prescriber.lastName}`);
+
         const page = await browser.newPage();
         // Spoof normal browser to avoid being auto-flagged as a bot
-        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36')
+        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36');
         
         let scraper = getScraper(prescriber);
         let isVerified = await scraper.getStatus(prescriber, page);
 
         if (isVerified === true) {
-            verified.push(prescriber);
-            // TODO: Update db status to verified
+            // Create prescriber stub
+            const res = await createPrescriber(prescriber);
+            if (res) {
+                verified.push(prescriber);
+            }
+            else {
+                console.error(`Prescriber ${prescriber.firstName} ${prescriber.lastName} is verified but could not be created in database after a few times. Putting in error.`);
+                error.push(prescriber);
+            }
         }
         else if (isVerified === false) {
             invalid.push(prescriber);
