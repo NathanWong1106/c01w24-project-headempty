@@ -77,7 +77,6 @@ export async function verifyPrescribers(inputData) {
         // Create prescriber stub
         const res = await createPrescriber(prescriber);
         if (!res) {
-            console.error(`Prescriber ${prescriber.firstName} ${prescriber.lastName} could not be created in database after a few times. Putting in error.`);
             error.push(prescriber);
             continue;
         }

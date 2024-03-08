@@ -4,8 +4,8 @@ import { prescriberDataSchema } from "../schemas.js";
 import { retryPromiseWithDelay } from "../utils.js";
 
 export async function createPrescriber(prescriber) {
-    if (!prescriberDataSchema.isValid(prescriber)) {
-        console.error("Provided prescriber data does not match schema.");
+    if (!await prescriberDataSchema.isValid(prescriber)) {
+        console.error(`Provided prescriber data for ${prescriber.firstName} ${prescriber.lastName} does not match schema.`);
         return false;
     }
 
@@ -27,7 +27,7 @@ export async function createPrescriber(prescriber) {
         await retryPromiseWithDelay(collection.insertOne(data));
         return true;
     } catch (err) {
-        console.error("Unable to insert new prescriber");
+        console.error(`Unable to insert new prescriber: ${prescriber.firstName} ${prescriber.lastName}`);
         return false;
     }
 }
