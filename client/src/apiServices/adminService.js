@@ -23,3 +23,23 @@ export const getPaginatedPrescribers = async (page, pageSize, search) => {
 
     return res.status != 200 ? null : (await res.json())['list'];
 }
+
+/**
+ * Patches a single prescriber specified by providerCode.
+ * 
+ * @param {*} providerCode the provider code of the prescriber
+ * @param {*} patches patches (see server endpoint comment)
+ * @returns {boolean} true on success, else false
+ */
+export const patchPrescriber = async (providerCode, patches) => {
+    const res = await callProtectedEndpoint(
+        SERVER_PATHS.ADMIN_SERVICE.PATCH_PRESCRIBER,
+        'PATCH',
+        {
+            providerCode: providerCode,
+            patches: patches
+        }
+    )
+
+    return res.status == 200;
+}

@@ -70,7 +70,11 @@ const PrescriberManagement = () => {
                     prescriberFields.map(field => (
                         <td key={prescriber['providerCode'] + '_' + field} className="p-4">
                             <div className="flex items-center">
-                                {prescriber[prescriberField2PrescriberInfo[field]]}
+                                {
+                                    prescriber[prescriberField2PrescriberInfo[field]] ?
+                                        prescriber[prescriberField2PrescriberInfo[field]].toString() :
+                                        prescriber[prescriberField2PrescriberInfo[field]]
+                                }
                             </div>
                         </td>
                     ))
