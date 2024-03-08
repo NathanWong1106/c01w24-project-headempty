@@ -9,14 +9,14 @@ export async function createPrescriber(prescriber) {
         return false;
     }
 
-    const providerCode = getAndIncrementProviderCode(prescriber);
+    const providerCode = await getAndIncrementProviderCode(prescriber);
 
     const data = {
         ...prescriber,
         email: "",
         language: "",
         city: "",
-        address: "",
+        address: "", 
         profession: "",
         providerCode: providerCode,
         registered: false,
