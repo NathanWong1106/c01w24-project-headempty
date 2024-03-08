@@ -40,10 +40,9 @@ verificationRouter.post("/verifyPrescribers", express.json(), async (req, res) =
         let validData = true;
         for (const p of prescribers) {
             validData = validData && await prescriberDataSchema.isValid(p);
-            if (!validData) break;
-        }
-        if (!validData) {
-            return res.status(400).json({ error: "Some objects within the array of prescriber field do not match the prescriber data schema." });
+            if (!validData) {
+                return res.status(400).json({ error: "Some objects within the array of prescriber field do not match the prescriber data schema." });
+            }
         }
 
         const data = await verifyPrescribers(prescribers);
