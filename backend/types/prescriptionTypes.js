@@ -16,7 +16,7 @@ export const PRESCRIBER_PRESCRIPTION_STATUS = {
 }
 
 
-class LogPrescription {
+class Prescription {
     constructor(providerCode, date, initial, prescribed, status) {
         this.providerCode = providerCode;
         this.date = date;
@@ -26,13 +26,13 @@ class LogPrescription {
     }
 }
 
-export class PrescriberPrescription extends LogPrescription {
+export class PrescriberPrescription extends Prescription {
     constructor(providerCode, date, initial, prescribed, status) {
         super(providerCode, date, initial, prescribed, status || PRESCRIBER_PRESCRIPTION_STATUS.NOT_LOGGED);
     }
 }
 
-export class PatientPrescription extends LogPrescription {
+export class PatientPrescription extends Prescription {
     constructor(providerCode, date, initial, prescribed, status) {
         super(providerCode, date, initial, prescribed, status || PATIENT_PRESCRIPTION_STATUS.NOT_LOGGED);
     }

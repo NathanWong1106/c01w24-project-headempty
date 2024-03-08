@@ -1,5 +1,5 @@
 import { COLLECTIONS } from "../constants.js"
-import { PrescriberPrescription } from "../types/Prescription.js";
+import { PrescriberPrescription } from "../types/prescriptionTypes.js";
 import { getDb } from "./dbConnection.js";
 import paginate from "./pagination.js";
 

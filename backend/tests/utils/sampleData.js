@@ -1,4 +1,4 @@
-import { PRESCRIBER_PRESCRIPTION_STATUS } from "../../types/Prescription.js";
+import { PRESCRIBER_PRESCRIPTION_STATUS } from "../../types/prescriptionTypes.js";
 import { ACCOUNT_TYPE } from "../../types/userServiceTypes.js";
 
 export const defaultPassword = "1234";
