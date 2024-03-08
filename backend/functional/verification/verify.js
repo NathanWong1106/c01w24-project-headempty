@@ -61,11 +61,31 @@ export async function verifyPrescribers(inputData) {
     let verified = [];
     let error = [];
 
-    const browser = await puppeteer.launch({
-        headless: true,
-        executablePath: SERVER.PUPPETEER_BROWSER_PATH,
-        defaultViewport: null,
-    });
+    let browser = null;
+    if (SERVER.RUN_PUPPETEER === "container") {
+        browser = await puppeteer.launch({
+            headless: true,
+            executablePath: "google-chrome-stable",
+            defaultViewport: null,
+        });
+    }
+    else if (SERVER.RUN_PUPPETEER === "devcontainer") {
+        browser = await puppeteer.launch({
+            headless: true,
+            executablePath: "google-chrome-stable",
+            defaultViewport: null,
+            args: ['--no-sandbox'],
+        });
+    }
+    else if (SERVER.RUN_PUPPETEER === "local") {
+        browser = await puppeteer.launch({
+            headless: false,
+            defaultViewport: null,
+        });
+    }
+    else {
+        throw new Error("Invalid value for environment variable: RUN_PUPPETEER.");
+    }
     
     for (const prescriber of inputData) {
         console.debug(`Verifying: ${prescriber.firstName} ${prescriber.lastName}`);
