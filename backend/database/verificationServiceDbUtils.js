@@ -82,15 +82,3 @@ async function getAndIncrementProviderCode(prescriber) {
 
     return providerCode;
 }
-
-export async function updatePrescriberRegistered(prescriber) {
-    const prescriberCollection = getDb().collection(COLLECTIONS.PRESCRIBER);
-    await retryPromiseWithDelay(prescriberCollection.updateOne(
-        prescriber,
-        {
-            $set: {
-                registered: true
-            }
-        }
-    ));
-}

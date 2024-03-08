@@ -54,24 +54,24 @@ export async function verifyPrescribers(inputData) {
     
     for (const prescriber of inputData) {
         console.debug(`Verifying: ${prescriber.firstName} ${prescriber.lastName}`);
-        // Create prescriber stub
-        const res = await createPrescriber(prescriber);
-        if (!res) {
-            console.error(`Prescriber ${prescriber.firstName} ${prescriber.lastName} could not be created in database after a few times. Putting in error.`);
-            error.push(prescriber);
-            continue;
-        }
 
         const page = await browser.newPage();
         // Spoof normal browser to avoid being auto-flagged as a bot
-        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36')
+        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36');
         
         let scraper = getScraper(prescriber);
         let isVerified = await scraper.getStatus(prescriber, page);
 
         if (isVerified === true) {
-            verified.push(prescriber);
-            updatePrescriberRegistered(prescriber);
+            // Create prescriber stub
+            const res = await createPrescriber(prescriber);
+            if (res) {
+                verified.push(prescriber);
+            }
+            else {
+                console.error(`Prescriber ${prescriber.firstName} ${prescriber.lastName} is verified but could not be created in database after a few times. Putting in error.`);
+                error.push(prescriber);
+            }
         }
         else if (isVerified === false) {
             invalid.push(prescriber);
