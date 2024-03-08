@@ -22,6 +22,7 @@ export const clearDB = async (clearAdmins = true) => {
     await db.collection(COLLECTIONS.PRESCRIBER).deleteMany({});
     await db.collection(COLLECTIONS.PATIENT_PRESCRIPTIONS).deleteMany({});
     await db.collection(COLLECTIONS.PRESCRIBER_PRESCRIPTIONS).deleteMany({});
+    await db.collection(COLLECTIONS.PROVIDER_CODE_NUMBER).deleteMany({});
 }
 
 /**
