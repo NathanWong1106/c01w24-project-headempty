@@ -9,6 +9,8 @@ import { prescriberField2PrescriberInfo, prescriberFields } from "../../apiServi
 import { EditPrescriberDialog } from "../../components/EditPrescriberDialog";
 import PaginatedTableWithSearch from "../../components/PaginatedTableWithSearch";
 
+const PAGE_SIZE = 20;
+
 const PrescriberManagement = () => {
     // List of all prescribers on the current page
     const [prescriberList, setPrescriberList] = useState([]);
@@ -58,7 +60,7 @@ const PrescriberManagement = () => {
         // If search was pressed reset the state
         searchPressed && setPrevSearch(searchObj);
 
-        const list = await getPaginatedPrescribers(searchPage, 20, searchObj);
+        const list = await getPaginatedPrescribers(searchPage, PAGE_SIZE, searchObj);
         setPrescriberList(list);
         return list ? list.length : 0;
     }
@@ -97,7 +99,7 @@ const PrescriberManagement = () => {
                 searchForm={adminSearchForm}
                 cols={[...prescriberFields, ""]}
                 createRow={createRow}
-                pageSize={20}
+                pageSize={PAGE_SIZE}
             />
         </div>
     )
