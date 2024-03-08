@@ -14,6 +14,7 @@ export async function createPrescriber(prescriber) {
     const data = {
         ...prescriber,
         email: "",
+        password: "",
         language: "",
         city: "",
         address: "", 
