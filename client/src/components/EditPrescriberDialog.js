@@ -27,7 +27,6 @@ export const EditPrescriberDialog = ({ prescriber }) => {
     const fieldMapping = {};
     prescriberPatchFields.forEach(field => {
         fieldMapping[field] = useState(prescriber[prescriberField2PrescriberInfo[field]]);
-        console.log(field);
     })
 
     const [open, setOpen] = useState(false);
