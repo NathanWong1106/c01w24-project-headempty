@@ -12,5 +12,5 @@ export const SERVER = {
     PORT: process.env.PORT,
     MONGO_URL: process.env.MONGO_URL,
     DB_NAME: process.env.NODE_ENV=="test" ? process.env.TEST_DB_NAME : process.env.DB_NAME,
-    PUPPETEER_BROWSER_PATH: process.env.PUPPETEER_BROWSER_PATH
+    RUN_PUPPETEER: process.env.RUN_PUPPETEER,
 }
