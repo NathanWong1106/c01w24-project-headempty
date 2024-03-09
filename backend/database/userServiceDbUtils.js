@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { Admin, Patient, Prescriber } from "../types/userServiceTypes.js";
 import { getDb } from "./dbConnection.js";
+import { ObjectId } from "mongodb";
 
 /**
  * Tries to login an admin user with the given email and password.
@@ -98,3 +99,37 @@ async function getUserFromCollectionWithPassword(email, password, collection) {
         return null;
     }
 }
+
+/**
+ * Tries to register a prescriber user with the given prescriber Id.
+ * Returns the prescriber response object if successful, else null.
+ * 
+ * @param {ObjectId} prescriberId  prescriber Id
+ * @returns {Prescriber | null}
+ */
+export async function tryRegisterPrescriber(prescriberId) {
+    const data = await getPrescriberFromCollectionWithId(prescriberId);
+
+    if (data) {
+        const { email, firstName, lastName, language, city, province, address, profession, providerCode, licensingCollege, licenceNumber, registered } = data;
+        return new Prescriber(email, "", firstName, lastName, language, city, province, address, profession, providerCode, licensingCollege, licenceNumber, registered)
+    } 
+    return null;
+}
+
+/**
+ * @param {ObjectId} prescriberId prescriber ID
+ * @returns the prescriber document from the collection with the corresponding ID.
+ * Else, returns null.
+ */
+async function getPrescriberFromCollectionWithId(prescriberId) {
+    const collection = db.collection(COLLECTIONS.PRESCRIBER)
+    const data = await collection.findOne({
+        _id: prescriberId
+    });
+    if (!data) {
+        return null
+    }
+    return data
+}
+
