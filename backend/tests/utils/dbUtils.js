@@ -16,12 +16,12 @@ let db;
  * Implicitly creates the necessary collections if they
  * do not already exist.
  */
-export const clearDB = async (clearAdmins = true, clearPrescribers = true) => {
+export const clearDB = async (clearAdmins = true, clearPrescribers = true, clearPatient = true, clearPatientPrescription = true, clearPrescriberPrescription = true) => {
     clearAdmins && await db.collection(COLLECTIONS.ADMINS).deleteMany({});
-    await db.collection(COLLECTIONS.PATIENT).deleteMany({});
     clearPrescribers && await db.collection(COLLECTIONS.PRESCRIBER).deleteMany({});
-    await db.collection(COLLECTIONS.PATIENT_PRESCRIPTIONS).deleteMany({});
-    await db.collection(COLLECTIONS.PRESCRIBER_PRESCRIPTIONS).deleteMany({});
+    clearPatient && await db.collection(COLLECTIONS.PATIENT).deleteMany({});
+    clearPatientPrescription && await db.collection(COLLECTIONS.PATIENT_PRESCRIPTIONS).deleteMany({});
+    clearPrescriberPrescription && await db.collection(COLLECTIONS.PRESCRIBER_PRESCRIPTIONS).deleteMany({});
 }
 
 /**

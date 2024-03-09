@@ -8,7 +8,6 @@ export const prescriberRouter = express.Router();
 
 /**
  * Get a paginated list of all prescription prescriptions from prescriber.
- * If search is not defined, defaults to no filter.
  * 
  * Needs to be authorized (use middleware prescriberRoute).
  * 
