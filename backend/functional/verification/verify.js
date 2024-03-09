@@ -12,7 +12,7 @@ import { ScraperPE } from "./scrapers/scraperPE.js";
 import { ScraperQC } from "./scrapers/scraperQC.js";
 import { ScraperSK } from "./scrapers/scraperSK.js";
 
-import { createPrescriber, updatePrescriberRegistered } from "../../database/verificationServiceDbUtils.js";
+import { createPrescriber } from "../../database/verificationServiceDbUtils.js";
 
 const scraperMapping = {
     "College of Physicians and Surgeons of Alberta": ScraperAB,
