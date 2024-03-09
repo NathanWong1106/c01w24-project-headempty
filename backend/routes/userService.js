@@ -2,7 +2,6 @@ import express from "express";
 import { ObjectId } from "mongodb";
 import { tryLoginAdmin, tryLoginPatient, tryLoginPrescriber, tryRegisterPrescriber } from "../database/userServiceDbUtils.js";
 import { ACCOUNT_TYPE } from "../types/userServiceTypes.js";
-import { COLLECTIONS } from "../constants.js";
 
 export const userRouter = express.Router();
 
@@ -53,7 +52,7 @@ userRouter.post("/login", express.json(), async (req, res) => {
  * 
  * Response: Object< Prescriber >
  */
-userRouter.post("/registration/prescriber/:prescriberId", express.json(), async(req, res) => {
+userRouter.get("/registration/prescriber/:prescriberId", express.json(), async(req, res) => {
     try {
         const prescriberId = req.params.prescriberId;
     
@@ -61,13 +60,13 @@ userRouter.post("/registration/prescriber/:prescriberId", express.json(), async(
         if (!ObjectId.isValid(prescriberId)){
             return res.status(400).json({ error: "This is not a valid registration link."})
         }
-        preObjId = ObjectId(prescriberId);
+        let preObjId = new ObjectId(prescriberId);
         if (!((String)(preObjId === prescriberId))){
             return res.status(400).json({ error: "This is not a valid registration link."})
         }
         
         //search db for document of corresponding prescriber and check if they have already been registered
-        let user = tryRegisterPrescriber(preObjId)
+        let user = await tryRegisterPrescriber(preObjId)
         if (!user) {
             return res.status(401).json({ error: "Unable to find a verified presciber associated with this link."}) 
         } else if (user.registered) {

@@ -122,9 +122,8 @@ export async function tryRegisterPrescriber(prescriberId) {
  * @returns the prescriber document from the collection with the corresponding ID.
  * Else, returns null.
  */
-async function getPrescriberFromCollectionWithId(prescriberId) {
-    const collection = db.collection(COLLECTIONS.PRESCRIBER)
-    const data = await collection.findOne({
+export async function getPrescriberFromCollectionWithId(prescriberId) {
+    const data = await getDb().collection(COLLECTIONS.PRESCRIBER).findOne({
         _id: prescriberId
     });
     if (!data) {
