@@ -58,10 +58,10 @@ userRouter.post("/registration/prescriber/:prescriberId", express.json(), async(
         const prescriberId = req.params.prescriberId;
     
         //check if unique prescriber id exists in db, and check if id is valid (extremely special case)    
-        if (!ObjectId.isValid(prescriberId) || !((String)(new ObjectId(prescriberId)) === prescriberId)){
+        if (!ObjectId.isValid(prescriberId)){
             return res.status(400).json({ error: "This is not a valid registration link."})
         }
-        preObjId = new ObjectId(prescriberId);
+        preObjId = ObjectId(prescriberId);
         if (!((String)(preObjId === prescriberId))){
             return res.status(400).json({ error: "This is not a valid registration link."})
         }
@@ -71,7 +71,7 @@ userRouter.post("/registration/prescriber/:prescriberId", express.json(), async(
         if (!user) {
             return res.status(401).json({ error: "Unable to find a verified presciber associated with this link."}) 
         } else if (user.registered) {
-            return res.status(401).json({ error: "The prescriber associated with this link has already been registered."})
+            return res.status(402).json({ error: "The prescriber associated with this link has already been registered."})
         } else {
             return res.status(200).json(user);
         }
