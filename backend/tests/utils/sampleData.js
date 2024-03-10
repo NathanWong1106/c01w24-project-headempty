@@ -1,4 +1,4 @@
-import { ACCOUNT_TYPE } from "../../types/userServiceTypes";
+import { ACCOUNT_TYPE } from "../../types/userServiceTypes.js";
 
 export const defaultPassword = "1234";
 
@@ -27,7 +27,7 @@ export const genericPatient = {
 
 export const genericPrescriber = {
     "licensingCollege": "licensing college",
-    "licenseNumber": "license number 1234",
+    "licenceNumber": "licence number 1234",
     "profession": "therapist",
     "providerCode": "ON-JC001",
     "email": "prescriber1@gmail.com",

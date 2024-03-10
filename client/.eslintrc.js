@@ -32,7 +32,7 @@ module.exports = {
         "react",
     ],
     "rules": {
-        "linebreak-style": ['error', process.platform === 'win32' ? 'windows' : 'unix'],
+        "linebreak-style": 'off',
         "no-unused-vars": "off",
         'react/prop-types': ['off'],
         "react/react-in-jsx-scope": "off",
