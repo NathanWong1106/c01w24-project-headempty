@@ -8,11 +8,8 @@ export class ScraperNB extends BaseScraper {
     static lastNameLocator = "#parameterformcontainer > div > fieldset > div > div:nth-child(2) > div:nth-child(1) > input";
     static licenceNumberLocator = "#parameterformcontainer > div > fieldset > div > div:nth-child(4) > div:nth-child(1) > input"
     static searchButtonLocator = "#publicdirectorycontainer > div.page-content.als-page-content > div.row > div > section > div:nth-child(1) > div > div > div.input-group-btn > div > button";
-
     static matchesTextLocator = "#publicdirectorycontainer > div.page-content.als-page-content > div.row > div > section > div:nth-child(2) > div > div > div > div > div > small > span:nth-child(6)";
-    static resultTableLocator = "#Results";
 
-    
     /**
      * 
      * @param {object} prescriber 
