@@ -11,15 +11,7 @@ export class ScraperBC extends BaseScraper {
     static resultWrapperLocator = ".results-main-wrapper";
     static resultsLocator = ".result-item";
 
-
     static activeStatus = "Practising";
-    static inactiveStatuses = [
-        "Not licensed for independent practice",
-        "In training",
-        "Resigned",
-        "Out of province",
-        "Cancelled"
-    ];
 
     /**
      * 
@@ -79,16 +71,8 @@ export class ScraperBC extends BaseScraper {
                         // Need to remove leading 'Registration status: '
                         return statusElement.textContent.trim().replace(/Registration status:\s*/, '');
                     });
-                    if (status === ScraperBC.activeStatus) {
-                        return true;
-                    }
-                    else if (ScraperBC.inactiveStatuses.includes(status)) {
-                        return false;
-                    }
-                    else {
-                        console.warn(`Unknown status: ${status}, for ${prescriber.firstName} ${prescriber.lastName}.`);
-                        return null;
-                    }
+
+                    return status === ScraperBC.activeStatus;
                 }
             }
         } catch (e) {

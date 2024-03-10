@@ -1,33 +1,8 @@
-import { Db, MongoClient } from "mongodb";
-import { COLLECTIONS, SERVER } from "./constants.js"
+import { COLLECTIONS } from "../constants.js"
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { Admin, Patient, Prescriber } from "./types/userServiceTypes.js";
-
-/**
- * The mongodb database object.
- * @type {Db}
- */
-let db;
-
-/**
- * Initialize the db object for all database actions.
- * 
- * Call this in server.js to connect to the db.
- * @returns {Db}
- */
-export async function connectToMongo() {
-    const client = new MongoClient(SERVER.MONGO_URL);
-
-    try {
-        await client.connect();
-        db = client.db(SERVER.DB_NAME);
-        console.log(`Connected to MongoDB on ${SERVER.MONGO_URL} to db ${SERVER.DB_NAME}`);
-    } catch (error) {
-        console.error("Error connecting to MongoDB:", error);
-        return null;
-    }
-}
+import { Admin, Patient, Prescriber } from "../types/userServiceTypes.js";
+import { getDb } from "./dbConnection.js";
 
 /**
  * Tries to login an admin user with the given email and password.
@@ -38,7 +13,7 @@ export async function connectToMongo() {
  * @returns {Admin | null}
  */
 export async function tryLoginAdmin(email, password) {
-    const data = await getUserFromCollectionWithPassword(email, password, db.collection(COLLECTIONS.ADMINS));
+    const data = await getUserFromCollectionWithPassword(email, password, getDb().collection(COLLECTIONS.ADMINS));
 
     if (data) {
         const { email, accountType } = data;
@@ -61,7 +36,7 @@ export async function tryLoginAdmin(email, password) {
  * @returns {Patient | null}
  */
 export async function tryLoginPatient(email, password) {
-    const data = await getUserFromCollectionWithPassword(email, password, db.collection(COLLECTIONS.PATIENT));
+    const data = await getUserFromCollectionWithPassword(email, password, getDb().collection(COLLECTIONS.PATIENT));
 
     if (data) {
         const { email, firstName, lastName, language, city, province, address } = data;
@@ -84,18 +59,18 @@ export async function tryLoginPatient(email, password) {
  * @returns {Prescriber | null}
  */
 export async function tryLoginPrescriber(email, password) {
-    const data = await getUserFromCollectionWithPassword(email, password, db.collection(COLLECTIONS.PRESCRIBER));
+    const data = await getUserFromCollectionWithPassword(email, password, getDb().collection(COLLECTIONS.PRESCRIBER));
 
     if (data) {
-        const { email, firstName, lastName, language, city, province, address, profession, providerCode, licensingCollege, licenseNumber, registered } = data;
+        const { email, firstName, lastName, language, city, province, address, profession, providerCode, licensingCollege, licenceNumber, registered } = data;
 
         //This could be a prescriber stub, if so, don't allow login
         if (!registered) {
-            console.log (data)
+            console.log(data)
             return null;
         }
 
-        const prescriber = new Prescriber(email, "", firstName, lastName, language, city, province, address, profession, providerCode, licensingCollege, licenseNumber, registered)
+        const prescriber = new Prescriber(email, "", firstName, lastName, language, city, province, address, profession, providerCode, licensingCollege, licenceNumber, registered)
         const token = jwt.sign({ prescriber }, process.env.JWT_SECRET, { expiresIn: "1h" });
 
         prescriber.token = token;
