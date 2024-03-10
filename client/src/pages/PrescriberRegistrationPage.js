@@ -13,7 +13,7 @@ const PrescriberRegistrationPage = () => {
     
     const { prescriberId } = useParams();
 
-    const languages = ["English", "Spanish", "French", "German"]; // Sample list of languages
+    const languages = ["English", "Spanish", "French", "German"]; // Sample list of languages, will convert to constant after other registration is complete
 
     const navigate = useNavigate();
     const dispatch = useDispatch();

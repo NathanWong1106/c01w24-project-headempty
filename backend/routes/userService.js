@@ -66,7 +66,7 @@ userRouter.get("/registration/:prescriberId", express.json(), async(req, res) =>
         //search db for document of corresponding prescriber and check if they have already been registered
         let user = await getVerifiedPrescriber(preObjId)
         if (!user) {
-            return res.status(401).json({ error: "Unable to find a verified presciber associated with this link."}) 
+            return res.status(401).json({ error: "Unable to find a verified prescriber associated with this link."}) 
         } else if (user.registered) {
             return res.status(402).json({ error: "The prescriber associated with this link has already been registered."})
         } else {
