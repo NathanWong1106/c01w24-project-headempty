@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import { Admin, Patient, Prescriber } from "../types/userServiceTypes.js";
 import { getDb } from "./dbConnection.js";
 import { ObjectId } from "mongodb";
+import {retryPromiseWithDelay} from "../utils.js"
 
 /**
  * Tries to login an admin user with the given email and password.
@@ -101,13 +102,13 @@ async function getUserFromCollectionWithPassword(email, password, collection) {
 }
 
 /**
- * Tries to register a prescriber user with the given prescriber Id.
+ * Creates a prescriber profile if prescriber is verified
  * Returns the prescriber response object if successful, else null.
  * 
  * @param {ObjectId} prescriberId  prescriber Id
  * @returns {Prescriber | null}
  */
-export async function tryRegisterPrescriber(prescriberId) {
+export async function getVerifiedPrescriber(prescriberId) {
     const data = await getPrescriberFromCollectionWithId(prescriberId);
 
     if (data) {
@@ -123,12 +124,40 @@ export async function tryRegisterPrescriber(prescriberId) {
  * Else, returns null.
  */
 export async function getPrescriberFromCollectionWithId(prescriberId) {
-    const data = await getDb().collection(COLLECTIONS.PRESCRIBER).findOne({
+    const prescriberCollection = getDb().collection(COLLECTIONS.PRESCRIBER)
+    const data = await retryPromiseWithDelay(prescriberCollection.findOne({
         _id: prescriberId
-    });
+    }));
     if (!data) {
         return null
     }
     return data
 }
+
+/**
+ * @param {ObjectId} prescriberId prescriber ID
+ * @param {String} password new password
+ * @param {String} language preferred language
+ * @returns the prescriber document from the collection with the corresponding ID.
+ * Else, returns null.
+ */
+export async function updatePrescriberRegistration(prescriberId, password, language) {
+    const prescriberCollection = getDb().collection(COLLECTIONS.PRESCRIBER)
+    const data = await retryPromiseWithDelay(prescriberCollection.updateOne({ 
+        _id: prescriberId},
+        {
+            $set: {
+                registered: true,
+                password: await bcrypt.hash(password, 10),
+                language: language
+            }
+        }
+    ));
+    if (data.matchedCount === 0) {
+        return null
+    }
+    return data
+}
+
+
 

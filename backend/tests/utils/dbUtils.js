@@ -100,6 +100,20 @@ export const insertPrescribers = async (numPrescribers = 20) => {
 }
 
 /**
+ * Finds a prescriber with the corresponding fields
+ * 
+ * Returns the id of the prescriber
+ * @returns {String} the id of the prescriber
+ */
+export const findPrescriberId = async (prescriber) => {
+    const data = await db.collection(COLLECTIONS.PRESCRIBER).findOne(prescriber);
+    if (!data) {
+        return ""
+    }
+    return data._id;
+}
+
+/**
  * Returns a clone of obj with the KVP's specified in opts
  * copied to obj.
  * @param {Object} obj the original object

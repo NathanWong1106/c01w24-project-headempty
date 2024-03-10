@@ -13,6 +13,7 @@ import store from './store/store';
 import { Provider } from 'react-redux';
 import LoginPage from './pages/Login';
 import HomePage from './pages/HomePage';
+import PrescriberRegistrationPage from './pages/PrescriberRegistrationPage';
 import PrivateRoute from './routing/PrivateRoute';
 
 const router = createBrowserRouter(
@@ -20,6 +21,7 @@ const router = createBrowserRouter(
     <Route path="/" element={<App />}>
       <Route path="login" element={<LoginPage />} />
       <Route path="home" element={<PrivateRoute><HomePage /></PrivateRoute>} />
+      <Route path="registration/:prescriberId" element={<PrescriberRegistrationPage></PrescriberRegistrationPage>}></Route>
     </Route>
   )
 );

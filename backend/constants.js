@@ -12,7 +12,7 @@ export const COLLECTIONS = {
 export const SERVER = {
     PORT: process.env.PORT,
     MONGO_URL: process.env.MONGO_URL,
-    DB_NAME: process.env.NODE_ENV=="test" ? process.env.TEST_DB_NAME : process.env.DB_NAME,
+    DB_NAME: process.env.TEST_DB_NAME,
     RUN_PUPPETEER: process.env.RUN_PUPPETEER,
 }
 

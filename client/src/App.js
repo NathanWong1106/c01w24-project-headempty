@@ -14,8 +14,8 @@ function App() {
 
   return (
     <div>
-      {location.pathname != ROUTES.LOGIN && <DrawerWithNavigation />}
-      <Outlet />
+      {location.pathname != ROUTES.LOGIN && !location.pathname.includes(ROUTES.PRESCRIBER_REGISTRATION) && <DrawerWithNavigation />}
+      <Outlet/>
     </div>
   )
 
