@@ -15,13 +15,19 @@ import LoginPage from './pages/Login';
 import HomePage from './pages/HomePage';
 import PrescriberRegistrationPage from './pages/PrescriberRegistrationPage';
 import PrivateRoute from './routing/PrivateRoute';
+import { ADMIN_ROUTE_BASE, ADMIN_ROUTES, ROUTES } from './routing/RouteConstants';
+import AdminRoute from './routing/AdminRoute';
+import PrescriberManagement from './pages/admin/PrescriberManagement';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<App />}>
-      <Route path="login" element={<LoginPage />} />
-      <Route path="home" element={<PrivateRoute><HomePage /></PrivateRoute>} />
-      <Route path="registration/:prescriberId" element={<PrescriberRegistrationPage></PrescriberRegistrationPage>}></Route>
+    <Route path={ROUTES.BASE} element={<App />}>
+      <Route path={ROUTES.PRESCRIBER_REGISTRATION} element={<PrescriberRegistrationPage></PrescriberRegistrationPage>}></Route>
+      <Route path={ROUTES.LOGIN} element={<LoginPage />} />
+      <Route path={ROUTES.HOME} element={<PrivateRoute><HomePage /></PrivateRoute>} />
+      <Route path={ADMIN_ROUTE_BASE} element={<AdminRoute />}>
+        <Route path={ADMIN_ROUTES.PRESCRIBER_MNGMT} element={<PrescriberManagement />} />
+      </Route>
     </Route>
   )
 );

@@ -13,9 +13,9 @@ function App() {
   }
 
   return (
-    <div>
+    <div className='bg-off-white'>
       {location.pathname != ROUTES.LOGIN && !location.pathname.includes(ROUTES.PRESCRIBER_REGISTRATION) && <DrawerWithNavigation />}
-      <Outlet/>
+      <Outlet />
     </div>
   )
 

@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { loginUser } from "../../apiServices/authService";
+import { setAPIToken } from "../../apiServices/utils/apiUtils";
 
 export const currentUserSlice = createSlice({
     name: 'currentUser',
@@ -33,9 +34,11 @@ export const currentUserSlice = createSlice({
                 state.token = action.payload.token;
                 state.email = action.payload.email;
                 state.auxInfo = action.payload;
+
+                setAPIToken (action.payload.token);
             })
             .addCase(loginUser.rejected, (state, action) => {
-                //Currently, do nothing
+                setAPIToken ("");
             })
     }
 })
