@@ -34,7 +34,7 @@ const LoginPage = () => {
 
     return (
         <div className="flex flex-col h-screen justify-center items-center">
-            <Card className="absolute" color="transparent" shadow={false}>
+            <Card className="absolute justify-center items-center" color="transparent" shadow={false}>
                 <Typography variant="h4">
                     Login
                 </Typography>
@@ -75,6 +75,12 @@ const LoginPage = () => {
                         Login
                     </Button>
                 </form>
+                <Typography>
+                    No account?
+                    <Button className="ml-4" color="blue" buttonType="link" ripple="light" onClick={() => navigate(ROUTES.REGISTRATION)}>
+                        Make One Here
+                    </Button>
+                </Typography>
             </Card>
             <div className="mb-16 absolute bottom-0">
                 <ClosableAlert text="Couldn't login. Check that all fields are correct, then try again." open={showAlert} onDismiss={() => setShowAlert(false)} />

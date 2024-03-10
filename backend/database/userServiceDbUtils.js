@@ -50,6 +50,10 @@ export async function tryLoginPatient(email, password) {
     }
 }
 
+export async function tryRegisterPatient(email, password, fName, lName, initials, address, city, province, preferredLanguage) {
+    return await addPatient(email, password, fName, lName, initials, address, city, province, preferredLanguage);
+}
+
 /**
  * Tries to login a prescriber user with the given email and password.
  * Returns the prescriber response object if successful, else null.
@@ -97,4 +101,34 @@ async function getUserFromCollectionWithPassword(email, password, collection) {
     } else {
         return null;
     }
+}
+
+async function addPatient(email, password, fName, lName, initials, address, city, province, preferredLanguage,) {
+    try {
+        const collection = getDb().collection(COLLECTIONS.PATIENT)
+        const existingUser = await collection.findOne({
+            email: email,
+        })
+        if (existingUser) {
+            return { data: null, error: "Email already used" };
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const data = await collection.insertOne({
+            email,
+            password: hashedPassword,
+            firstName: fName,
+            lastName: lName,
+            language: preferredLanguage,
+            initials,
+            address,
+            city,
+            province
+        });
+        return { data: data, error: null };
+    } catch (error) {
+        console.error('Error adding patient:', error.message);
+        return { data: null, error: error };
+    }
+
 }

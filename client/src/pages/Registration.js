@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Input, Button, Card, Typography, Select, Option } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../apiServices/authService.js";
+import { registerUser } from "../apiServices/registrationService.js";
 import { ACCOUNT_TYPE } from "../apiServices/types/userServiceTypes.js";
 import { ClosableAlert } from "../components/ClosableAlert.js";
 import { ROUTES } from "../routing/RouteConstants.js";
@@ -18,8 +19,10 @@ const RegistrationPage = () => {
     const [province, setProvince] = useState("");
     const [password, setPassword] = useState("");
     const [retypepassword, setRetypePassword] = useState("");
-    const [accountType, setAccountType] = useState("Patient");
+    const [accountType, setAccountType] = useState("");
     const [showAlert, setShowAlert] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+    const formRef = useRef(null);
 
     // Mapping of client string to api type
     const accountTypes = {
@@ -33,27 +36,101 @@ const RegistrationPage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const doLogin = async (email, password) => {
-        const data = { email, password, accountType: accountTypes[accountType] }
+    const validateEmail = (email) => {
+        // Regular expression for validating email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+
+    const validatePassword = (password) => {
+        // Regular expression for password validation
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])(?=.*[a-zA-Z]).{8,}$/;
+
+        return passwordRegex.test(password);
+    }
+
+    const resetForm = () => {
+        setEmail("");
+        setFName("");
+        setLName("");
+        setInitials("");
+        setPreferredLanguage("");
+        setAddress("");
+        setCity("");
+        setProvince("");
+        setPassword("");
+        setRetypePassword("");
+        setAccountType("");
+        const inputs = Array.from(formRef.current.getElementsByTagName('input'));
+        inputs.forEach(input => {
+            input.value = '';
+        });
+    }
+
+    const doRegistration = async () => {
+        setShowAlert(false);
+        let error = '';
+
+        // Check if any of the required fields are empty
+        if (!accountType || !email || !fName || !lName || !initials || !preferredLanguage || !address || !city || !province || !password || !retypepassword) {
+            // Construct the error message
+            error = "Please fill in the following fields: ";
+            if (!accountType) error += "Account Type, ";
+            if (!email) error += "Email, ";
+            if (!fName) error += "First Name, ";
+            if (!lName) error += "Last Name, ";
+            if (!initials) error += "Initials, ";
+            if (!preferredLanguage) error += "Preferred Language, ";
+            if (!address) error += "Address, ";
+            if (!city) error += "City, ";
+            if (!province) error += "Province, ";
+            if (!password) error += "Password, ";
+            if (!retypepassword) error += "Re-type Password, ";
+            error = error.slice(0, -2); // Remove the last comma and space
+        }
+        else if (!validateEmail(email)) {
+            error = "Please enter a valid email address.";
+        }
+        else if (password !== retypepassword) {
+            error = "Passwords do not match."; // Error message for mismatched passwords
+        }
+        else if (!validatePassword(password)) {
+            error = "Password must be at least 8 characters long and contain at least one uppercase letter, one number, and one special character.";
+        }
+
+        if (error) {
+            setErrorMessage(error);
+            setShowAlert(true);
+            console.log("Error:", error);
+            return;
+        }
+
+        const data = { email, password, accountType: accountTypes[accountType], fName, lName, initials, address, city, province, preferredLanguage }
         try {
-            await dispatch(loginUser(data)).unwrap();
-            navigate(ROUTES.HOME);
+            const result = await dispatch(registerUser(data)).unwrap();
+            console.log(result);
+
+            setErrorMessage("Account Created Successfully")
+            setShowAlert(true);
+            resetForm();
         } catch (err) {
+            console.log(err);
+            setErrorMessage("Failed to Create Account: " + err.error)
             setShowAlert(true);
         }
     }
 
     return (
         <div className="flex flex-col h-screen justify-center items-center">
-            <Card className="absolute w-1/2" color="transparent" shadow={false}>
+            <Card className="absolute w-1/2 justify-center items-center" color="transparent" shadow={false}>
                 <Typography variant="h4">
                     Register
                 </Typography>
-                <form className="mt-8 mb-2 max-w-screen-lg ">
+                <form className="mt-8 mb-2 max-w-screen-lg " ref={formRef}>
                     <div className="mb-1 flex flex-wrap gap-6 justify-center items-center">
                         <div className="flex flex-col w-full">
                             <Select value={accountType} onChange={el => { setAccountType(el) }} label="I am a(n)">
-                                {<Option value={accountTypes.Patient} key={accountTypes.Patient}>{accountTypes.Patient}</Option>}
+                                {Object.keys(accountTypes).map(str => <Option value={str} key={str}>{str}</Option>)}
                             </Select>
 
                             <Typography variant="h6" className="-mb-1 mt-2">
@@ -215,13 +292,19 @@ const RegistrationPage = () => {
                             </div>
                         </div>
                     </div>
-                    <Button className="mt-6 bg-moss-green" onClick={() => doLogin(email, password)} fullWidth>
+                    <Button className="mt-6 bg-moss-green" onClick={async () => await doRegistration()} fullWidth>
                         Register
                     </Button>
                 </form>
+                <Typography>
+                    Already have an account?
+                    <Button className="ml-4" color="blue" buttonType="link" ripple="light" onClick={() => navigate(ROUTES.LOGIN)}>
+                        Login here
+                    </Button>
+                </Typography>
             </Card>
             <div className="mb-16 absolute bottom-0">
-                <ClosableAlert text="Couldn't login. Check that all fields are correct, then try again." open={showAlert} onDismiss={() => setShowAlert(false)} />
+                <ClosableAlert text={errorMessage} open={showAlert} onDismiss={() => setShowAlert(false)} />
             </div>
         </div>
 
