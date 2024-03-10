@@ -8,15 +8,17 @@ RUN apt update \
     && apt -y upgrade
 
 # Copy dependency definitions
-COPY package.json /app
-COPY package-lock.json /app
+COPY package.json .
+COPY package-lock.json .
+
+ENV DISABLE_ESLINT_PLUGIN=true
 
 # Install dependecies
 # ci won't modify package-lock.json
 RUN npm ci
 
 # Get all the code needed to run the app
-COPY . /app
+COPY . .
 
 # Expose the port the app runs in
 EXPOSE 3000

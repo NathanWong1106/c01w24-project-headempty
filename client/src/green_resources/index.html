@@ -7,7 +7,7 @@
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-
+ 
 	<style>
 		html, body {
 			height: 100%;
@@ -25,135 +25,292 @@
 </head>
 <body>
     <div>
-        <label for="postal-code">Canadian Postal Code:</label>
+        <label for="postal-code">Postal Code:</label>
         <input type="text" id="postal-code" name="postal-code">
+        <label for="city-name">City:</label>
+        <input type="text" id="city-name" name="city-name">
+        <label for="radius">Radius:</label>
+        <input type="text" id="radius" name="radius" placeholder="5000">
+
+        <div>
+            <label><input type="checkbox" name="filter" id="filter-free-green-spaces" value="free_green_spaces" checked> Free Green Spaces</label>
+            <label><input type="checkbox" name="filter" id="filter-paid-green-spaces" value="paid_green_spaces" checked> Paid Green Spaces</label>
+            <label><input type="checkbox" name="filter" id="filter-sports" value="sports" checked> Sports</label>
+            <label><input type="checkbox" name="filter" id="filter-water-activities" value="water_activities" checked> Water Activities</label>
+            <label><input type="checkbox" name="filter" id="filter-wildlife" value="wildlife" checked> Wildlife</label>
+            <label><input type="checkbox" name="filter" id="filter-bicycle-rental" value="bicycle_rental" checked> Bicycle Rentals</label>
+        </div>
+        
         <button onclick="searchCoordinates()">Search</button>
     </div>
+    
+    
 
-
-<div id="map" style="width: 600px; height: 500px; position: relative; outline-style: none;" class="leaflet-container leaflet-touch leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom" tabindex="0"><div class="leaflet-pane leaflet-map-pane" style="transform: translate3d(0px, -141px, 0px);"><div class="leaflet-pane leaflet-tile-pane"><div class="leaflet-layer " style="z-index: 1; opacity: 1;"><div class="leaflet-tile-container leaflet-zoom-animated" style="z-index: 19; transform: translate3d(0px, 0px, 0px) scale(1);"><img alt="" src="https://tile.openstreetmap.org/13/4093/2723.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(56px, -91px, 0px); opacity: 1;"><img alt="" src="https://tile.openstreetmap.org/13/4094/2723.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(312px, -91px, 0px); opacity: 1;"><img alt="" src="https://tile.openstreetmap.org/13/4093/2724.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(56px, 165px, 0px); opacity: 1;"><img alt="" src="https://tile.openstreetmap.org/13/4094/2724.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(312px, 165px, 0px); opacity: 1;"><img alt="" src="https://tile.openstreetmap.org/13/4092/2723.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-200px, -91px, 0px); opacity: 1;"><img alt="" src="https://tile.openstreetmap.org/13/4095/2723.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(568px, -91px, 0px); opacity: 1;"><img alt="" src="https://tile.openstreetmap.org/13/4092/2724.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-200px, 165px, 0px); opacity: 1;"><img alt="" src="https://tile.openstreetmap.org/13/4095/2724.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(568px, 165px, 0px); opacity: 1;"></div></div></div><div class="leaflet-pane leaflet-overlay-pane"></div><div class="leaflet-pane leaflet-shadow-pane"></div><div class="leaflet-pane leaflet-marker-pane"></div><div class="leaflet-pane leaflet-tooltip-pane"></div><div class="leaflet-pane leaflet-popup-pane"></div><div class="leaflet-proxy leaflet-zoom-animated" style="transform: translate3d(1048050px, 697379px, 0px) scale(4096);"></div></div><div class="leaflet-control-container"><div class="leaflet-top leaflet-left"><div class="leaflet-control-zoom leaflet-bar leaflet-control"><a class="leaflet-control-zoom-in" href="#" title="Zoom in" role="button" aria-label="Zoom in" aria-disabled="false"><span aria-hidden="true">+</span></a><a class="leaflet-control-zoom-out" href="#" title="Zoom out" role="button" aria-label="Zoom out" aria-disabled="false"><span aria-hidden="true">−</span></a></div></div><div class="leaflet-top leaflet-right"></div><div class="leaflet-bottom leaflet-left"></div><div class="leaflet-bottom leaflet-right"><div class="leaflet-control-attribution leaflet-control"><a href="https://leafletjs.com" title="A JavaScript library for interactive maps"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" class="leaflet-attribution-flag"><path fill="#4C7BE1" d="M0 0h12v4H0z"></path><path fill="#FFD500" d="M0 4h12v3H0z"></path><path fill="#E0BC00" d="M0 7h12v1H0z"></path></svg> Leaflet</a> <span aria-hidden="true">|</span> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a></div></div></div></div>
+<div id="map" style="width: 800px; height: 550px; position: relative; outline-style: none;" class="leaflet-container leaflet-touch leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom" tabindex="0"><div class="leaflet-pane leaflet-map-pane" style="transform: translate3d(0px, -141px, 0px);"><div class="leaflet-pane leaflet-tile-pane"><div class="leaflet-layer " style="z-index: 1; opacity: 1;"><div class="leaflet-tile-container leaflet-zoom-animated" style="z-index: 19; transform: translate3d(0px, 0px, 0px) scale(1);"><img alt="" src="https://tile.openstreetmap.org/13/4093/2723.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(56px, -91px, 0px); opacity: 1;"><img alt="" src="https://tile.openstreetmap.org/13/4094/2723.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(312px, -91px, 0px); opacity: 1;"><img alt="" src="https://tile.openstreetmap.org/13/4093/2724.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(56px, 165px, 0px); opacity: 1;"><img alt="" src="https://tile.openstreetmap.org/13/4094/2724.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(312px, 165px, 0px); opacity: 1;"><img alt="" src="https://tile.openstreetmap.org/13/4092/2723.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-200px, -91px, 0px); opacity: 1;"><img alt="" src="https://tile.openstreetmap.org/13/4095/2723.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(568px, -91px, 0px); opacity: 1;"><img alt="" src="https://tile.openstreetmap.org/13/4092/2724.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-200px, 165px, 0px); opacity: 1;"><img alt="" src="https://tile.openstreetmap.org/13/4095/2724.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(568px, 165px, 0px); opacity: 1;"></div></div></div><div class="leaflet-pane leaflet-overlay-pane"></div><div class="leaflet-pane leaflet-shadow-pane"></div><div class="leaflet-pane leaflet-marker-pane"></div><div class="leaflet-pane leaflet-tooltip-pane"></div><div class="leaflet-pane leaflet-popup-pane"></div><div class="leaflet-proxy leaflet-zoom-animated" style="transform: translate3d(1048050px, 697379px, 0px) scale(4096);"></div></div><div class="leaflet-control-container"><div class="leaflet-top leaflet-left"><div class="leaflet-control-zoom leaflet-bar leaflet-control"><a class="leaflet-control-zoom-in" href="#" title="Zoom in" role="button" aria-label="Zoom in" aria-disabled="false"><span aria-hidden="true">+</span></a><a class="leaflet-control-zoom-out" href="#" title="Zoom out" role="button" aria-label="Zoom out" aria-disabled="false"><span aria-hidden="true">−</span></a></div></div><div class="leaflet-top leaflet-right"></div><div class="leaflet-bottom leaflet-left"></div><div class="leaflet-bottom leaflet-right"><div class="leaflet-control-attribution leaflet-control"><a href="https://leafletjs.com" title="A JavaScript library for interactive maps"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" class="leaflet-attribution-flag"><path fill="#4C7BE1" d="M0 0h12v4H0z"></path><path fill="#FFD500" d="M0 4h12v3H0z"></path><path fill="#E0BC00" d="M0 7h12v1H0z"></path></svg> Leaflet</a> <span aria-hidden="true">|</span> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a></div></div></div></div>
 
 <script>
-	const map = L.map('map').setView([43.784212, -79.183279], 13); // this initializes the map somewhere. In this case is the utsc campus
+    // Initialize the map without setting a view yet
+    const map = L.map('map').fitWorld();
+    
+    // Add base tiles from OpenStreetMap to the map
+    const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
 
-	const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-		maxZoom: 19,
-		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-	}).addTo(map);
+    let markers = []; // This will store all the markers added to the map
+    
+    // Function to search for Green Resources (GR) nearby a given location
+    async function searchGRNearby(latitude, longitude, radius) {
 
-    async function searchParksNearby(latitude, longitude) { // it gets the latitude and longitude of the given postal code
-    try {
-        const radius = 5000; //in meters. it's 5000 for testing purposes
-        const url = `https://overpass-api.de/api/interpreter?data=[out:json];node[leisure](around:${radius},${latitude},${longitude});out;`; // where it says leisue it can be changed to other things like natural, etc or subtags like park, etc
-        const response = await fetch(url);
-        const data = await response.json();
+        try {
+            const filterString = applyFilters(radius, latitude, longitude);
+            if (!filterString) {
+                console.error('No filters selected');
+                return;
+            }
 
-        if (data && data.elements && data.elements.length > 0) {
-            data.elements.forEach(async element => {
-                const parkLatitude = element.lat;
-                const parkLongitude = element.lon;
-                const parkName = element.tags.name || "Unnamed Park"; // We get the name of the park from the Api or we set it as unnamed park
-                const parkDescription = await getWikipediaDescription(parkName); // we use the wikipedia api to get the description of the park
-                const parkImageUrl = await getWikipediaImageUrl(parkName); // same but for the image
-                const parkUrl = await getWikipediaUrl(parkName); // same but for the url (to get more information)
+            let url = `https://overpass-api.de/api/interpreter?data=[out:json];(${filterString});out center;`;
 
-                // We create a marker and add this information to the popup
-                const popupContent = `
-                    <h3>${parkName}</h3>
-                    <p>${parkDescription}</p>
-                    <img src="${parkImageUrl}" alt="Park Image" style="max-width: 100%; height: auto;">
-                    <a href="${parkUrl}" target="_blank">More Info</a>
-                    <button onclick="getDirections('${parkName}')">Get Directions</button>
-                    `; // we add a button to get directions to the park, which connects to the google maps api. we should change this to just redirect to the google maps page
+            const response = await fetch(url);
+            const data = await response.json();
 
-                L.marker([parkLatitude, parkLongitude])
-                    .addTo(map)
-                    .bindPopup(popupContent); // 
+    
+            if (data.elements && data.elements.length > 0) {
+            data.elements.forEach(element => {
+                if (element.type === "way" && element.center) {
+                    // If it's a way with a center, use the center's lat and lon
+                    addGRMarker(element.center.lat, element.center.lon, element.tags);
+                } else if (element.type === "node") {
+                    // If it's a node, use its lat and lon directly
+                    addGRMarker(element.lat, element.lon, element.tags);
+                }
             });
         } else {
-            alert('No parks found nearby.');
+            alert('No Green Resources found nearby.');
         }
-    } catch (error) {
-        console.error('Error fetching parks:', error);
-        alert('An error occurred while fetching parks.');
+        } catch (error) {
+            console.error('Error fetching GR:', error);
+            alert('An error occurred while fetching Green Resources.');
+        }
     }
+    
+    // Function to add a marker for a Green Resource on the map
+    async function addGRMarker(lat, lon, tags = {}) {
+        
+        //if name is empty, skip
+        if (!tags.name) return;
+
+        
+        const grLatitude = lat;
+        const grLongitude = lon;
+        const grName = tags.name;
+        const grImageUrl = await getWikipediaImageUrl(tags.name);
+        // Use the description from the tags or fallback to Wikipedia if not present
+        let grDescription = tags.description ? tags.description : await getWikipediaDescription(tags.name);
+
+        //the popup content will only show tags for the information we have
+        let additionalInfo = '';
+        if (tags.email) additionalInfo += `Email: <a href="mailto:${tags.email}">${tags.email}</a><br>`;
+        if (tags.opening_hours) additionalInfo += `Opening Hours: ${tags.opening_hours}<br>`;
+        if (tags.phone) additionalInfo += `Phone: <a href="tel:${tags.phone}">${tags.phone}</a><br>`;
+        if (tags.website) additionalInfo += `Website: <a href="${tags.website}" target="_blank">${tags.website}</a><br>`;
+        if(grImageUrl) additionalInfo += `<img src="${grImageUrl}" alt="${grName}" style="max-width: 100%;"><br>`;
+        if (tags.wikipedia) {
+            const wikipediaUrl = await getWikipediaUrl(tags.wikipedia);
+            additionalInfo += `Wikipedia: <a href="${wikipediaUrl}" target="_blank">Link</a><br>`;
+        }
+
+        
+        const popupContent = `
+            <h3>${grName}</h3>
+            <p>${grDescription}</p>
+            ${additionalInfo}
+            <button onclick="getDirections('${grLatitude}, ${grLongitude}')">Get Directions</button>
+        `;
+
+/*      let tagsContent = "<ul>";
+            for (const [key, value] of Object.entries(tags)) {
+                tagsContent += `<li>${key}: ${value}</li>`;
+            }
+        tagsContent += "</ul>";
+
+
+            const popupContent = `
+            <h3>${grName}</h3>
+            <p>${grDescription}</p>
+            ${additionalInfo}
+            <button onclick="getDirections('${grLatitude}, ${grLongitude}')">Get Directions</button>
+            <hr>
+            <h4>Tags:</h4>
+            ${tagsContent}
+        `; */
+        
+        const marker = L.marker([grLatitude, grLongitude]).bindPopup(popupContent);
+        marker.addTo(map); 
+        
+        markers.push(marker); // This will allow us to clear the markers later
 }
 
-async function getWikipediaDescription(placeName) { // this function gets the description of the park from the wikipedia api
-    try {
-        const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(placeName)}`;
-        const response = await fetch(url);
-        const data = await response.json();
-        return data.extract;
-    } catch (error) {
-        console.error('Error fetching Wikipedia description:', error);
-        return 'Description not available.';
+    function clearMarkers() {
+        markers.forEach(marker => map.removeLayer(marker));
+        markers = []; // Reset the markers array
     }
-}
-
-async function getWikipediaImageUrl(placeName) {
-    try {
-        const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(placeName)}`;
-        const response = await fetch(url);
-        const data = await response.json();
-        return data.thumbnail ? data.thumbnail.source : '';
-    } catch (error) {
-        console.error('Error fetching Wikipedia image:', error);
-        return '';
+    
+    // Wikipedia API integration functions
+    async function getWikipediaDescription(placeName) {
+        try {
+            const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(placeName)}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            return data.extract ? data.extract : 'Description not available.';
+        } catch (error) {
+            return 'Description not available.';
+        }
     }
-}
-
-async function getWikipediaUrl(placeName) {
-    try {
-        const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(placeName)}`;
-        const response = await fetch(url);
-        const data = await response.json();
-        return data.content_urls ? data.content_urls.desktop.page : '';
-    } catch (error) {
-        console.error('Error fetching Wikipedia URL:', error);
-        return '';
+    
+    async function getWikipediaImageUrl(placeName) {
+        try {
+            const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(placeName)}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            return data.thumbnail ? data.thumbnail.source : 'https://easydrawingguides.com/wp-content/uploads/2021/04/how-to-draw-a-park-featured-image-1200.png';
+        } catch (error) {
+            console.error('Error fetching Wikipedia image:', error);
+            // Return default image in case of any error as well
+            return 'https://easydrawingguides.com/wp-content/uploads/2021/04/how-to-draw-a-park-featured-image-1200.png';
+        }
     }
-}
+    
+    async function getWikipediaUrl(placeName) {
+        try {
+            const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(placeName)}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            return data.content_urls ? data.content_urls.desktop.page : '';
+        } catch (error) {
+            console.error('Error fetching Wikipedia URL:', error);
+            return '';
+        }
+    }
+    
+    // Function to search coordinates based on the postal code
+    async function searchCoordinates() {
 
-async function searchCoordinates() { // we use the postal code to get the coordinates of the place using the openstreetmap api
-    const postalCode = document.getElementById('postal-code').value;
-    try {
-        const url = `https://nominatim.openstreetmap.org/search?postalcode=${postalCode}&country=Canada&format=json`; // its hardcoded to Canada
-        const response = await fetch(url);
-        const data = await response.json();
+        clearMarkers();
 
-        if (data && data.length > 0) {
-            const firstResult = data[0]; // we get the first result
-            const latitude = firstResult.lat;
-            const longitude = firstResult.lon;
-            //print the coordinates to console
-            console.log('Coordinates:', latitude, longitude);
+        const postalCode = document.getElementById('postal-code').value;
+        const cityName = document.getElementById('city-name').value;
+        const radius = document.getElementById('radius').value || 5000; // Use the input value or default to 5000 meters
 
-            map.setView([latitude, longitude], 13); // we set the view of the map to the coordinates we got
-            L.marker([latitude, longitude]).addTo(map); // we add a marker to the map
-            searchParksNearby(latitude, longitude); // we call the function to search for parks nearby
+        if (!postalCode && !cityName && currentUserLocation) {
+            getUserLocation(true);
+            return;
+        } else if (!postalCode && !cityName) {
+            // If no location is stored yet, request it
+            getUserLocation();
+            return;
+        }
+
+
+        let searchQuery = postalCode ? `postalcode=${postalCode}&country=Canada` : `city=${cityName}&country=Canada`;
+
+        try {
+            const url = `https://nominatim.openstreetmap.org/search?${searchQuery}&format=json`;
+            const response = await fetch(url);
+            const data = await response.json();
+    
+            if (data.length > 0) {
+                const {lat, lon} = data[0];
+                console.log('Coordinates:', lat, lon);
+                map.setView([lat, lon], 13);
+                L.marker([lat, lon]).addTo(map);
+                searchGRNearby(lat, lon, radius);
+            } else {
+                alert('No coordinates found for the provided postal code.');
+            }
+        } catch (error) {
+            console.error('Error fetching coordinates:', error);
+            alert('An error occurred while fetching coordinates.');
+        }
+    }
+    
+    let currentUserLocation = null; // Global variable to store the user's location
+
+    // Function to get user's location and search GR nearby
+    function getUserLocation(useStoredLocation = false) {
+
+        if (useStoredLocation && currentUserLocation) {
+        const { latitude, longitude } = currentUserLocation;
+        const radiusInput = document.getElementById('radius').value;
+        const radius = radiusInput ? parseInt(radiusInput) : 5000;
+        map.setView([latitude, longitude], 13);
+        L.marker([latitude, longitude]).addTo(map);
+        searchGRNearby(latitude, longitude, radius);
+        return;
+        }
+
+        if ('geolocation' in navigator) {
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                    const {latitude, longitude} = position.coords;
+                    console.log('Current Coordinates:', latitude, longitude);
+                    currentUserLocation = { latitude, longitude };
+                    const radiusInput = document.getElementById('radius').value;
+                    const radius = radiusInput ? parseInt(radiusInput) : 5000; // Use input value or default to 5000 meters
+                    map.setView([latitude, longitude], 13);
+                    L.marker([latitude, longitude]).addTo(map);
+                    await searchGRNearby(latitude, longitude, 5000);
+                },
+                (error) => {
+                    console.error('Error getting location:', error);
+                    alert('Unable to retrieve your location. Please enter your city or postal code.');
+                }, {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+                }
+            );
         } else {
-            alert('No coordinates found for the provided postal code.');
+            alert('Geolocation is not supported by your browser.');
         }
-    } catch (error) {
-        console.error('Error fetching coordinates:', error);
-        alert('An error occurred while fetching coordinates.');
+
     }
-}
+    
+    // Get user location on page load
+    document.addEventListener('DOMContentLoaded', async () => {
+    getUserLocation();
+    // Initially fetch with all filters applied after obtaining the location
+});
+    
+    // Function to handle directions button click
+    function getDirections(grLatitude, grLongitude) {
+        const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(grLatitude, grLongitude)}`;
+        window.open(googleMapsUrl, '_blank'); // Open Google Maps in a new tab
+    }
 
-function getDirections(placeName) { // this function builds the url to get directions to the park using the google maps api
-            
-            //currently, the link is added below the map when the user presses the button. We should change this to just get the button to redirect to the google maps page
-            const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(placeName)}`;
-            const directionsContainer = document.getElementById('directions-container'); 
-            const directionsLink = document.createElement('a'); 
-            directionsLink.href = googleMapsUrl;
-            directionsLink.textContent = 'Get Directions';
-            directionsContainer.innerHTML = '';
-            directionsContainer.appendChild(directionsLink);
+    function applyFilters(radius, latitude, longitude) {
+    let queryParts = [];
+    const filters = {
+        'free_green_spaces': `node[leisure~"park|nature_reserve|garden|recreation_ground"](around:${radius},${latitude},${longitude});way[leisure~"park|nature_reserve|garden|recreation_ground"](around:${radius},${latitude},${longitude});`,
+        'paid_green_spaces': `node[leisure~"park|nature_reserve|garden|recreation_ground"][fee~"yes|donation"](around:${radius},${latitude},${longitude});way[leisure~"park|nature_reserve|garden|recreation_ground"][fee~"yes|donation"](around:${radius},${latitude},${longitude});`,
+        'sports': `node[sport~"archery|athletics|baseball|basketball|beachvolleyball|climbing|cricket|cycling|equestrian|fencing|golf|hiking|ice_hockey|judo|kayaking|kitesurfing|running|sailing|skateboard|soccer|surfing|swimming|table_tennis|tennis|volleyball"](around:${radius},${latitude},${longitude});`,
+        'water_activities': `node[leisure~"swimming_area|water_park"](around:${radius},${latitude},${longitude});way[water~"river|lake|pond|canal"](around:${radius},${latitude},${longitude});`,
+        'wildlife': `node[attraction="zoo|animal"](around:${radius},${latitude},${longitude});node[leisure="bird_hide"](around:${radius},${latitude},${longitude});`,
+        'bicycle_rental': `node[amenity="bicycle_rental"](around:${radius},${latitude},${longitude});` // Added line for bicycle rentals
+    };
+
+    document.querySelectorAll('input[name="filter"]:checked').forEach(filter => {
+        if (filters[filter.value]) {
+            queryParts.push(filters[filter.value]);
         }
-</script>
+    });
 
+    return queryParts.length > 0 ? queryParts.join('') : '';
+}
+    
+    </script>
+    
 
 <div id="directions-container"></div> 
 
