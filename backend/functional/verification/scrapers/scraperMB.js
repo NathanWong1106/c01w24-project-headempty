@@ -31,7 +31,7 @@ export class ScraperMB extends BaseScraper {
             await driver.type(ScraperMB.lastNameLocator, prescriber.lastName);
 
             await driver.click(ScraperMB.searchButtonLocator);
-            await driver.waitForNetworkIdle();
+            await driver.waitForSelector(ScraperMB.tableLocator);
 
             // Result table is the first table with classes 'table table-borderless table-sm'
             const tables = await driver.$$(ScraperMB.tableLocator);
