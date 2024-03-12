@@ -34,7 +34,6 @@ export class ScraperNL extends BaseScraper {
             
             await frame.click(ScraperNL.searchButtonLocator)
             await driver.waitForNetworkIdle();
-            await driver.waitForNetworkIdle();
             
             const resultTable = await frame.$(ScraperNL.resultTableLocator);
             const lastName = await resultTable.evaluate(ele => {
