@@ -1,20 +1,8 @@
 import { clearDB, closeConn, connect, insertAdmins, insertPrescribers } from "../utils/dbUtils.js";
-import { SERVER } from "../../constants.js";
 import { loginAsDefaultCoordinator } from "../utils/testSessionUtils.js";
+import { fetchAsAdmin } from "../utils/fetchUtils.js";
 
-const SERVER_URL = `http://localhost:${SERVER.PORT}`;
 let adminToken = null;
-
-const fetchAsAdmin = async (endpoint, method, body) => {
-    return await fetch(`${SERVER_URL}${endpoint}`, {
-        method: method,
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${adminToken}`
-        },
-        body: JSON.stringify(body)
-    })
-}
 
 beforeAll(async () => {
     await connect();
@@ -46,7 +34,7 @@ test("/admin/getPaginatedPrescribers - gets all prescribers paginated, no search
             search: {}
         }
 
-        let res = await fetchAsAdmin("/admin/getPaginatedPrescribers", "POST", body);
+        let res = await fetchAsAdmin(adminToken, "/admin/getPaginatedPrescribers", "POST", body);
         expect(res.status).toBe(200);
 
         let resBody = await res.json();
@@ -71,7 +59,7 @@ test("/admin/getPaginatedPrescribers - gets all prescribers paginated, with sear
         }
     }
 
-    let res = await fetchAsAdmin("/admin/getPaginatedPrescribers", "POST", body);
+    let res = await fetchAsAdmin(adminToken, "/admin/getPaginatedPrescribers", "POST", body);
     expect(res.status).toBe(200);
 
     let resBody = await res.json();
@@ -95,7 +83,7 @@ test("/admin/patchPrescriber - patches correct prescriber and protects providerC
     }
 
     // Patch prescriber
-    let res = await fetchAsAdmin("/admin/patchPrescriber", "PATCH", patchBody);
+    let res = await fetchAsAdmin(adminToken, "/admin/patchPrescriber", "PATCH", patchBody);
     expect(res.status).toBe(200);
 
     const getPageBody = {
@@ -105,7 +93,7 @@ test("/admin/patchPrescriber - patches correct prescriber and protects providerC
     }
 
     // Get resulting list and search for the newly patched prescriber
-    res = await fetchAsAdmin("/admin/getPaginatedPrescribers", "POST", getPageBody);
+    res = await fetchAsAdmin(adminToken, "/admin/getPaginatedPrescribers", "POST", getPageBody);
     expect(res.status).toBe(200);
 
     let resBody = await res.json();
