@@ -8,6 +8,7 @@ import { adminRoute, coordinatorRoute, patientRoute, prescriberRoute } from "./m
 import { connectToMongo } from "./database/dbConnection.js";
 import { adminRouter } from "./routes/adminService.js";
 import { prescriberRouter } from "./routes/prescriberService.js";
+import { verificationRouter } from "./routes/verificationService.js";
 
 // Give this process an identifiable name so we can kill it
 // after jest tests run.
@@ -37,6 +38,9 @@ app.use("/admin", adminRoute, adminRouter);
 
 // Prescriber service
 app.use("/prescriber", prescriberRoute, prescriberRouter);
+
+// Prescriber Verification service
+app.use("/verification", adminRoute, verificationRouter);
 
 // Example endpoint that only accepts prescribers
 app.use("/private", prescriberRoute, privateRouter); 
