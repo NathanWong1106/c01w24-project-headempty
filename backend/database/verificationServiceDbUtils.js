@@ -83,3 +83,9 @@ async function getAndIncrementProviderCode(prescriber) {
 
     return providerCode;
 }
+
+export async function checkIfExistingPrescriber(prescriber) {
+    const prescriberCollection = getDb().collection(COLLECTIONS.PRESCRIBER);
+    const foundPrescriber = await retryPromiseWithDelay(prescriberCollection.findOne(prescriber));
+    return foundPrescriber != null;
+}
