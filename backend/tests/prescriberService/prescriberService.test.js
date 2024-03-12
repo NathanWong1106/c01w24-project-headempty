@@ -1,20 +1,10 @@
 import { clearDB, closeConn, connect, insertPrescriberPrescriptions, insertPrescribers } from "../utils/dbUtils.js";
 import { SERVER } from "../../constants.js";
 import { loginAsDefaultPrescriber } from "../utils/testSessionUtils.js";
+import { fetchAsPrescriber } from "../utils/fetchUtils.js"; 
 
 const SERVER_URL = `http://localhost:${SERVER.PORT}`;
 let prescriberToken = null;
-
-const fetchAsPrescriber = async (endpoint, method, body) => {
-    return await fetch(`${SERVER_URL}${endpoint}`, {
-        method: method,
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${prescriberToken}`
-        },
-        body: JSON.stringify(body)
-    })
-}
 
 beforeAll(async () => {
     await connect();
@@ -46,10 +36,10 @@ test("/prescriber/getPaginatedPrescriptions - gets all prescribers paginated Pre
         const body = {
             page: page,
             pageSize: 20,
-            providerCode: searchProviderCode,
+            search: { providerCode: searchProviderCode },
             thisFieldShouldBeIgnored: "AHHHHHHHHHH",
         }
-        let res = await fetchAsPrescriber("/prescriber/getPaginatedPrescriptions", "POST", body);
+        let res = await fetchAsPrescriber(prescriberToken, "/prescriber/getPaginatedPrescriptions", "POST", body);
         expect(res.status).toBe(200);
 
         let resBody = await res.json();
