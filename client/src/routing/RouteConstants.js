@@ -11,7 +11,7 @@ export const ADMIN_ROUTES = {
 
 export const PRESCRIBER_ROUTE_BASE = '/prescriber'
 export const PRESCRIBER_ROUTES = {
-    PRESCRIPTIONS: `${PRESCRIBER_ROUTE_BASE}/getPaginatedPrescriptions`
+    PRESCRIPTIONS: `${PRESCRIBER_ROUTE_BASE}/myPrescriptions`
 }
 
 
@@ -42,7 +42,7 @@ export const COORDINATOR_LINKS = [...ASSISTANT_LINKS]
 export const PRESCRIBER_LINKS = [
     ...COMMON_LINKS,
     {
-        name: "View All Your Prescription",
+        name: "My Prescriptions",
         link: PRESCRIBER_ROUTES.PRESCRIPTIONS
     }
 ];

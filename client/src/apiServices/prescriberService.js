@@ -10,7 +10,7 @@ import { SERVER_PATHS } from "./utils/constants"
  * @param {object} search search params (see server endpoint comment)
  * @returns {Array<PrescriberPrescription> | null} an array of prescriber info if successful, else null
  */
-export const getPaginatedPrescribers = async (page, pageSize, search) => {
+export const getPaginatedPrescriberPrescriptions = async (page, pageSize, search) => {
     const res = await callProtectedEndpoint(
         SERVER_PATHS.PRESCRIBER_SERVICE.GET_PAGINATED_PRESCRIPTIONS,
         'POST',

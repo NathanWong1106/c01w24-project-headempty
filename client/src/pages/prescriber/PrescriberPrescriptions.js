@@ -5,7 +5,7 @@ import {
 } from "@material-tailwind/react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { getPaginatedPrescribers } from "../../apiServices/prescriberService";
+import { getPaginatedPrescriberPrescriptions } from "../../apiServices/prescriberService";
 import { prescriptionField2PrescriptionInfo, prescriptionFields } from "../../apiServices/types/prescriptionTypes";
 import PaginatedTableWithSearch from "../../components/PaginatedTableWithSearch";
 
@@ -36,7 +36,7 @@ const PrescriberPrescriptions = () => {
         }
     }
 
-    const prescrptionSearchForm = (
+    const prescriptionSearchForm = (
         <div className="flex flex-col w-5/6">
             <div className="flex items-start gap-8">
                 <Input size="md" label="Date" value={date} onChange={el => setDate(el.target.value)} />
@@ -56,7 +56,7 @@ const PrescriberPrescriptions = () => {
         // If search was pressed reset the state
         searchPressed && setPrevSearch(searchObj);
 
-        const list = await getPaginatedPrescribers(searchPage, PAGE_SIZE, searchObj);
+        const list = await getPaginatedPrescriberPrescriptions(searchPage, PAGE_SIZE, searchObj);
 
         setPrescriptionList(list);
         return list ? list.length : 0;
@@ -85,11 +85,11 @@ const PrescriberPrescriptions = () => {
 
     return (
         <div className="flex flex-col h-screen justify-center items-center">
-            <Typography variant="h3">Prescriber Prescription</Typography>
+            <Typography variant="h3">My Prescriptions</Typography>
             <PaginatedTableWithSearch
                 dataList={prescriptionList}
                 searchFn={searchFn}
-                searchForm={prescrptionSearchForm}
+                searchForm={prescriptionSearchForm}
                 cols={[...prescriptionFields]}
                 createRow={createRow}
                 pageSize={PAGE_SIZE}
