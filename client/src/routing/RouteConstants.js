@@ -27,6 +27,10 @@ const ADMIN_LINKS = [
     {
         name: "Prescriber Management",
         link: ADMIN_ROUTES.PRESCRIBER_MNGMT
+    },
+    {
+        name: "Prescriber Verification",
+        link: ADMIN_ROUTES.PRESCRIBER_VERIFICATION
     }
 ]
 
