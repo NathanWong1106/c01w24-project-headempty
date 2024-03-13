@@ -17,6 +17,7 @@ import PrivateRoute from './routing/PrivateRoute';
 import { ADMIN_ROUTE_BASE, ADMIN_ROUTES, ROUTES } from './routing/RouteConstants';
 import AdminRoute from './routing/AdminRoute';
 import PrescriberManagement from './pages/admin/PrescriberManagement';
+import PrescriberVerification from './pages/admin/PrescriberVerification';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -25,6 +26,7 @@ const router = createBrowserRouter(
       <Route path={ROUTES.HOME} element={<PrivateRoute><HomePage /></PrivateRoute>} />
       <Route path={ADMIN_ROUTE_BASE} element={<AdminRoute />}>
         <Route path={ADMIN_ROUTES.PRESCRIBER_MNGMT} element={<PrescriberManagement />} />
+        <Route path={ADMIN_ROUTES.PRESCRIBER_VERIFICATION} element={<PrescriberVerification />} />
       </Route>
     </Route>
   )

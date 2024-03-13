@@ -6,7 +6,8 @@ export const ROUTES = {
 
 export const ADMIN_ROUTE_BASE = '/admin'
 export const ADMIN_ROUTES = {
-    PRESCRIBER_MNGMT: `${ADMIN_ROUTE_BASE}/prescriberManagement`
+    PRESCRIBER_MNGMT: `${ADMIN_ROUTE_BASE}/prescriberManagement`,
+    PRESCRIBER_VERIFICATION: `${ADMIN_ROUTE_BASE}/prescriberVerification`,
 }
 
 

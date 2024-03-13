@@ -5,5 +5,6 @@ export const SERVER_PATHS = {
     ADMIN_SERVICE: {
         GET_PAGINATED_PRESCRIBERS: "/admin/getPaginatedPrescribers",
         PATCH_PRESCRIBER: "/admin/patchPrescriber"
-    }
+    },
+    VERIFY_PRESCRIBERS: "/verification/verifyPrescribers",
 }
