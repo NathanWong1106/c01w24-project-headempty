@@ -1,7 +1,9 @@
+
 export const ROUTES = {
     BASE: '/',
     LOGIN: '/login',
-    HOME: '/home'
+    HOME: '/home',
+    GREEN_RESOURCES: '/greenResources',
 }
 
 export const ADMIN_ROUTE_BASE = '/admin'
@@ -12,11 +14,16 @@ export const ADMIN_ROUTES = {
 
 
 
+
 /* Below is for use in the sidebar / drawer */
 const COMMON_LINKS = [
     {
         name: "Home",
         link: ROUTES.HOME
+    },
+    {
+        name: "Green Resources",
+        link: ROUTES.GREEN_RESOURCES
     }
 ]
 
