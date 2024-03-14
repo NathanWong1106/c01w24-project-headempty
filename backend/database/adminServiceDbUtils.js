@@ -3,6 +3,7 @@ import { PrescriberInfo } from "../types/adminServiceTypes.js";
 import { getDb } from "./dbConnection.js";
 import paginate from "./pagination.js";
 import { objWithFields } from "./utils/dbUtils.js";
+import { prescriberSearchSchema, prescriberPatchSchema } from "../schemas.js";
 
 const prescriberSearchFields = ["email", "firstName", "lastName", "providerCode", "licensingCollege", "licenceNumber"];
 const prescriberPatchFields = ["email", "firstName", "lastName", "language", "city", "province", "profession", "licensingCollege", "licenceNumber"];
@@ -15,8 +16,7 @@ const prescriberPatchFields = ["email", "firstName", "lastName", "language", "ci
  * @returns {PrescriberInfo[]} an array of the prescribers
  */
 export async function getPaginatedPrescriber(page, pageSize, search) {
-    const searchObj = await objWithFields(prescriberSearchFields, search);
-
+    const searchObj = await objWithFields(search, prescriberSearchSchema);
     const collection = getDb().collection(COLLECTIONS.PRESCRIBER);
     const data = await paginate(collection.find(searchObj), page, pageSize).toArray();
     return data.map(x => fillPrescriber(x));
@@ -36,7 +36,7 @@ function fillPrescriber(x) {
  * @returns {boolean} true if successful, else false
  */
 export async function patchSinglePrescriber(providerCode, patches) {
-    const patchObj = await objWithFields(prescriberPatchFields, patches);
+    const patchObj = await objWithFields(patches, prescriberPatchSchema);
     const collection = getDb().collection(COLLECTIONS.PRESCRIBER);
     const data = await collection.updateOne({ providerCode: providerCode }, { $set: patchObj });
 

@@ -15,7 +15,7 @@ const prescriptionFields = ["providerCode", "date", "initial", "prescribed", "st
  * @returns {PrescriberPrescription[]} an array of the prescribers log prescriptions
  */
 export async function getPaginatedPrescriberPrescription(page, pageSize, search) {
-    const searchObj = await objWithFields(prescriptionFields, search, prescriberPrescriptionSearchSchema);
+    const searchObj = await objWithFields(search, prescriberPrescriptionSearchSchema);
     const collection = getDb().collection(COLLECTIONS.PRESCRIBER_PRESCRIPTIONS);
     const data = await paginate(collection.find(searchObj), page, pageSize).toArray();
     return data.map(x => fillPrescriberPrescription(x));
