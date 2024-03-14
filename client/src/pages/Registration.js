@@ -179,7 +179,7 @@ const RegistrationPage = () => {
                                         label=""
                                     >
                                         {languages.map(lang => (
-                                            <Option value={lang.name} key={lang.name}>{lang.name} ({lang.code})</Option>
+                                            <Option value={lang.code} key={lang.name}>{lang.name} ({lang.code})</Option>
                                         ))}
                                     </Select>
                                 </div>

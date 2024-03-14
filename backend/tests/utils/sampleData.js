@@ -19,6 +19,19 @@ export const genericPatient = {
     "password": defaultPassword,
     "firstName": "John",
     "lastName": "Cena",
+    "initials": "JC",
+    "language": "en",
+    "city": "Toronto",
+    "province": "ON",
+    "address": "1254 Military Trail"
+};
+
+export const genericPatient2 = {
+    "email": "patient2@gmail.com",
+    "password": defaultPassword,
+    "firstName": "Silly",
+    "lastName": "Billy",
+    "initials": "SB",
     "language": "en",
     "city": "Toronto",
     "province": "ON",
