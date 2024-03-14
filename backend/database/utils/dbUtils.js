@@ -16,7 +16,6 @@ export async function objWithFields(referenceObj, schema = null) {
     // Wait for the schema cast to finish before returning the object
     try {
         obj = await schema.cast(referenceObj, { noUnknown: true });
-        console.log(obj);
         return obj;
     } catch (error) {
         console.error("Error casting object:", error);

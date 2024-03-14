@@ -5,9 +5,6 @@ import paginate from "./pagination.js";
 import { objWithFields } from "./utils/dbUtils.js";
 import { prescriberSearchSchema, prescriberPatchSchema } from "../schemas.js";
 
-const prescriberSearchFields = ["email", "firstName", "lastName", "providerCode", "licensingCollege", "licenceNumber"];
-const prescriberPatchFields = ["email", "firstName", "lastName", "language", "city", "province", "profession", "licensingCollege", "licenceNumber"];
-
 /**
  * Get a page from all prescribers 
  * @param {Number} page the page number
