@@ -1,12 +1,10 @@
 import { useState, useRef } from "react";
 import { Input, Button, Card, Typography, Select, Option } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { loginUser } from "../apiServices/authService.js";
 import { registerUser } from "../apiServices/registrationService.js";
-import { ACCOUNT_TYPE } from "../apiServices/types/userServiceTypes.js";
 import { ClosableAlert } from "../components/ClosableAlert.js";
 import { ROUTES } from "../routing/RouteConstants.js";
+import { languages } from "../constants.js"
 
 const RegistrationPage = () => {
     const [email, setEmail] = useState("")
@@ -19,22 +17,12 @@ const RegistrationPage = () => {
     const [province, setProvince] = useState("");
     const [password, setPassword] = useState("");
     const [retypepassword, setRetypePassword] = useState("");
-    const [accountType, setAccountType] = useState("");
     const [showAlert, setShowAlert] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const formRef = useRef(null);
 
-    // Mapping of client string to api type
-    const accountTypes = {
-        "Prescriber": ACCOUNT_TYPE.PRESCRIBER,
-        "Patient": ACCOUNT_TYPE.PATIENT,
-        "Administrator": ACCOUNT_TYPE.ADMIN
-    }
-
-    const languages = ["English", "Spanish", "French", "German"]; // Sample list of languages
-
     const navigate = useNavigate();
-    const dispatch = useDispatch();
+
 
     const validateEmail = (email) => {
         // Regular expression for validating email
@@ -60,7 +48,6 @@ const RegistrationPage = () => {
         setProvince("");
         setPassword("");
         setRetypePassword("");
-        setAccountType("");
         const inputs = Array.from(formRef.current.getElementsByTagName('input'));
         inputs.forEach(input => {
             input.value = '';
@@ -72,10 +59,9 @@ const RegistrationPage = () => {
         let error = '';
 
         // Check if any of the required fields are empty
-        if (!accountType || !email || !fName || !lName || !initials || !preferredLanguage || !address || !city || !province || !password || !retypepassword) {
+        if (!email || !fName || !lName || !initials || !preferredLanguage || !address || !city || !province || !password || !retypepassword) {
             // Construct the error message
             error = "Please fill in the following fields: ";
-            if (!accountType) error += "Account Type, ";
             if (!email) error += "Email, ";
             if (!fName) error += "First Name, ";
             if (!lName) error += "Last Name, ";
@@ -86,13 +72,13 @@ const RegistrationPage = () => {
             if (!province) error += "Province, ";
             if (!password) error += "Password, ";
             if (!retypepassword) error += "Re-type Password, ";
-            error = error.slice(0, -2); // Remove the last comma and space
+            error = error.slice(0, -2);
         }
         else if (!validateEmail(email)) {
             error = "Please enter a valid email address.";
         }
         else if (password !== retypepassword) {
-            error = "Passwords do not match."; // Error message for mismatched passwords
+            error = "Passwords do not match.";
         }
         else if (!validatePassword(password)) {
             error = "Password must be at least 8 characters long and contain at least one uppercase letter, one number, and one special character.";
@@ -105,14 +91,19 @@ const RegistrationPage = () => {
             return;
         }
 
-        const data = { email, password, accountType: accountTypes[accountType], fName, lName, initials, address, city, province, preferredLanguage }
+        const data = { email, password, accountType: "patient", fName, lName, initials, address, city, province, preferredLanguage }
         try {
-            const result = await dispatch(registerUser(data)).unwrap();
+            const result = await registerUser(data);
             console.log(result);
-
-            setErrorMessage("Account Created Successfully")
-            setShowAlert(true);
-            resetForm();
+            if (!result.error) {
+                setErrorMessage("Account Created Successfully, Go to Login Page to Login")
+                setShowAlert(true);
+                resetForm();
+            } else {
+                console.log(result.error.error);
+                setErrorMessage("Failed to Create Account: " + result.error.error)
+                setShowAlert(true);
+            }
         } catch (err) {
             console.log(err);
             setErrorMessage("Failed to Create Account: " + err.error)
@@ -124,15 +115,11 @@ const RegistrationPage = () => {
         <div className="flex flex-col h-screen justify-center items-center">
             <Card className="absolute w-1/2 justify-center items-center" color="transparent" shadow={false}>
                 <Typography variant="h4">
-                    Register
+                    Patient Registration
                 </Typography>
                 <form className="mt-8 mb-2 max-w-screen-lg " ref={formRef}>
                     <div className="mb-1 flex flex-wrap gap-6 justify-center items-center">
                         <div className="flex flex-col w-full">
-                            <Select value={accountType} onChange={el => { setAccountType(el) }} label="I am a(n)">
-                                {Object.keys(accountTypes).map(str => <Option value={str} key={str}>{str}</Option>)}
-                            </Select>
-
                             <Typography variant="h6" className="-mb-1 mt-2">
                                 Email
                             </Typography>
@@ -192,7 +179,7 @@ const RegistrationPage = () => {
                                         label=""
                                     >
                                         {languages.map(lang => (
-                                            <Option value={lang} key={lang}>{lang}</Option>
+                                            <Option value={lang.name} key={lang.name}>{lang.name} ({lang.code})</Option>
                                         ))}
                                     </Select>
                                 </div>

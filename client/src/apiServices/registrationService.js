@@ -7,19 +7,17 @@ import { SERVER_PATHS } from "./utils/constants";
 // and async logic in redux
 // https://redux.js.org/tutorials/essentials/part-5-async-logic#reducers-and-loading-actions
 
+export const registerUser = async ({ email, password, accountType, fName, lName, initials, address, city, province, preferredLanguage }) => {
+    try {
+        const res = await callEndpoint(SERVER_PATHS.REGISTRATION, 'POST', { email, password, accountType, fName, lName, initials, address, city, province, preferredLanguage })
 
-export const registerUser = createAsyncThunk(
-    '/user/register',
-    async ({ email, password, accountType, fName, lName, initials, address, city, province, preferredLanguage }, thunkAPI) => {
-        try {
-            const res = await callEndpoint(SERVER_PATHS.REGISTRATION, 'POST', { email, password, accountType, fName, lName, initials, address, city, province, preferredLanguage })
-
-            if (res.status != 200) {
-                return thunkAPI.rejectWithValue(await res.json());
-            }
-            return await res.json();
-        } catch (err) {
-            return thunkAPI.rejectWithValue(err);
+        if (res.status != 200) {
+            const err = await res.json();
+            return { data: null, error: err }
         }
+        const result = await res.json()
+        return { data: result, error: null }
+    } catch (err) {
+        return { data: null, error: err }
     }
-)
+}

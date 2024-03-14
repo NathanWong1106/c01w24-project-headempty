@@ -75,12 +75,14 @@ const LoginPage = () => {
                         Login
                     </Button>
                 </form>
-                <Typography>
-                    No account?
-                    <Button className="ml-4" color="blue" buttonType="link" ripple="light" onClick={() => navigate(ROUTES.REGISTRATION)}>
-                        Make One Here
-                    </Button>
-                </Typography>
+                {accountType === "Patient" && (
+                    <Typography>
+                        Are You a New Patient?
+                        <Button className="ml-4" color="blue" buttonType="link" ripple="light" onClick={() => navigate(ROUTES.REGISTRATION)}>
+                            Make an Account Here
+                        </Button>
+                    </Typography>
+                )}
             </Card>
             <div className="mb-16 absolute bottom-0">
                 <ClosableAlert text="Couldn't login. Check that all fields are correct, then try again." open={showAlert} onDismiss={() => setShowAlert(false)} />
