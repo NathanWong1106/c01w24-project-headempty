@@ -12,7 +12,8 @@ import { ScraperPE } from "./scrapers/scraperPE.js";
 import { ScraperQC } from "./scrapers/scraperQC.js";
 import { ScraperSK } from "./scrapers/scraperSK.js";
 
-import { createPrescriber } from "../../database/verificationServiceDbUtils.js";
+import { createPrescriber, checkIfExistingPrescriber } from "../../database/verificationServiceDbUtils.js";
+import { prescriberDataSchema } from "../../schemas.js";
 
 const scraperMapping = {
     "College of Physicians and Surgeons of Alberta": ScraperAB,
@@ -74,10 +75,24 @@ export async function verifyPrescribers(inputData) {
     
     for (const prescriber of inputData) {
         console.debug(`Verifying: ${prescriber.firstName} ${prescriber.lastName}`);
+        
+        const isValidPrescriberData = await prescriberDataSchema.isValid(prescriber)
+        if (!isValidPrescriberData) {
+            console.error(`Provided prescriber data for ${prescriber.firstName} ${prescriber.lastName} does not match schema. Skipping`);
+            continue;
+        }
+
+        // We do not re-verify prescribers (from valid to invalid).
+        // If they have been verified in the past, they won't be checked.
+        const existingPrescriber = await checkIfExistingPrescriber(prescriber);
+        if (existingPrescriber) {
+            console.error(`Provided prescriber data for ${prescriber.firstName} ${prescriber.lastName} already exists in database. Skipping.`)
+            continue;
+        }
 
         const page = await browser.newPage();
         // Spoof normal browser to avoid being auto-flagged as a bot
-        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36');
+        // await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.181 Safari/537.36');
         
         let scraper = getScraper(prescriber);
         let isVerified = await scraper.getStatus(prescriber, page);

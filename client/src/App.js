@@ -13,7 +13,7 @@ function App() {
   }
 
   return (
-    <div>
+    <div className='bg-off-white'>
       {location.pathname != ROUTES.LOGIN && <DrawerWithNavigation />}
       <Outlet />
     </div>
