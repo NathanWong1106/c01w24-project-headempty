@@ -14,7 +14,7 @@ export const prescriberRouter = express.Router();
  * Expected body: {
  *  page: Number (1-indexed)
  *  pageSize: Number
- *  providerCode: String
+ *  search: Object
  * }
  * 
  * Response: { list: PrescirberPrescription[] } | {error: String}
