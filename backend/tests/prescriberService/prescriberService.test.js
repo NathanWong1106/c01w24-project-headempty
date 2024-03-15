@@ -46,3 +46,23 @@ test("/prescriber/getPaginatedPrescriptions - gets all prescribers paginated Pre
         expect(resBody.list.length).toBe(20);
     }
 })
+
+test("/prescriber/getPaginatedPrescriptions - wrong prescriber code check", async () => {
+    await insertPrescriberPrescriptions(40);
+
+    const searchProviderCode = "Should not find anything";
+
+    for (let page = 1; page <= 2; page++) {
+        const body = {
+            page: page,
+            pageSize: 20,
+            search: { providerCode: searchProviderCode },
+            thisFieldShouldBeIgnored: "AHHHHHHHHHH",
+        }
+        let res = await fetchAsPrescriber(prescriberToken, "/prescriber/getPaginatedPrescriptions", "POST", body);
+        expect(res.status).toBe(200);
+
+        let resBody = await res.json();
+        expect(resBody.list.length).toBe(0);
+    }
+})
