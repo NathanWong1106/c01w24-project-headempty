@@ -58,7 +58,7 @@ const PrescriberPrescriptions = () => {
 
         const list = await getPaginatedPrescriberPrescriptions(searchPage, PAGE_SIZE, searchObj);
 
-        setPrescriptionList(list);
+        list === null ? setPrescriptionList([]) : setPrescriptionList(list);
         return list ? list.length : 0;
     }
 
