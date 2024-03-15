@@ -1,7 +1,6 @@
 import {
     Input,
     Typography,
-    Tooltip
 } from "@material-tailwind/react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -15,7 +14,6 @@ const PrescriberPrescriptions = () => {
     // List of all prescriptions on the current page
     const [prescriptionList, setPrescriptionList] = useState([]);
     // Search fields
-    const [providerCode, setProviderCode] = useState("");
     const [date, setDate] = useState("");
     const [initials, setInitials] = useState("");
     const [prescribed, setPrescribed] = useState("");
@@ -23,12 +21,12 @@ const PrescriberPrescriptions = () => {
     // Search obj
     const [prevSearch, setPrevSearch] = useState({});
 
-    const prescribercode = useSelector(state => state.currentUser.auxInfo.providerCode);
+    const providerCode = useSelector(state => state.currentUser.auxInfo.providerCode);
 
     const getSearchObj = () => {
         // Note: the empty string is falsy in js
         return {
-            ...({ providerCode: prescribercode }),
+            ...({ providerCode: providerCode }),
             ...(date && { date: date }),
             ...(initials && { initials: initials }),
             ...(prescribed && { prescribed: prescribed }),
