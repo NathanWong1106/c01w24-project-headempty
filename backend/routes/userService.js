@@ -48,14 +48,20 @@ userRouter.post("/register/patient", express.json(), async (req, res) => {
     try {
         const { email, password, accountType, fName, lName, initials, address, city, province, preferredLanguage } = req.body;
 
+        // Check if any required field is null
+        const requiredFields = ['email', 'password', 'accountType', 'fName', 'lName', 'initials', 'address', 'city', 'province', 'preferredLanguage'];
+        for (const field of requiredFields) {
+            if (req.body[field] === null || req.body[field] === undefined) {
+                return res.status(400).json({ error: `${field} is required.` });
+            }
+        }
+
         let user = null;
 
-        switch (accountType) {
-            case ACCOUNT_TYPE.PATIENT:
-                user = await tryRegisterPatient(email, password, fName, lName, initials, address, city, province, preferredLanguage);
-                break;
-            default:
-                return res.status(400).json({ error: "Account type is not Patient" });
+        if (accountType === ACCOUNT_TYPE.PATIENT) {
+            user = await tryRegisterPatient(email, password, fName, lName, initials, address, city, province, preferredLanguage);
+        } else {
+            return res.status(400).json({ error: "Account type is not Patient" });
         }
 
         if (user.data) {
