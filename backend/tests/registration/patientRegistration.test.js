@@ -20,7 +20,6 @@ afterAll(async () => {
 })
 
 test("/register/patient - new patient can register", async () => {
-    // Try logging in coordinator
     let res = await fetch(`${SERVER_URL}/user/register/patient`, {
         method: "POST",
         headers: {
