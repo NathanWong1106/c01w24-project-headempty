@@ -2,11 +2,6 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { callEndpoint } from "./utils/apiUtils";
 import { SERVER_PATHS } from "./utils/constants";
 
-// For more on redux thunks:
-// https://redux-toolkit.js.org/api/createAsyncThunk
-// and async logic in redux
-// https://redux.js.org/tutorials/essentials/part-5-async-logic#reducers-and-loading-actions
-
 export const registerUser = async ({ email, password, accountType, fName, lName, initials, address, city, province, preferredLanguage }) => {
     try {
         const res = await callEndpoint(SERVER_PATHS.REGISTRATION, 'POST', { email, password, accountType, fName, lName, initials, address, city, province, preferredLanguage })
