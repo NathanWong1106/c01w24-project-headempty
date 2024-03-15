@@ -39,7 +39,7 @@ export class ScraperON extends BaseScraper {
                 const strongTag = strongTags[1];
                 const strongText = await driver.evaluate(strongTag => strongTag.textContent, strongTag);
 
-                return strongText.includes(ScraperON.validStatus);
+                return strongText == ScraperON.validStatus;
             }
             else {
                 console.warn(`No matches for: ${prescriber.firstName} ${prescriber.lastName} License Number: ${prescriber.licenceNumber}`);

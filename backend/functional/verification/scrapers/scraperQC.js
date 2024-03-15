@@ -16,7 +16,8 @@ export class ScraperQC extends BaseScraper {
     static async getStatus(prescriber, driver) {
         // Uses license number, last name, first name
         try {
-            await driver.goto(ScraperQC.scrapeUrl + prescriber.licenceNumber, { waitUntil: 'networkidle2' });
+            const licenceNumber = String(prescriber.licenceNumber);
+            await driver.goto(`${ScraperQC.scrapeUrl}${licenceNumber.padStart(5, '0')}`, { waitUntil: 'networkidle2' });
             try {
                 await driver.waitForSelector(ScraperQC.cookieButtonLocator, { timeout: 5000 });
                 await driver.click(ScraperQC.cookieButtonLocator);

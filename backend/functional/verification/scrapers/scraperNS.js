@@ -1,5 +1,5 @@
 import { BaseScraper } from "./baseScraper.js";
-import { Page } from "puppeteer";
+import { prescriberDataSchema } from "../../../schemas.js";
 
 export class ScraperNS extends BaseScraper {
     static scrapeUrl = "https://cpsnsphysiciansearch.azurewebsites.net/";
@@ -11,7 +11,8 @@ export class ScraperNS extends BaseScraper {
     static async getStatus(prescriber, driver) {
         // Uses licence number, last name, first name
         try {
-            const prescriberScrapeUrl = `${ScraperNS.scrapeUrl}PhysicianDetails.aspx?LicenceNumber=${prescriber.licenceNumber.padStart(6, '0')}`;
+            const licenceNumber = String(prescriber.licenceNumber);
+            const prescriberScrapeUrl = `${ScraperNS.scrapeUrl}PhysicianDetails.aspx?LicenceNumber=${licenceNumber.padStart(6, '0')}`;
             await driver.goto(prescriberScrapeUrl, {waitUntil: 'networkidle2'});
             
             // Will go to search homepage if no match
