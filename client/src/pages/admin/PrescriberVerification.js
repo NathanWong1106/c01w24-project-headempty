@@ -1,20 +1,24 @@
+import {
+    Typography,
+    Button,
+} from "@material-tailwind/react";
 import { useState } from "react"
 import * as Excel from "exceljs";
 import _ from "lodash";
 import { getPrescriberStatuses } from "../../apiServices/verificationService";
 
 const ColumnEnum = {
-    firstName: 0,
-    lastName: 1,
-    province: 2,
-    licensingCollege: 3,
-    licenceNumber: 4,
-    status: 5,
+    firstName: 1,
+    lastName: 2,
+    province: 3,
+    licensingCollege: 4,
+    licenceNumber: 5,
+    status: 6,
 }
 
 const StatusEnum = {
     verified: "VERIFIED",
-    invalid: "ERROR",
+    invalid: "INACTIVE",
     error: "NOT FOUND",
 }
 
@@ -37,7 +41,7 @@ const PrescriberVerification = () => {
     //     return [".xlsx", ".xlsm", ".xls", ".csv"].some((ele) => filename.endsWith(ele));
     // }
 
-    const onFileChange = async (changeEvent) => {
+    const handleFileChange = async (changeEvent) => {
         const eventFile = changeEvent.target.files[0];
         if (!eventFile) return;
 
@@ -112,7 +116,7 @@ const PrescriberVerification = () => {
                     row.getCell(ColumnEnum.status).value = StatusEnum.invalid;
                     iIdx++;
                 }
-                else if (eIdx < eLen && _.isEqual(rowData, invalid[eIdx])){
+                else if (eIdx < eLen && _.isEqual(rowData, error[eIdx])){
                     row.getCell(ColumnEnum.status).value = StatusEnum.error;
                     eIdx++;
                 }
@@ -142,6 +146,7 @@ const PrescriberVerification = () => {
         setStatus("Updating File");
         await updateInputFile(verified, invalid, error);
         setStatus("Done");
+        await downloadUpdatedFile();
     }
 
     const downloadUpdatedFile = async () => {
@@ -161,7 +166,28 @@ const PrescriberVerification = () => {
     }
 
     return (
-        <div></div>
+        <div className="flex flex-col h-screen justify-center items-center">
+            <Typography variant="h3">Prescriber Management</Typography>
+            <input type="file" accept=".xlsx, .xls, .csv" onChange={handleFileChange} />
+            <Button variant="gradient" className="flex items-center gap-3" onClick={verifyPrescribers}>
+                <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                stroke="currentColor"
+                className="h-5 w-5"
+                >
+                <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"
+                />
+                </svg>
+                Verify Prescribers
+            </Button>
+            <Typography variant="paragraph">{status}</Typography>
+        </div>
     )
 }
 
