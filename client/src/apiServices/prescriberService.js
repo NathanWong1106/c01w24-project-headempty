@@ -3,12 +3,12 @@ import { callProtectedEndpoint } from "./utils/apiUtils"
 import { SERVER_PATHS } from "./utils/constants"
 
 /**
- * Gets a paginated list of prescribers
+ * Gets a paginated list of prescriber prescriptions
  * 
  * @param {number} page the page number
  * @param {number} pageSize the size of one page
  * @param {object} search search params (see server endpoint comment)
- * @returns {Array<PrescriberPrescription> | null} an array of prescriber info if successful, else null
+ * @returns {Array<PrescriberPrescription> | null} an array of prescription info if successful, else null
  */
 export const getPaginatedPrescriberPrescriptions = async (page, pageSize, search) => {
     const res = await callProtectedEndpoint(
