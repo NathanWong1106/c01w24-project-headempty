@@ -6,6 +6,9 @@ import { useState } from "react"
 import * as Excel from "exceljs";
 import _ from "lodash";
 import { getPrescriberStatuses } from "../../apiServices/verificationService";
+import uploadSVG from "../../svgs/uploadSVG";
+import { prescriberDataFields, prescriberDataField2prescriberDataInfo } from "../../apiServices/types/verificationServiceTypes";
+import TableBody from "../../components/TableBody";
 
 const ColumnEnum = {
     firstName: 1,
@@ -29,17 +32,9 @@ const DatatypeEnum = {
 
 const PrescriberVerification = () => {
     const [file, setFile] = useState(null);
-    const [data, setData] = useState([]);
     const [status, setStatus] = useState("Upload File");
     const [dataType, setDataType] = useState(DatatypeEnum.excel);
     const [errors, setErrors] = useState([]);
-
-    // const reader = new FileReader();
-
-    // Just use <input type="file" accept=".xlsx, .xls, .csv" onChange={handleFileChange} />
-    // const isValidFile = (filename) => {
-    //     return [".xlsx", ".xlsm", ".xls", ".csv"].some((ele) => filename.endsWith(ele));
-    // }
 
     const handleFileChange = async (changeEvent) => {
         const eventFile = changeEvent.target.files[0];
@@ -47,7 +42,6 @@ const PrescriberVerification = () => {
 
         if (eventFile.name.endsWith(".xlsx") || eventFile.name.endsWith(".xls")){
             const workbook = new Excel.Workbook();
-            // await workbook.xlsx.load(reader.readAsArrayBuffer(eventFile));
             await workbook.xlsx.load(eventFile);
             setFile(workbook);
             setDataType(DatatypeEnum.excel);
@@ -77,7 +71,7 @@ const PrescriberVerification = () => {
                 data.push(rowData);
             });
 
-            setData(data);
+            return data;
         }
         else if (dataType === DatatypeEnum.csv) {
             // TODO: csv
@@ -134,15 +128,15 @@ const PrescriberVerification = () => {
 
     const verifyPrescribers = async () => {
         setStatus("Parsing File");
-        await parseFile();
+        const fileData = await parseFile();
         setStatus("Verifying Statuses");
-        const prescriberStatuses = await getPrescriberStatuses(data);
-        if (!prescriberStatuses) {
+        const { verified, invalid, error } = await getPrescriberStatuses(fileData);
+        if (!verified.length && !invalid.length && !error.length) {
             setStatus("Something went wrong. Could not verify statuses. Try Again.");
             return;
         }
+        setErrors(error);
 
-        const { verified, invalid, error } = prescriberStatuses;
         setStatus("Updating File");
         await updateInputFile(verified, invalid, error);
         setStatus("Done");
@@ -165,28 +159,51 @@ const PrescriberVerification = () => {
         }
     }
 
+    const createErrorRow = (prescriber) => {
+        return (
+            <tr key={prescriber['firstName'] + prescriber['lastName'] + prescriber['licenceNumber']}>
+                {
+                    prescriberDataFields.map(field => (
+                        <td key={prescriber['firstName'] + prescriber['lastName'] + prescriber['licenceNumber'] + '_' + field} className="p-4">
+                            <div className="flex items-center">
+                                {
+                                    prescriber[prescriberDataField2prescriberDataInfo[field]] ?
+                                        prescriber[prescriberDataField2prescriberDataInfo[field]].toString() :
+                                        prescriber[prescriberDataField2prescriberDataInfo[field]]
+                                }
+                            </div>
+                        </td>
+                    ))
+                }
+            </tr>
+        )
+    }
+
+    const ErrorTable = () => {
+        if (!errors.length) return null;
+        return (
+            <>
+                <Typography variant="h4">Errors & Not Found</Typography>
+                <TableBody 
+                    cols={prescriberDataFields}
+                    dataList={errors}
+                    createRow={createErrorRow}
+                />
+            </>
+        )
+    }
+
     return (
         <div className="flex flex-col h-screen justify-center items-center">
             <Typography variant="h3">Prescriber Management</Typography>
-            <input type="file" accept=".xlsx, .xls, .csv" onChange={handleFileChange} />
+            <input className="py-4" type="file" name="file" accept=".xlsx, .xls, .csv" onChange={handleFileChange} />
             <Button variant="gradient" className="flex items-center gap-3" onClick={verifyPrescribers}>
-                <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                className="h-5 w-5"
-                >
-                <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z"
-                />
-                </svg>
+                {uploadSVG}
                 Verify Prescribers
             </Button>
-            <Typography variant="paragraph">{status}</Typography>
+            <Typography variant="paragraph">Status: {status}</Typography>
+
+            <ErrorTable/>
         </div>
     )
 }
