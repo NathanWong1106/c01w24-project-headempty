@@ -1,5 +1,4 @@
 import { BaseScraper } from "./baseScraper.js";
-import { prescriberDataSchema } from "../../../schemas.js";
 
 export class ScraperNS extends BaseScraper {
     static scrapeUrl = "https://cpsnsphysiciansearch.azurewebsites.net/";
