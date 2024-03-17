@@ -16,13 +16,12 @@ import HomePage from './pages/HomePage';
 import PrescriberRegistration from './pages/Registration/PrescriberRegistration';
 import PatientRegistration from './pages/Registration/PatientRegistration';
 import PrivateRoute from './routing/PrivateRoute';
-import GreenResourcesMap from './pages/GreenResourcesMap';
-import { ADMIN_ROUTE_BASE, ADMIN_ROUTES, PRESCRIBER_ROUTE_BASE, PRESCRIBER_ROUTES, REGISTRATION_ROUTE_BASE, REGISTRATION_ROUTES, ROUTES } from './routing/RouteConstants';
+import { ADMIN_ROUTE_BASE, ADMIN_ROUTES, PRESCRIBER_ROUTE_BASE, PRESCRIBER_ROUTES, ROUTES } from './routing/RouteConstants';
 import AdminRoute from './routing/AdminRoute';
 import PrescriberRoute from './routing/PrescriberRoute';
 import PrescriberManagement from './pages/admin/PrescriberManagement';
-import PrescriberVerification from './pages/admin/PrescriberVerification';
-import PrescriberPrescriptions from './pages/prescriber/PrescriberPrescriptions';
+import PrescriptionLogs from './pages/prescriber/PrescriptionLog';
+import PrescriptionForm from './pages/prescriber/PrescriptionForm';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -41,6 +40,10 @@ const router = createBrowserRouter(
       <Route path={ADMIN_ROUTE_BASE} element={<AdminRoute />}>
         <Route path={ADMIN_ROUTES.PRESCRIBER_MNGMT} element={<PrescriberManagement />} />
         <Route path={ADMIN_ROUTES.PRESCRIBER_VERIFICATION} element={<PrescriberVerification />} />
+      </Route>
+      <Route path={PRESCRIBER_ROUTE_BASE} elements= {<PrescriberRoute />}>
+        <Route path={PRESCRIBER_ROUTES.PRESCRIPTIONS} element={<PrescriptionLogs />} />
+        <Route path={PRESCRIBER_ROUTES.PRESC_FORM} element={<PrescriptionForm />} />
       </Route>
     </Route>
   )

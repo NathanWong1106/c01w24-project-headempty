@@ -8,8 +8,8 @@ export const SERVER_PATHS = {
         GET_PAGINATED_PRESCRIBERS: "/admin/getPaginatedPrescribers",
         PATCH_PRESCRIBER: "/admin/patchPrescriber"
     },
-    VERIFY_PRESCRIBERS: "/verification/verifyPrescribers",
     PRESCRIBER_SERVICE: {
-        GET_PAGINATED_PRESCRIPTIONS: "/prescriber/getPaginatedPrescriptions"
+        GET_PRESCRIPTIONS: "/prescriber/getPrescriptions",
+        POST_PRESCRIPTION: "/prescriber/postPrescription"
     }
 }

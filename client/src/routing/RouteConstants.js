@@ -12,15 +12,17 @@ export const REGISTRATION_ROUTES = {
 }
 
 export const ADMIN_ROUTE_BASE = '/admin'
+export const PRESCRIBER_ROUTE_BASE = '/prescriber'
 export const ADMIN_ROUTES = {
     PRESCRIBER_MNGMT: `${ADMIN_ROUTE_BASE}/prescriberManagement`,
     PRESCRIBER_VERIFICATION: `${ADMIN_ROUTE_BASE}/prescriberVerification`,
 }
 
-export const PRESCRIBER_ROUTE_BASE = '/prescriber'
 export const PRESCRIBER_ROUTES = {
-    PRESCRIPTIONS: `${PRESCRIBER_ROUTE_BASE}/myPrescriptions`
+    PRESCRIPTIONS: `${PRESCRIBER_ROUTE_BASE}/prescriptionLogs`,
+    PRESC_FORM: `${PRESCRIBER_ROUTE_BASE}/prescriptionForm`
 }
+
 
 
 /* Below is for use in the sidebar / drawer */
