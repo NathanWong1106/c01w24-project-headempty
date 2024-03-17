@@ -1,6 +1,7 @@
 import { MongoClient, Db } from "mongodb";
 import { COLLECTIONS, SERVER } from "../../constants.js"
 import { genericPatient, genericPrescriber, coordinator, assistant } from "./sampleData.js"
+import { retryPromiseWithDelay } from "../../utils.js";
 import bcrypt from "bcryptjs"
 
 const client = new MongoClient(SERVER.MONGO_URL);
@@ -106,7 +107,7 @@ export const insertPrescribers = async (numPrescribers = 20) => {
  * @returns {String} the id of the prescriber
  */
 export const findPrescriberId = async (prescriber) => {
-    const data = await db.collection(COLLECTIONS.PRESCRIBER).findOne(prescriber);
+    const data = await retryPromiseWithDelay(db.collection(COLLECTIONS.PRESCRIBER).findOne(prescriber));
     if (!data) {
         return ""
     }

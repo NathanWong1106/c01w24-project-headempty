@@ -46,7 +46,7 @@ userRouter.post("/login", express.json(), async (req, res) => {
 })
 
 /**
- * Registration endpoint for all users.
+ * Endpoint to find out if a prescriber is verified, and if they are, if they're verified or not
  * 
  * Response: Object< Prescriber >
  */
@@ -77,6 +77,11 @@ userRouter.get("/registration/:prescriberId", express.json(), async(req, res) =>
     }
 });
 
+/**
+ * Endpoint to edit prescriber to registered status to complete registration
+ * 
+ * Response: Object< Patch data >
+ */
 userRouter.patch("/registration/prescriber", express.json(), async(req, res) => {
     try {
         const {_id, password, language} = req.body;

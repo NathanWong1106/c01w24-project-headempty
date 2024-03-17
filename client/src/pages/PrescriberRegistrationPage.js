@@ -13,7 +13,7 @@ const PrescriberRegistrationPage = () => {
     
     const { prescriberId } = useParams();
 
-    const languages = ["English", "Spanish", "French", "German"]; // Sample list of languages, will convert to constant after other registration is complete
+    const languages = ["en", "fr"]; // Sample list of languages, will convert to constant after other registration is complete
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -27,11 +27,9 @@ const PrescriberRegistrationPage = () => {
     const [showAlert, setShowAlert] = useState(false);
 
     const fetchPrescriber = async () => {
-        let res = await callEndpoint(SERVER_PATHS.PRESCRIBER_REGISTRATION + "/" + prescriberId, 'GET',);
+        let res = await callEndpoint(`${SERVER_PATHS.PRESCRIBER_REGISTRATION}/${prescriberId}`, 'GET',);
         let resBody = await res.json();
         setPrescriber(resBody);
-        console.log(SERVER_PATHS.PRESCRIBER_REGISTRATION + "/" + prescriberId)
-        console.log(resBody);
         setCanBeRegistered(res.status == 200);
     }
     
@@ -74,7 +72,6 @@ const PrescriberRegistrationPage = () => {
         const data = { _id: prescriberId, password: password, language: preferredLanguage }
         try {
             const result = await dispatch(registerPrescriber(data)).unwrap();
-            console.log(result);
 
             setErrorMessage("Account Created Successfully. Redirecting you to the login page.")
             setShowAlert(true);
