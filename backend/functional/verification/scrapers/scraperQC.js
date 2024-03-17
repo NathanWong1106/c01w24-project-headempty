@@ -21,9 +21,7 @@ export class ScraperQC extends BaseScraper {
             try {
                 await driver.waitForSelector(ScraperQC.cookieButtonLocator, { timeout: 5000 });
                 await driver.click(ScraperQC.cookieButtonLocator);
-            } catch (error) {
-                console.log("no cookie button");
-            }
+            } catch {}
 
             try {
                 await driver.waitForSelector('table tr.physician-item', { timeout: 5000 });
