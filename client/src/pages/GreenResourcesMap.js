@@ -31,7 +31,7 @@ const GreenResourcesMapPage = () => {
   useEffect(() => {
     if (currentUserLocation) {
       onSearch({
-        radius: 1500,
+        radius: 800,
         latitude: currentUserLocation.latitude,
         longitude: currentUserLocation.longitude,
       });
@@ -54,9 +54,9 @@ const GreenResourcesMapPage = () => {
         return; 
       }
     } else {
-      const searchQuery = postalCode ? `postalcode=${postalCode}&country=Canada` : `city=${cityName}&country=Canada`;
+      const searchQuery = postalCode ? `postalcode=${postalCode}` : `city=${cityName}`;
       try {
-        const url = `https://nominatim.openstreetmap.org/search?${searchQuery}&format=json`;
+        const url = `https://nominatim.openstreetmap.org/search?${searchQuery}&country=Canada&format=json`;
         const response = await fetch(url);
         const data = await response.json();
         if (data.length > 0) {

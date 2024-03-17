@@ -5,20 +5,21 @@ import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 
+const mapMarker = new L.Icon({
+  iconUrl: markerIcon,
+  iconRetinaUrl: markerIcon2x,
+  shadowUrl: markerShadow,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
 const MapDisplay = ({ markers, center, currentUserLocation }) => {
   const mapRef = useRef(null);
   const userLocationMarkerRef = useRef(null);
   const markersRef = useRef([]);
 
-  const mapMarker = new L.Icon({
-    iconUrl: markerIcon,
-    iconRetinaUrl: markerIcon2x,
-    shadowUrl: markerShadow,
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-  });
 
   useEffect(() => {
 
@@ -68,7 +69,7 @@ const MapDisplay = ({ markers, center, currentUserLocation }) => {
     }
   };
 
-  return <div id="map" style={{ height: "800px", width: "1100px" }}></div>;
+  return <div id="map" className="w-full h-screen"></div>;
 };
 
 export default MapDisplay;

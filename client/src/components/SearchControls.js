@@ -4,7 +4,7 @@ import { Input, Button, Typography, Checkbox } from "@material-tailwind/react";
 const SearchControls = ({ onSearch, filters, onFilterChange }) => {
   const [postalCode, setPostalCode] = useState('');
   const [cityName, setCityName] = useState('');
-  const [radius, setRadius] = useState(1500);
+  const [radius, setRadius] = useState(800);
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -52,7 +52,7 @@ const SearchControls = ({ onSearch, filters, onFilterChange }) => {
         <Input
           id="radius"
           size="sm"
-          placeholder="1500"
+          placeholder="800"
           value={radius}
           onChange={handleInputChange}
         />
