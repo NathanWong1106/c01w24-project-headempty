@@ -16,6 +16,8 @@ export class ScraperQC extends BaseScraper {
     static async getStatus(prescriber, driver) {
         // Uses license number, last name, first name
         try {
+            const firstName = String(prescriber.firstName);
+            const lastName = String(prescriber.lastName);
             const licenceNumber = String(prescriber.licenceNumber);
             await driver.goto(`${ScraperQC.scrapeUrl}${licenceNumber.padStart(5, '0')}`, { waitUntil: 'networkidle2' });
             try {
@@ -30,13 +32,19 @@ export class ScraperQC extends BaseScraper {
                 await driver.evaluate(() => {
                     const firstRow = document.querySelector('table tr.physician-item');
                     if (firstRow) {
+                        // Check if name matches who we are verifying
+                        const name = firstRow.querySelector('td:nth-child(1)').textContent.trim();
+                        if (!name.toLowerCase().contains(firstName.toLowerCase()) || !name.toLowerCase().contains(lastName.toLowerCase())) {
+                            console.error(`Prescriber name: ${firstName} ${lastName}, does not match: ${name}, using Licence Number: ${licenceNumber}.`);
+                            return null;
+                        }
+
                         firstRow.click();
                     } else {
                         console.warn(`No matches for: ${prescriber.firstName} ${prescriber.lastName} License Number: ${prescriber.licenceNumber}`);
                         return null;
                     }
                 });
-
                 await driver.waitForSelector('ul.o-list-bare.u-owl-s > li:nth-child(4)');
 
                 // Get the text of the span tag inside the div with class "info" within the 4th li element
