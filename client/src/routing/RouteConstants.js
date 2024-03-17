@@ -5,10 +5,15 @@ export const ROUTES = {
 }
 
 export const ADMIN_ROUTE_BASE = '/admin'
+export const PRESCRIBER_ROUTE_BASE = '/prescriber'
 export const ADMIN_ROUTES = {
     PRESCRIBER_MNGMT: `${ADMIN_ROUTE_BASE}/prescriberManagement`
 }
 
+export const PRESCRIBER_ROUTES = {
+    PRESCRIPTIONS: `${PRESCRIBER_ROUTE_BASE}/prescriptionLogs`,
+    PRESC_FORM: `${PRESCRIBER_ROUTE_BASE}/prescriptionForm`
+}
 
 
 
@@ -36,7 +41,13 @@ export const ASSISTANT_LINKS = [...ADMIN_LINKS]
 export const COORDINATOR_LINKS = [...ASSISTANT_LINKS]
 
 /* Links for prescribers */
-export const PRESCRIBER_LINKS = [...COMMON_LINKS];
+export const PRESCRIBER_LINKS = [
+    ...COMMON_LINKS,
+    {
+        name: "My Prescriptions",
+        link: PRESCRIBER_ROUTES.PRESCRIPTIONS
+    }
+];
 
 /* Links for patients */
 export const PATIENT_LINKS = [...COMMON_LINKS]

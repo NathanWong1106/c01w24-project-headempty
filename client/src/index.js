@@ -14,9 +14,12 @@ import { Provider } from 'react-redux';
 import LoginPage from './pages/Login';
 import HomePage from './pages/HomePage';
 import PrivateRoute from './routing/PrivateRoute';
-import { ADMIN_ROUTE_BASE, ADMIN_ROUTES, ROUTES } from './routing/RouteConstants';
+import { ADMIN_ROUTE_BASE, ADMIN_ROUTES, PRESCRIBER_ROUTE_BASE, PRESCRIBER_ROUTES, ROUTES } from './routing/RouteConstants';
 import AdminRoute from './routing/AdminRoute';
+import PrescriberRoute from './routing/PrescriberRoute';
 import PrescriberManagement from './pages/admin/PrescriberManagement';
+import PrescriptionLogs from './pages/prescriber/PrescriptionLog';
+import PrescriptionForm from './pages/prescriber/PrescriptionForm';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -25,6 +28,10 @@ const router = createBrowserRouter(
       <Route path={ROUTES.HOME} element={<PrivateRoute><HomePage /></PrivateRoute>} />
       <Route path={ADMIN_ROUTE_BASE} element={<AdminRoute />}>
         <Route path={ADMIN_ROUTES.PRESCRIBER_MNGMT} element={<PrescriberManagement />} />
+      </Route>
+      <Route path={PRESCRIBER_ROUTE_BASE} elements= {<PrescriberRoute />}>
+        <Route path={PRESCRIBER_ROUTES.PRESCRIPTIONS} element={<PrescriptionLogs />} />
+        <Route path={PRESCRIBER_ROUTES.PRESC_FORM} element={<PrescriptionForm />} />
       </Route>
     </Route>
   )
