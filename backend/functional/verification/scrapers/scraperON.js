@@ -26,14 +26,15 @@ export class ScraperON extends BaseScraper {
         try {
             const firstName = String(prescriber.firstName);
             const lastName = String(prescriber.lastName);
+            const licenceNumber = String(prescriber.licenceNumber);
 
             await driver.goto(ScraperON.scrapeUrl, { waitUntil: 'networkidle2' });
             // Check checkbox to also include doctors no longer registered
             await driver.$eval(ScraperON.notRegisteredCheckboxLocator, ele => ele.checked = true);
 
-            await driver.type(ScraperON.lastNameLocator, prescriber.lastName);
-            await driver.type(ScraperON.firstNameLocator, prescriber.firstName);
-            await driver.type(ScraperON.licenceNumberLocator, prescriber.licenceNumber);
+            await driver.type(ScraperON.lastNameLocator, lastName);
+            await driver.type(ScraperON.firstNameLocator, firstName);
+            await driver.type(ScraperON.licenceNumberLocator, licenceNumber);
 
             await driver.click(ScraperON.searchButtonLocator);
             await driver.waitForSelector(ScraperON.headingLocator, { timeout: 5000 });
