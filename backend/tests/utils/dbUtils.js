@@ -1,6 +1,6 @@
 import { MongoClient, Db } from "mongodb";
 import { COLLECTIONS, SERVER } from "../../constants.js"
-import { genericPatient, genericPrescriber, coordinator, assistant } from "./sampleData.js"
+import { genericPatient, genericPrescriber, coordinator, assistant, genericPrescriberPrescription } from "./sampleData.js"
 import bcrypt from "bcryptjs"
 
 const client = new MongoClient(SERVER.MONGO_URL);
@@ -16,12 +16,12 @@ let db;
  * Implicitly creates the necessary collections if they
  * do not already exist.
  */
-export const clearDB = async () => {
-    await db.collection(COLLECTIONS.ADMINS).deleteMany({});
-    await db.collection(COLLECTIONS.PATIENT).deleteMany({});
-    await db.collection(COLLECTIONS.PRESCRIBER).deleteMany({});
-    await db.collection(COLLECTIONS.PATIENT_PRESCRIPTIONS).deleteMany({});
-    await db.collection(COLLECTIONS.PRESCRIBER_PRESCRIPTIONS).deleteMany({});
+export const clearDB = async (clearAdmins = true, clearPrescribers = true, clearPatient = true, clearPatientPrescription = true, clearPrescriberPrescription = true) => {
+    clearAdmins && await db.collection(COLLECTIONS.ADMINS).deleteMany({});
+    clearPrescribers && await db.collection(COLLECTIONS.PRESCRIBER).deleteMany({});
+    clearPatient && await db.collection(COLLECTIONS.PATIENT).deleteMany({});
+    clearPatientPrescription && await db.collection(COLLECTIONS.PATIENT_PRESCRIPTIONS).deleteMany({});
+    clearPrescriberPrescription && await db.collection(COLLECTIONS.PRESCRIBER_PRESCRIPTIONS).deleteMany({});
 }
 
 /**
@@ -30,8 +30,6 @@ export const clearDB = async () => {
 export const connect = async () => {
     try {
         await client.connect();
-        console.log("Connected to MongoDB");
-
         db = client.db(SERVER.DB_NAME);
     } catch (error) {
         console.error("Error connecting to MongoDB:", error);
@@ -82,6 +80,55 @@ export const insertPrescriber = async (modifier = {}) => {
     await db.collection(COLLECTIONS.PRESCRIBER).insertOne(prescriber);
     return prescriber;
 }
+
+/**
+ * Insert numPrescribers prescribers into the db. 
+ * Each prescriber is generated from the generic prescriber format
+ * with incrementing email "prescriber{i}@gmail.com" and 
+ * padded providerCode "ON-JC{i}"
+ * @param {number} numPrescribers 
+ */
+export const insertPrescribers = async (numPrescribers = 20) => {
+    for (let i = 1; i <= numPrescribers; i++) {
+        const modifier = {
+            email: `prescriber${i}@gmail.com`,
+            providerCode: `ON-JC${String(i).padStart(3, '0')}`
+        }
+        await insertPrescriber(modifier);
+    }
+}
+
+/**
+ * Inserts a prescriber Prescription to the db. If modifier is empty then inserts genericPrescriberPrescription.
+ * Else, overwrites the specified fields in genericPrescriberPrescription with the values in 
+ * modifier then inserts the modified prescriberPrescription.
+ * 
+ * Returns the prescriberPrescription that was inserted.
+ * @param {Object} modifier optional object to overwrite values in genericPrescriberPrescription .
+ * @returns {Object} the prescriberPrescription that was inserted.
+ */
+export const insertPrescriberFrom = async (modifier = {}) => {
+    let prescriberPrescription = await objWithModifier(genericPrescriberPrescription, modifier);
+    await db.collection(COLLECTIONS.PRESCRIBER_PRESCRIPTIONS).insertOne(prescriberPrescription);
+    return prescriberPrescription;
+}
+
+/**
+ * Insert numPrescribersPrescription prescribers into the db. 
+ * Each prescriber Prescription is generated from the generic prescriber Prescription Prescriptionat
+ * with incrementing date "2024-12-{i}" and 
+ * padded providerCode "ON-JC001"
+ * @param {number} numPrescriberPrescriptions 
+ */
+export const insertPrescriberPrescriptions = async (numPrescriberPrescriptions = 20) => {
+    for (let i = 1; i <= numPrescriberPrescriptions; i++) {
+        const modifier = {
+            date: `2024-12-${i}`
+        }
+        await insertPrescriberFrom(modifier);
+    }
+}
+
 
 /**
  * Returns a clone of obj with the KVP's specified in opts

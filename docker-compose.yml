@@ -2,8 +2,31 @@ version: '3.2'
 
 services:
   client:
+    container_name: client
     build: ./client
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
-      - 3000:3000
+      - 8080:80
+    env_file:
+      - ./client/.env.development
+    depends_on:
+      - backend
+  backend:
+    container_name: backend
+    build: ./backend
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    env_file:
+      - ./backend/.env
+    ports:
+      - 4000:4000
+    depends_on:
+      - mongo
+  mongo:
+    restart: always
+    image: mongo:7.0.5
+    volumes:
+      - ./backend/data:/data/db
+    ports:
+      - 27017:27017

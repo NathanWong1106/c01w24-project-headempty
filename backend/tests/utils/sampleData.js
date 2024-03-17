@@ -1,3 +1,4 @@
+import { PRESCRIBER_PRESCRIPTION_STATUS } from "../../types/prescriptionTypes.js";
 import { ACCOUNT_TYPE } from "../../types/userServiceTypes.js";
 
 export const defaultPassword = "1234";
@@ -27,7 +28,7 @@ export const genericPatient = {
 
 export const genericPrescriber = {
     "licensingCollege": "licensing college",
-    "licenseNumber": "license number 1234",
+    "licenceNumber": "licence number 1234",
     "profession": "therapist",
     "providerCode": "ON-JC001",
     "email": "prescriber1@gmail.com",
@@ -39,4 +40,12 @@ export const genericPrescriber = {
     "province": "ON",
     "address": "1254 Military Trail",
     "registered": true
+};
+
+export const genericPrescriberPrescription = {
+    "providerCode": "ON-JC001",
+    "date": "2024-12-34",
+    "initial": "JC",
+    "prescribed": true,
+    "status": PRESCRIBER_PRESCRIPTION_STATUS.NOT_LOGGED
 };
