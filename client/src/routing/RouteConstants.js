@@ -10,7 +10,10 @@ export const ADMIN_ROUTES = {
     PRESCRIBER_VERIFICATION: `${ADMIN_ROUTE_BASE}/prescriberVerification`,
 }
 
-
+export const PRESCRIBER_ROUTE_BASE = '/prescriber'
+export const PRESCRIBER_ROUTES = {
+    PRESCRIPTIONS: `${PRESCRIBER_ROUTE_BASE}/myPrescriptions`
+}
 
 
 /* Below is for use in the sidebar / drawer */
@@ -41,7 +44,13 @@ export const ASSISTANT_LINKS = [...ADMIN_LINKS]
 export const COORDINATOR_LINKS = [...ASSISTANT_LINKS]
 
 /* Links for prescribers */
-export const PRESCRIBER_LINKS = [...COMMON_LINKS];
+export const PRESCRIBER_LINKS = [
+    ...COMMON_LINKS,
+    {
+        name: "My Prescriptions",
+        link: PRESCRIBER_ROUTES.PRESCRIPTIONS
+    }
+];
 
 /* Links for patients */
 export const PATIENT_LINKS = [...COMMON_LINKS]

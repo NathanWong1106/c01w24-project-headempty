@@ -7,6 +7,7 @@ import { privateRouter } from "./routes/samplePrivate.js";
 import { adminRoute, coordinatorRoute, patientRoute, prescriberRoute } from "./middleware/auth.js";
 import { connectToMongo } from "./database/dbConnection.js";
 import { adminRouter } from "./routes/adminService.js";
+import { prescriberRouter } from "./routes/prescriberService.js";
 import { verificationRouter } from "./routes/verificationService.js";
 
 // Give this process an identifiable name so we can kill it
@@ -35,6 +36,9 @@ app.use("/user", userRouter);
 // Admin service
 app.use("/admin", adminRoute, adminRouter);
 
+// Prescriber service
+app.use("/prescriber", prescriberRoute, prescriberRouter);
+
 // Prescriber Verification service
 app.use("/verification", adminRoute, verificationRouter);
 
@@ -45,4 +49,3 @@ app.use("/private", prescriberRoute, privateRouter);
 app.get("/ping", express.json(), async (req, res) => {
   return res.json({ response: "pong" });
 });
-
