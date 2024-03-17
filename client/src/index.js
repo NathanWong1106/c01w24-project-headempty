@@ -23,7 +23,7 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path={ROUTES.BASE} element={<App />}>
       <Route path={ROUTES.LOGIN} element={<LoginPage />} />
-      <Route path={ROUTES.REGISTRATION} element={<RegistrationPage />} />
+      <Route path={ROUTES.PATIENT_REGISTRATION} element={<RegistrationPage />} />
       <Route path={ROUTES.HOME} element={<PrivateRoute><HomePage /></PrivateRoute>} />
       <Route path={ADMIN_ROUTE_BASE} element={<AdminRoute />}>
         <Route path={ADMIN_ROUTES.PRESCRIBER_MNGMT} element={<PrescriberManagement />} />

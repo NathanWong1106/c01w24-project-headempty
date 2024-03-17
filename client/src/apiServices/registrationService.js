@@ -4,7 +4,7 @@ import { SERVER_PATHS } from "./utils/constants";
 
 export const registerUser = async ({ email, password, accountType, fName, lName, initials, address, city, province, preferredLanguage }) => {
     try {
-        const res = await callEndpoint(SERVER_PATHS.REGISTRATION, 'POST', { email, password, accountType, fName, lName, initials, address, city, province, preferredLanguage })
+        const res = await callEndpoint(SERVER_PATHS.PATIENT_REGISTRATION, 'POST', { email, password, accountType, fName, lName, initials, address, city, province, preferredLanguage })
 
         if (res.status != 200) {
             const err = await res.json();

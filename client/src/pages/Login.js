@@ -78,9 +78,7 @@ const LoginPage = () => {
                 {accountType === "Patient" && (
                     <Typography>
                         Are You a New Patient?
-                        <Button className="ml-4" color="blue" buttonType="link" ripple="light" onClick={() => navigate(ROUTES.REGISTRATION)}>
-                            Make an Account Here
-                        </Button>
+                        <a href={ROUTES.PATIENT_REGISTRATION} className="text-blue-500 hover:text-blue-600 ml-4">Make an Account Here</a>
                     </Typography>
                 )}
             </Card>

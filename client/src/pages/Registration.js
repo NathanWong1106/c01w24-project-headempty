@@ -120,7 +120,7 @@ const RegistrationPage = () => {
                 <form className="mt-8 mb-2 max-w-screen-lg " ref={formRef}>
                     <div className="mb-1 flex flex-wrap gap-6 justify-center items-center">
                         <div className="flex flex-col w-full">
-                            <Typography variant="h6" className="-mb-1 mt-2">
+                            <Typography variant="h6" className="mb-1 mt-2">
                                 Email
                             </Typography>
                             <Input
@@ -136,7 +136,7 @@ const RegistrationPage = () => {
 
                             <div className="flex gap-6 mb-1">
                                 <div className="w-full">
-                                    <Typography variant="h6" className="-mb-1 mt-2">
+                                    <Typography variant="h6" className="mb-1 mt-2">
                                         First Name
                                     </Typography>
                                     <Input
@@ -152,7 +152,7 @@ const RegistrationPage = () => {
                                 </div>
 
                                 <div className="w-full">
-                                    <Typography variant="h6" className="-mb-1 mt-2">
+                                    <Typography variant="h6" className="mb-1 mt-2">
                                         Last Name
                                     </Typography>
                                     <Input
@@ -170,7 +170,7 @@ const RegistrationPage = () => {
                             </div>
                             <div className="flex gap-6 mb-1">
                                 <div className="w-full">
-                                    <Typography variant="h6" className="-mb-1 mt-2">
+                                    <Typography variant="h6" className="mb-1 mt-2">
                                         Preferred Language
                                     </Typography>
                                     <Select
@@ -185,7 +185,7 @@ const RegistrationPage = () => {
                                 </div>
 
                                 <div className="w-full">
-                                    <Typography variant="h6" className="-mb-1 mt-2">
+                                    <Typography variant="h6" className="mb-1 mt-2">
                                         Initials
                                     </Typography>
                                     <Input
@@ -202,7 +202,7 @@ const RegistrationPage = () => {
 
                             </div>
                             {/* Add more pairs of input fields and labels here */}
-                            <Typography variant="h6" className="-mb-1 mt-2">
+                            <Typography variant="h6" className="mb-1 mt-2">
                                 Address
                             </Typography>
                             <Input
@@ -215,7 +215,7 @@ const RegistrationPage = () => {
                                 value={address}
                                 onChange={el => setAddress(el.target.value)}
                             />
-                            <Typography variant="h6" className="-mb-1 mt-2">
+                            <Typography variant="h6" className="mb-1 mt-2">
                                 City
                             </Typography>
                             <Input
@@ -228,7 +228,7 @@ const RegistrationPage = () => {
                                 value={city}
                                 onChange={el => setCity(el.target.value)}
                             />
-                            <Typography variant="h6" className="-mb-1 mt-2">
+                            <Typography variant="h6" className="mb-1 mt-2">
                                 Province
                             </Typography>
                             <Input
@@ -244,7 +244,7 @@ const RegistrationPage = () => {
 
                             <div className="flex gap-6 mb-1">
                                 <div className="w-full">
-                                    <Typography variant="h6" className="-mb-1 mt-2">
+                                    <Typography variant="h6" className="mb-1 mt-2">
                                         Password
                                     </Typography>
                                     <Input
@@ -261,7 +261,7 @@ const RegistrationPage = () => {
                                 </div>
 
                                 <div className="w-full">
-                                    <Typography variant="h6" className="-mb-1 mt-2">
+                                    <Typography variant="h6" className="mb-1 mt-2">
                                         Re-type Password
                                     </Typography>
                                     <Input
@@ -285,10 +285,10 @@ const RegistrationPage = () => {
                 </form>
                 <Typography>
                     Already have an account?
-                    <Button className="ml-4" color="blue" buttonType="link" ripple="light" onClick={() => navigate(ROUTES.LOGIN)}>
-                        Login here
-                    </Button>
+                    <a href={ROUTES.LOGIN} className="text-blue-500 hover:text-blue-600 ml-4">Login here</a>
                 </Typography>
+
+
             </Card>
             <div className="mb-16 absolute bottom-0">
                 <ClosableAlert text={errorMessage} open={showAlert} onDismiss={() => setShowAlert(false)} />
