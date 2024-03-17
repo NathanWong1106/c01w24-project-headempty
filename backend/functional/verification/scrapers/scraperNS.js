@@ -22,11 +22,13 @@ export class ScraperNS extends BaseScraper {
             }
 
             // Confirm if prescriber from licence number is the one we want to verify
-            const firstNameRegex = new RegExp("\\b" + prescriber.firstName + "\\b");
-            const lastNameRegex = new RegExp("\\b" + prescriber.lastName + "\\b");
+            const firstName = String(prescriber.firstName);
+            const lastName = String(prescriber.lastName);
+            const firstNameRegex = new RegExp("\\b" + firstName.toLowerCase() + "\\b");
+            const lastNameRegex = new RegExp("\\b" + lastName.toLowerCase() + "\\b");
             const name = await driver.$eval(ScraperNS.nameLocator, ele => ele.textContent.trim());
-            if (!(firstNameRegex.test(name) && lastNameRegex.test(name))) {
-                console.error(`Prescriber name: ${prescriber.firstName} ${prescriber.lastName}, does not match: ${name}, using Licence Number: ${prescriber.licenceNumber}.`);
+            if (!(firstNameRegex.test(name.toLowerCase()) && lastNameRegex.test(name.toLowerCase()))) {
+                console.error(`Prescriber name: ${firstName} ${lastName}, does not match: ${name}, using Licence Number: ${prescriber.licenceNumber}.`);
                 return null;
             }
             
