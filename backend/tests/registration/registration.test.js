@@ -72,6 +72,7 @@ test("/user/registration/prescriber - actually register prescriber", async () =>
         },
         body: JSON.stringify({
             _id: _id,
+            email: "harry@mail.com",
             password: "dorwssap",
             language: "yapology"
         })
@@ -116,6 +117,7 @@ test("/user/registration/prescriber - check if id is valid", async () => {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
+            email: "yessir@mail.com",
             _id: "dsfhjks",
             password: "dorwssap",
             language: "yapology"

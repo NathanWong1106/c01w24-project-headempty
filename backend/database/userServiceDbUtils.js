@@ -136,25 +136,36 @@ export async function getPrescriberFromCollectionWithId(prescriberId) {
 
 /**
  * @param {ObjectId} prescriberId prescriber ID
+ * @param {String} email set email
  * @param {String} password new password
  * @param {String} language preferred language
  * @returns the prescriber document from the collection with the corresponding ID.
  * Else, returns null.
  */
-export async function updatePrescriberRegistration(prescriberId, password, language) {
-    const prescriberCollection = getDb().collection(COLLECTIONS.PRESCRIBER)
-    const data = await retryPromiseWithDelay(prescriberCollection.updateOne({ 
+export async function updatePrescriberRegistration(prescriberId, email, password, language) {
+    
+    const collection = getDb().collection(COLLECTIONS.PRESCRIBER)
+    const existingUser = await retryPromiseWithDelay(collection.findOne({
+        email: email,
+    }))
+    
+    if (existingUser) {
+        return {error: "Email has already been registered"};
+    }
+    
+    const data = await retryPromiseWithDelay(collection.updateOne({ 
         _id: prescriberId},
         {
             $set: {
                 registered: true,
+                email: email,
                 password: await bcrypt.hash(password, 10),
                 language: language
             }
         }
     ));
     if (data.matchedCount === 0) {
-        return null
+        return {error: "Verified prescriber not found"}
     }
     return data
 }

@@ -84,9 +84,9 @@ userRouter.get("/registration/:prescriberId", express.json(), async(req, res) =>
  */
 userRouter.patch("/registration/prescriber", express.json(), async(req, res) => {
     try {
-        const {_id, password, language} = req.body;
+        const {_id, email, password, language} = req.body;
         
-        if (!password || !language) {
+        if (!email || !password || !language) {
             return res.status(400).json({ error: "Please fill out all fields"})
         }
 
@@ -98,9 +98,9 @@ userRouter.patch("/registration/prescriber", express.json(), async(req, res) => 
             return res.status(401).json({ error: "This is not a verified prescriber."})
         }
         
-        let data = await updatePrescriberRegistration(preObjId, password, language);
-        if (!data) {
-            return res.status(402).json({ error: "Could not find prescriber"})
+        let data = await updatePrescriberRegistration(preObjId, email, password, language);
+        if (data.error) {
+            return res.status(404).json({error: data.error})
         } else {
             return res.status(200).json(data)
         }

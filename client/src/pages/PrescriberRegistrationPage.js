@@ -1,7 +1,6 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect} from "react";
 import { Input, Button, Card, Typography, Select, Option } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux"; 
 import { callEndpoint } from "../apiServices/utils/apiUtils";
 import { SERVER_PATHS } from "../apiServices/utils/constants";
 import { registerPrescriber } from "../apiServices/prescriberRegistrationService";
@@ -16,10 +15,10 @@ const PrescriberRegistrationPage = () => {
     const languages = ["en", "fr"]; // Sample list of languages, will convert to constant after other registration is complete
 
     const navigate = useNavigate();
-    const dispatch = useDispatch();
 
-    const [prescriber, setPrescriber] = useState({email: "", firstName: "", lastName: "", licenceNumber: "", error: "Loading"})
+    const [prescriber, setPrescriber] = useState({firstName: "", lastName: "", licenceNumber: "", error: "Loading"})
     const [canBeRegistered, setCanBeRegistered] = useState(false);
+    const [email, setEmail] = useState("")
     const [password, setPassword] = useState("");
     const [retypePassword, setRetypePassword] = useState("");
     const [preferredLanguage, setPreferredLanguage] = useState("");
@@ -37,10 +36,15 @@ const PrescriberRegistrationPage = () => {
         fetchPrescriber();
     },[])
 
+    const validateEmail = (email) => {
+        // Regular expression for validating email
+        const emailRegex = /^[^\s@]+@[^\s@]+.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+    
     const validatePassword = (password) => {
         // Password must be at least 8 characters long and contain at least one uppercase letter, one number, and one special character.
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])(?=.*[a-zA-Z]).{8,}$/;
-
         return passwordRegex.test(password);
     }
 
@@ -48,12 +52,16 @@ const PrescriberRegistrationPage = () => {
         setShowAlert(false);
         let error = "";
 
-        if (!password || !retypePassword || !preferredLanguage) {
+        if (!email || !password || !retypePassword || !preferredLanguage) {
             error = "Please fill in the following fields: ";
+            if (!email) error += "Email, "
             if (!password) error += "Password, ";
             if (!retypePassword) error += "Re-type Password, ";
             if (!preferredLanguage) error += "Preferred Language, ";
             error = error.slice(0, -2); // Remove the last comma and space
+        }
+        else if (!validateEmail(email)) {
+            error = "Email must be in correct email format"
         }
         else if (!validatePassword(password)) {
             error = "Password must be at least 8 characters long and contain at least one uppercase letter, one number, and one special character.";
@@ -65,19 +73,23 @@ const PrescriberRegistrationPage = () => {
         if (error) {
             setErrorMessage(error);
             setShowAlert(true);
-            console.log("Error:", error);
             return;
         }
 
-        const data = { _id: prescriberId, password: password, language: preferredLanguage }
+        const data = { _id: prescriberId, email:email, password: password, language: preferredLanguage }
         try {
-            const result = await dispatch(registerPrescriber(data)).unwrap();
-
-            setErrorMessage("Account Created Successfully. Redirecting you to the login page.")
-            setShowAlert(true);
-            setTimeout(() => navigate(ROUTES.LOGIN), 3000);
+            const result = await registerPrescriber(data)
+            const res = await result.json();
+            if (!res.error) {
+                setErrorMessage("Account Created Successfully. Redirecting you to the login page.")
+                setShowAlert(true);
+                setTimeout(() => navigate(ROUTES.LOGIN), 3000);
+            }
+            else {
+                setErrorMessage(res.error)
+                setShowAlert(true);
+            }
         } catch (err) {
-            console.log(err);
             setErrorMessage("Failed to Register Account: " + err.error)
             setShowAlert(true);
         }
@@ -93,24 +105,10 @@ const PrescriberRegistrationPage = () => {
                     <form className="mt-5 mb-2 w-80 max-w-screen-lg sm:w-96">
                         <div className="mb-1 flex flex-col gap-6">
                             <Typography variant="h6" className="-mb-4">
-                                Your Email
-                            </Typography>
-                            <Input
-                                size="lg"
-                                placeholder="name@mail.com"
-                                disabled={true}
-                                className=" !border-rich-black focus:!border-t-dark-moss-green"
-                                labelProps={{
-                                    className: "before:content-none after:content-none",
-                                }}
-                                value={prescriber.email}
-                            />
-                            <Typography variant="h6" className="-mb-4">
                                 First Name
                             </Typography>
                             <Input
                                 size="lg"
-                                placeholder="name@mail.com"
                                 disabled={true}
                                 className=" !border-rich-black focus:!border-t-dark-moss-green"
                                 labelProps={{
@@ -123,7 +121,6 @@ const PrescriberRegistrationPage = () => {
                             </Typography>
                             <Input
                                 size="lg"
-                                placeholder="name@mail.com"
                                 disabled={true}
                                 className=" !border-rich-black focus:!border-t-dark-moss-green"
                                 labelProps={{
@@ -136,13 +133,25 @@ const PrescriberRegistrationPage = () => {
                             </Typography>
                             <Input
                                 size="lg"
-                                placeholder="name@mail.com"
                                 disabled={true}
                                 className=" !border-rich-black focus:!border-t-dark-moss-green"
                                 labelProps={{
                                     className: "before:content-none after:content-none",
                                 }}
                                 value={prescriber.licenceNumber}
+                            />
+                            <Typography variant="h6" className="-mb-4">
+                                Your Email
+                            </Typography>
+                            <Input
+                                size="lg"
+                                placeholder="name@mail.com"
+                                className=" !border-rich-black focus:!border-t-dark-moss-green"
+                                labelProps={{
+                                    className: "before:content-none after:content-none",
+                                }}
+                                value={email}
+                                onChange={el => setEmail(el.target.value)}
                             />
                             <Typography variant="h6" className="-mb-4">
                                 Password
