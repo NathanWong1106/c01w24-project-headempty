@@ -3,7 +3,8 @@ export const ROUTES = {
     LOGIN: '/login',
     HOME: '/home',
     REGISTRATION: '/registration',
-    PRESCRIBER_REGISTRATION: '/registration/:prescriberId'
+    PRESCRIBER_REGISTRATION: '/registration/:prescriberId',
+    GREEN_RESOURCES: '/greenResources',
 }
 
 export const ADMIN_ROUTE_BASE = '/admin'
@@ -11,7 +12,10 @@ export const ADMIN_ROUTES = {
     PRESCRIBER_MNGMT: `${ADMIN_ROUTE_BASE}/prescriberManagement`
 }
 
-
+export const PRESCRIBER_ROUTE_BASE = '/prescriber'
+export const PRESCRIBER_ROUTES = {
+    PRESCRIPTIONS: `${PRESCRIBER_ROUTE_BASE}/myPrescriptions`
+}
 
 
 /* Below is for use in the sidebar / drawer */
@@ -19,6 +23,10 @@ const COMMON_LINKS = [
     {
         name: "Home",
         link: ROUTES.HOME
+    },
+    {
+        name: "Green Resources",
+        link: ROUTES.GREEN_RESOURCES
     }
 ]
 
@@ -38,7 +46,13 @@ export const ASSISTANT_LINKS = [...ADMIN_LINKS]
 export const COORDINATOR_LINKS = [...ASSISTANT_LINKS]
 
 /* Links for prescribers */
-export const PRESCRIBER_LINKS = [...COMMON_LINKS];
+export const PRESCRIBER_LINKS = [
+    ...COMMON_LINKS,
+    {
+        name: "My Prescriptions",
+        link: PRESCRIBER_ROUTES.PRESCRIPTIONS
+    }
+];
 
 /* Links for patients */
 export const PATIENT_LINKS = [...COMMON_LINKS]

@@ -12,7 +12,8 @@ import { ScraperPE } from "./scrapers/scraperPE.js";
 import { ScraperQC } from "./scrapers/scraperQC.js";
 import { ScraperSK } from "./scrapers/scraperSK.js";
 
-import { createPrescriber } from "../../database/verificationServiceDbUtils.js";
+import { createPrescriber, checkIfExistingPrescriber } from "../../database/verificationServiceDbUtils.js";
+import { prescriberDataSchema } from "../../schemas.js";
 
 const scraperMapping = {
     "College of Physicians and Surgeons of Alberta": ScraperAB,
@@ -74,6 +75,20 @@ export async function verifyPrescribers(inputData) {
     
     for (const prescriber of inputData) {
         console.debug(`Verifying: ${prescriber.firstName} ${prescriber.lastName}`);
+        
+        const isValidPrescriberData = await prescriberDataSchema.isValid(prescriber)
+        if (!isValidPrescriberData) {
+            console.error(`Provided prescriber data for ${prescriber.firstName} ${prescriber.lastName} does not match schema. Skipping`);
+            continue;
+        }
+
+        // We do not re-verify prescribers (from valid to invalid).
+        // If they have been verified in the past, they won't be checked.
+        const existingPrescriber = await checkIfExistingPrescriber(prescriber);
+        if (existingPrescriber) {
+            console.error(`Provided prescriber data for ${prescriber.firstName} ${prescriber.lastName} already exists in database. Skipping.`)
+            continue;
+        }
 
         const page = await browser.newPage();
         // Spoof normal browser to avoid being auto-flagged as a bot
