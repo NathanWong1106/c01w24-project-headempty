@@ -5,6 +5,7 @@ import { Admin, Patient, Prescriber } from "../types/userServiceTypes.js";
 import { getDb } from "./dbConnection.js";
 import { ObjectId } from "mongodb";
 import {retryPromiseWithDelay} from "../utils.js"
+import { retryPromiseWithDelay } from "../utils.js";
 
 /**
  * Tries to login an admin user with the given email and password.
@@ -49,6 +50,36 @@ export async function tryLoginPatient(email, password) {
         return patient;
     } else {
         return null;
+    }
+}
+
+export async function tryRegisterPatient(email, password, fName, lName, initials, address, city, province, preferredLanguage) {
+    try {
+        const collection = getDb().collection(COLLECTIONS.PATIENT)
+        const existingUser = await retryPromiseWithDelay(collection.findOne({
+            email: email,
+        }))
+
+        if (existingUser) {
+            return { data: null, error: "Email already used" };
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const data = await retryPromiseWithDelay(collection.insertOne({
+            email,
+            password: hashedPassword,
+            firstName: fName,
+            lastName: lName,
+            language: preferredLanguage,
+            initials,
+            address,
+            city,
+            province
+        }));
+        return { data: data, error: null };
+    } catch (error) {
+        console.error('Error adding patient:', error.message);
+        return { data: null, error: error };
     }
 }
 

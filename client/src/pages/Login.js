@@ -34,7 +34,7 @@ const LoginPage = () => {
 
     return (
         <div className="flex flex-col h-screen justify-center items-center">
-            <Card className="absolute" color="transparent" shadow={false}>
+            <Card className="absolute justify-center items-center" color="transparent" shadow={false}>
                 <Typography variant="h4">
                     Login
                 </Typography>
@@ -75,6 +75,12 @@ const LoginPage = () => {
                         Login
                     </Button>
                 </form>
+                {accountType === "Patient" && (
+                    <Typography>
+                        Are You a New Patient?
+                        <a href={ROUTES.PATIENT_REGISTRATION} className="text-blue-500 hover:text-blue-600 ml-4">Make an Account Here</a>
+                    </Typography>
+                )}
             </Card>
             <div className="mb-16 absolute bottom-0">
                 <ClosableAlert text="Couldn't login. Check that all fields are correct, then try again." open={showAlert} onDismiss={() => setShowAlert(false)} />

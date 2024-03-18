@@ -14,6 +14,7 @@ import { Provider } from 'react-redux';
 import LoginPage from './pages/Login';
 import HomePage from './pages/HomePage';
 import PrescriberRegistrationPage from './pages/PrescriberRegistrationPage';
+import RegistrationPage from './pages/Registration';
 import PrivateRoute from './routing/PrivateRoute';
 import GreenResourcesMap from './pages/GreenResourcesMap';
 import { ADMIN_ROUTE_BASE, ADMIN_ROUTES, PRESCRIBER_ROUTE_BASE, PRESCRIBER_ROUTES, ROUTES } from './routing/RouteConstants';
@@ -27,6 +28,7 @@ const router = createBrowserRouter(
     <Route path={ROUTES.BASE} element={<App />}>
       <Route path={ROUTES.PRESCRIBER_REGISTRATION} element={<PrescriberRegistrationPage></PrescriberRegistrationPage>}></Route>
       <Route path={ROUTES.LOGIN} element={<LoginPage />} />
+      <Route path={ROUTES.PATIENT_REGISTRATION} element={<RegistrationPage />} />
       <Route path={ROUTES.HOME} element={<PrivateRoute><HomePage /></PrivateRoute>} />
       <Route path={ROUTES.GREEN_RESOURCES} element={<GreenResourcesMap />} />
       <Route path={PRESCRIBER_ROUTE_BASE} element={<PrescriberRoute />}>

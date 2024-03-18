@@ -2,6 +2,7 @@ export const ROUTES = {
     BASE: '/',
     LOGIN: '/login',
     HOME: '/home',
+    PATIENT_REGISTRATION: '/patientRegistration',
     REGISTRATION: '/registration',
     PRESCRIBER_REGISTRATION: '/registration/:prescriberId',
     GREEN_RESOURCES: '/greenResources',
