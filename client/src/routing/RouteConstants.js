@@ -5,6 +5,12 @@ export const ROUTES = {
     GREEN_RESOURCES: '/greenResources',
 }
 
+export const REGISTRATION_ROUTE_BASE = '/register' 
+export const REGISTRATION_ROUTES = {
+    PATIENT_REGISTRATION: '/register/patient',
+    PRESCRIBER_REGISTRATION: '/register/:prescriberId'
+}
+
 export const ADMIN_ROUTE_BASE = '/admin'
 export const ADMIN_ROUTES = {
     PRESCRIBER_MNGMT: `${ADMIN_ROUTE_BASE}/prescriberManagement`,
