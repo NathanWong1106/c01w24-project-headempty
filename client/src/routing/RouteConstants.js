@@ -2,10 +2,13 @@ export const ROUTES = {
     BASE: '/',
     LOGIN: '/login',
     HOME: '/home',
-    PATIENT_REGISTRATION: '/patientRegistration',
-    REGISTRATION: '/registration',
-    PRESCRIBER_REGISTRATION: '/registration/:prescriberId',
     GREEN_RESOURCES: '/greenResources',
+}
+
+export const REGISTRATION_ROUTE_BASE = '/register' 
+export const REGISTRATION_ROUTES = {
+    PATIENT_REGISTRATION: '/register/patient',
+    PRESCRIBER_REGISTRATION: '/register/:prescriberId'
 }
 
 export const ADMIN_ROUTE_BASE = '/admin'

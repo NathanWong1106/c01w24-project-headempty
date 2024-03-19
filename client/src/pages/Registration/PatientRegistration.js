@@ -1,12 +1,13 @@
-import { useState, useRef } from "react";
+import { useState} from "react";
 import { Input, Button, Card, Typography, Select, Option } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
-import { registerUser } from "../apiServices/registrationService.js";
-import { ClosableAlert } from "../components/ClosableAlert.js";
-import { ROUTES } from "../routing/RouteConstants.js";
-import { languages } from "../constants.js"
+import { registerPatient, registerPrescriber } from "../../apiServices/registrationService.js";
+import { ClosableAlert } from "../../components/ClosableAlert.js";
+import { ROUTES } from "../../routing/RouteConstants.js";
+import { languages } from "../../constants.js"
+import { validateEmail, validatePassword} from "./utils.js";
 
-const RegistrationPage = () => {
+const PatientRegistration = () => {
     const [email, setEmail] = useState("")
     const [fName, setFName] = useState("")
     const [lName, setLName] = useState("")
@@ -19,40 +20,8 @@ const RegistrationPage = () => {
     const [retypepassword, setRetypePassword] = useState("");
     const [showAlert, setShowAlert] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-    const formRef = useRef(null);
 
     const navigate = useNavigate();
-
-
-    const validateEmail = (email) => {
-        // Regular expression for validating email
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    }
-
-    const validatePassword = (password) => {
-        // Regular expression for password validation
-        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])(?=.*[a-zA-Z]).{8,}$/;
-
-        return passwordRegex.test(password);
-    }
-
-    const resetForm = () => {
-        setEmail("");
-        setFName("");
-        setLName("");
-        setInitials("");
-        setPreferredLanguage("");
-        setAddress("");
-        setCity("");
-        setProvince("");
-        setPassword("");
-        setRetypePassword("");
-        const inputs = Array.from(formRef.current.getElementsByTagName('input'));
-        inputs.forEach(input => {
-            input.value = '';
-        });
-    }
 
     const doRegistration = async () => {
         setShowAlert(false);
@@ -87,18 +56,17 @@ const RegistrationPage = () => {
         if (error) {
             setErrorMessage(error);
             setShowAlert(true);
-            console.log("Error:", error);
             return;
         }
 
         const data = { email, password, accountType: "patient", fName, lName, initials, address, city, province, preferredLanguage }
         try {
-            const result = await registerUser(data);
+            const result = await registerPatient(data);
             console.log(result);
             if (!result.error) {
-                setErrorMessage("Account Created Successfully, Go to Login Page to Login")
+                setErrorMessage("Account Created Successfully. Redirecting you to the login page.")
                 setShowAlert(true);
-                resetForm();
+                setTimeout(() => navigate(ROUTES.LOGIN), 3000);
             } else {
                 console.log(result.error.error);
                 setErrorMessage("Failed to Create Account: " + result.error.error)
@@ -117,7 +85,7 @@ const RegistrationPage = () => {
                 <Typography variant="h4">
                     Patient Registration
                 </Typography>
-                <form className="mt-8 mb-2 max-w-screen-lg " ref={formRef}>
+                <form className="mt-8 mb-2 max-w-screen-lg ">
                     <div className="mb-1 flex flex-wrap gap-6 justify-center items-center">
                         <div className="flex flex-col w-full">
                             <Typography variant="h6" className="mb-1 mt-2">
@@ -298,4 +266,4 @@ const RegistrationPage = () => {
     )
 }
 
-export default RegistrationPage;
+export default PatientRegistration;

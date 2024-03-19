@@ -1,8 +1,7 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
 import { callEndpoint } from "./utils/apiUtils";
 import { SERVER_PATHS } from "./utils/constants";
 
-export const registerUser = async ({ email, password, accountType, fName, lName, initials, address, city, province, preferredLanguage }) => {
+export const registerPatient = async ({ email, password, accountType, fName, lName, initials, address, city, province, preferredLanguage }) => {
     try {
         const res = await callEndpoint(SERVER_PATHS.PATIENT_REGISTRATION, 'POST', { email, password, accountType, fName, lName, initials, address, city, province, preferredLanguage })
 
@@ -16,3 +15,13 @@ export const registerUser = async ({ email, password, accountType, fName, lName,
         return { data: null, error: err }
     }
 }
+
+
+export const registerPrescriber = async ({ _id, email, password, language }) => {
+    try {
+        return await callEndpoint(SERVER_PATHS.PRESCRIBER_REGISTRATION + "/prescriber", 'PATCH', { _id, email, password, language });
+    } catch (err) {
+        return err;
+    }
+}
+    

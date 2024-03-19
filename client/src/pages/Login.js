@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { loginUser } from "../apiServices/authService.js";
 import { ACCOUNT_TYPE } from "../apiServices/types/userServiceTypes.js";
 import { ClosableAlert } from "../components/ClosableAlert.js";
-import { ROUTES } from "../routing/RouteConstants.js";
+import { REGISTRATION_ROUTES, ROUTES } from "../routing/RouteConstants.js";
 
 const LoginPage = () => {
     const [email, setEmail] = useState("")
@@ -78,7 +78,7 @@ const LoginPage = () => {
                 {accountType === "Patient" && (
                     <Typography>
                         Are You a New Patient?
-                        <a href={ROUTES.PATIENT_REGISTRATION} className="text-blue-500 hover:text-blue-600 ml-4">Make an Account Here</a>
+                        <a href={REGISTRATION_ROUTES.PATIENT_REGISTRATION} className="text-blue-500 hover:text-blue-600 ml-4">Make an Account Here</a>
                     </Typography>
                 )}
             </Card>

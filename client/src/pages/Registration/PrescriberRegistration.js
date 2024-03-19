@@ -1,18 +1,18 @@
 import { useState, useEffect} from "react";
 import { Input, Button, Card, Typography, Select, Option } from "@material-tailwind/react";
 import { useNavigate } from "react-router-dom";
-import { callEndpoint } from "../apiServices/utils/apiUtils";
-import { SERVER_PATHS } from "../apiServices/utils/constants";
-import { registerPrescriber } from "../apiServices/prescriberRegistrationService";
+import { callEndpoint } from "../../apiServices/utils/apiUtils.js";
+import { SERVER_PATHS } from "../../apiServices/utils/constants.js";
+import { registerPrescriber } from "../../apiServices/registrationService.js";
 import { useParams } from "react-router-dom";
-import { ClosableAlert } from "../components/ClosableAlert";
-import { ROUTES } from "../routing/RouteConstants";
+import { ClosableAlert } from "../../components/ClosableAlert.js";
+import { ROUTES } from "../../routing/RouteConstants.js";
+import { languages } from "../../constants.js";
+import { validateEmail, validatePassword} from "./utils.js";
 
-const PrescriberRegistrationPage = () => {
+const PrescriberRegistration = () => {
     
     const { prescriberId } = useParams();
-
-    const languages = ["en", "fr"]; // Sample list of languages, will convert to constant after other registration is complete
 
     const navigate = useNavigate();
 
@@ -35,18 +35,6 @@ const PrescriberRegistrationPage = () => {
     useEffect(() => {
         fetchPrescriber();
     },[])
-
-    const validateEmail = (email) => {
-        // Regular expression for validating email
-        const emailRegex = /^[^\s@]+@[^\s@]+.[^\s@]+$/;
-        return emailRegex.test(email);
-    }
-    
-    const validatePassword = (password) => {
-        // Password must be at least 8 characters long and contain at least one uppercase letter, one number, and one special character.
-        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])(?=.*[a-zA-Z]).{8,}$/;
-        return passwordRegex.test(password);
-    }
 
     const doRegistration = async () => {
         setShowAlert(false);
@@ -191,10 +179,9 @@ const PrescriberRegistrationPage = () => {
                                 label=""
                             >
                                 {languages.map(lang => (
-                                    <Option value={lang} key={lang}>{lang}</Option>
+                                    <Option value={lang.code} key={lang.name}>{lang.name} ({lang.code})</Option>
                                 ))}
                             </Select>
-                        
                             </div>
                             <Button className="mt-6 bg-moss-green" onClick={async() => doRegistration()} fullWidth>
                                 Complete Registration
@@ -220,4 +207,4 @@ const PrescriberRegistrationPage = () => {
     )
 }
 
-export default PrescriberRegistrationPage
+export default PrescriberRegistration
