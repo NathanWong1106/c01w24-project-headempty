@@ -50,25 +50,25 @@ userRouter.post("/login", express.json(), async (req, res) => {
  * 
  * Response: Object< Prescriber >
  */
-userRouter.get("/registration/:prescriberId", express.json(), async(req, res) => {
+userRouter.get("/registration/:prescriberId", express.json(), async (req, res) => {
     try {
         const prescriberId = req.params.prescriberId;
-    
+
         //check if unique prescriber id exists in db, and check if id is valid (extremely special case)    
-        if (!ObjectId.isValid(prescriberId)){
-            return res.status(400).json({ error: "This is not a valid registration link."})
+        if (!ObjectId.isValid(prescriberId)) {
+            return res.status(400).json({ error: "This is not a valid registration link." })
         }
         let preObjId = new ObjectId(prescriberId);
-        if (!((String)(preObjId === prescriberId))){
-            return res.status(400).json({ error: "This is not a valid registration link."})
+        if (!((String)(preObjId === prescriberId))) {
+            return res.status(400).json({ error: "This is not a valid registration link." })
         }
-        
+
         //search db for document of corresponding prescriber and check if they have already been registered
         let user = await getVerifiedPrescriber(preObjId)
         if (!user) {
-            return res.status(401).json({ error: "Unable to find a verified prescriber associated with this link."}) 
+            return res.status(401).json({ error: "Unable to find a verified prescriber associated with this link." })
         } else if (user.registered) {
-            return res.status(402).json({ error: "The prescriber associated with this link has already been registered."})
+            return res.status(402).json({ error: "The prescriber associated with this link has already been registered." })
         } else {
             return res.status(200).json(user);
         }
@@ -82,25 +82,25 @@ userRouter.get("/registration/:prescriberId", express.json(), async(req, res) =>
  * 
  * Response: Object< Patch data >
  */
-userRouter.patch("/registration/prescriber", express.json(), async(req, res) => {
+userRouter.patch("/registration/prescriber", express.json(), async (req, res) => {
     try {
-        const {_id, email, password, language} = req.body;
-        
+        const { _id, email, password, language } = req.body;
+
         if (!email || !password || !language) {
-            return res.status(400).json({ error: "Please fill out all fields"})
+            return res.status(400).json({ error: "Please fill out all fields" })
         }
 
-        if (!ObjectId.isValid(_id)){
-            return res.status(401).json({ error: "This is not a verified prescriber."})
+        if (!ObjectId.isValid(_id)) {
+            return res.status(401).json({ error: "This is not a verified prescriber." })
         }
         let preObjId = new ObjectId(_id);
-        if (!((String)(preObjId === _id))){
-            return res.status(401).json({ error: "This is not a verified prescriber."})
+        if (!((String)(preObjId === _id))) {
+            return res.status(401).json({ error: "This is not a verified prescriber." })
         }
-        
+
         let data = await updatePrescriberRegistration(preObjId, email, password, language);
         if (data.error) {
-            return res.status(404).json({error: data.error})
+            return res.status(404).json({ error: data.error })
         } else {
             return res.status(200).json(data)
         }
