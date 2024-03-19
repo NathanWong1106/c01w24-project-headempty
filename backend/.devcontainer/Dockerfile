@@ -20,6 +20,7 @@ COPY package-lock.json .
 
 ENV DISABLE_ESLINT_PLUGIN=true
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+ENV PUPPETEER_SKIP_DOWNLOAD=true
 
 # Install dependecies
 # ci won't modify package-lock.json

@@ -1,7 +1,7 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import './App.css';
 import { DrawerWithNavigation } from './components/Drawer';
-import { ROUTES } from './routing/RouteConstants';
+import { REGISTRATION_ROUTE_BASE, ROUTES } from './routing/RouteConstants';
 
 function App() {
   const location = useLocation();
@@ -14,7 +14,7 @@ function App() {
 
   return (
     <div className='bg-off-white'>
-      {location.pathname != ROUTES.LOGIN && <DrawerWithNavigation />}
+      {location.pathname != ROUTES.LOGIN && !location.pathname.includes(REGISTRATION_ROUTE_BASE) && <DrawerWithNavigation />}
       <Outlet />
     </div>
   )
