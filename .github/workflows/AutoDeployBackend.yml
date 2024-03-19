@@ -8,7 +8,7 @@ on:
       [ main ]
     paths:
     - 'client/**'
-    - '.github/workflows/AutoDeployServer.yml'
+    - '.github/workflows/AutoDeployBackend.yml'
 
   # Allow manual trigger 
   workflow_dispatch:      
@@ -35,13 +35,13 @@ jobs:
       - name: Build and push container image to registry
         uses: azure/container-apps-deploy-action@v2
         with:
-          appSourcePath: ${{ github.workspace }}/client 
+          appSourcePath: ${{ github.workspace }}/backend
           registryUrl: c01w24registry.azurecr.io
           registryUsername: ${{ secrets.C01W24HEADEMPTYCLIENT_REGISTRY_USERNAME }}
           registryPassword: ${{ secrets.C01W24HEADEMPTYCLIENT_REGISTRY_PASSWORD }}
-          containerAppName: c01-w24-server
+          containerAppName: c01-w24-backend
           resourceGroup: c01-w24-headempty
-          imageToBuild: c01w24registry.azurecr.io/c01-w24-server:${{ github.sha }}
+          imageToBuild: c01w24registry.azurecr.io/c01-w24-backend:${{ github.sha }}
           _buildArgumentsKey_: |
             _buildArgumentsValues_
 
