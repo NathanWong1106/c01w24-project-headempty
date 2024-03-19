@@ -68,9 +68,9 @@ const PrescriberPrescriptions = () => {
                             <td key={prescription['providerCode'] + prescription['date'] + '_' + field} className="p-4">
                                 <div className="flex items-center">
                                     {
-                                        prescription[prescriptionField2PrescriptionInfo[field]] ?
+                                        prescription[prescriptionField2PrescriptionInfo[field]] !== null ?
                                             prescription[prescriptionField2PrescriptionInfo[field]].toString() :
-                                            prescription[prescriptionField2PrescriptionInfo[field]]
+                                            null
                                     }
                                 </div>
                             </td>
