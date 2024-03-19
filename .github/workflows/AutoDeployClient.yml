@@ -7,7 +7,7 @@ on:
     branches: 
       [ main ]
     paths:
-    - 'backend/**'
+    - 'client/**'
     - '.github/workflows/AutoDeployClient.yml'
 
   # Allow manual trigger 
