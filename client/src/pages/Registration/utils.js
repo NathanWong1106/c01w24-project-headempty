@@ -4,7 +4,7 @@
  * @param {String} email
  * @returns boolean
  */
-const validateEmail = (email) => {
+export const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
 }
@@ -15,7 +15,7 @@ const validateEmail = (email) => {
  * @param {String} password
  * @returns Boolean
  */
-const validatePassword = (password) => {
+export const validatePassword = (password) => {
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])(?=.*[a-zA-Z]).{8,}$/;
 
     return passwordRegex.test(password);
