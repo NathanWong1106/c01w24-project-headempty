@@ -15,6 +15,16 @@ const mapMarker = new L.Icon({
   shadowSize: [41, 41]
 });
 
+const mapUserLocationMarker = new L.Icon({
+  iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png",
+  iconRetinaUrl: markerIcon2x,
+  shadowUrl: markerShadow,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
 const MapDisplay = ({ markers, center, currentUserLocation }) => {
   const mapRef = useRef(null);
   const userLocationMarkerRef = useRef(null);
@@ -54,7 +64,7 @@ const MapDisplay = ({ markers, center, currentUserLocation }) => {
       if (userLocationMarkerRef.current) {
       userLocationMarkerRef.current.remove(); 
     }
-    const newUserLocationMarker = L.marker([currentUserLocation.latitude, currentUserLocation.longitude], { icon: mapMarker }).bindPopup('You are here');
+    const newUserLocationMarker = L.marker([currentUserLocation.latitude, currentUserLocation.longitude], { icon: mapUserLocationMarker }).bindPopup('You are here');
     newUserLocationMarker.addTo(mapRef.current);
     userLocationMarkerRef.current = newUserLocationMarker; 
   }
