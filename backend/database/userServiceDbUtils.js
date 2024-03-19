@@ -4,7 +4,6 @@ import jwt from "jsonwebtoken";
 import { Admin, Patient, Prescriber } from "../types/userServiceTypes.js";
 import { getDb } from "./dbConnection.js";
 import { ObjectId } from "mongodb";
-import {retryPromiseWithDelay} from "../utils.js"
 import { retryPromiseWithDelay } from "../utils.js";
 
 /**
