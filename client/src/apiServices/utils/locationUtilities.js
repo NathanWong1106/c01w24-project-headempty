@@ -52,8 +52,8 @@ export const searchGRNearby = async ({ latitude, longitude, radius, filters }) =
         if (tags.website) additionalInfo += `Website: <a href="${tags.website}" target="_blank">${tags.website}</a><br>`;
         if (grImageUrl) additionalInfo += `<img src="${grImageUrl}" alt="${grName}" style="max-width: 100%;"><br>`;
         if (tags.wikipedia) {
-            const wikipediaUrl = await fetchWikipediaData(tags.wikipedia, 'url');
-            additionalInfo += `Wikipedia: <a href="${wikipediaUrl}" target="_blank">Link</a><br>`;
+            const wikipediaUrl = tags.wikipedia;
+            additionalInfo += `Wikipedia: <a href="https://en.wikipedia.org/wiki/${wikipediaUrl}" target="_blank">Link</a><br>`;
         }
 
         // Assemble the popup content
