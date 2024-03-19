@@ -190,6 +190,7 @@ const PrescriberVerification = () => {
         return (
             <>
                 <Typography variant="h4">Errors & Not Found</Typography>
+                <Typography variant="paragraph" className="text-center">This list includes prescribers that either could not be found or experienced an error in the verification process. These will likely require a manual check to confirm their status.</Typography>  
                 <TableBody 
                     cols={prescriberDataFields}
                     dataList={errors}
@@ -203,7 +204,7 @@ const PrescriberVerification = () => {
         <div className="flex flex-col h-screen justify-center items-center">
             <Typography variant="h3">Prescriber Management</Typography>
             <input className="py-4" type="file" name="file" accept=".xlsx, .xls" onChange={handleFileChange} />
-            <Button variant="gradient" className="flex items-center gap-3" onClick={verifyPrescribers}>
+            <Button variant="gradient" className="flex items-center gap-3" onClick={verifyPrescribers} disabled={file == null}>
                 {uploadSVG}
                 Verify Prescribers
             </Button>
