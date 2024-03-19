@@ -79,6 +79,7 @@ export async function verifyPrescribers(inputData) {
         const isValidPrescriberData = await prescriberDataSchema.isValid(prescriber)
         if (!isValidPrescriberData) {
             console.error(`Provided prescriber data for ${prescriber.firstName} ${prescriber.lastName} does not match schema. Skipping`);
+            error.push(prescriber);
             continue;
         }
 
@@ -87,6 +88,7 @@ export async function verifyPrescribers(inputData) {
         const existingPrescriber = await checkIfExistingPrescriber(prescriber);
         if (existingPrescriber) {
             console.error(`Provided prescriber data for ${prescriber.firstName} ${prescriber.lastName} already exists in database. Skipping.`)
+            verified.push(prescriber);
             continue;
         }
 

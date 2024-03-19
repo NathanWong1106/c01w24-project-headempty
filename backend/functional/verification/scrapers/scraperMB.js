@@ -70,7 +70,7 @@ export class ScraperMB extends BaseScraper {
                     }
                 });
 
-                if (name.lastName === prescriber.lastName && name.firstName === prescriber.firstName) {
+                if (name.lastName.includes(prescriber.lastName) && name.firstName.includes(prescriber.firstName)) {
                     await result.click();
                     await driver.waitForNetworkIdle();
 
