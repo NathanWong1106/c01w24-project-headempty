@@ -1,3 +1,4 @@
+import { PRESCRIBER_PRESCRIPTION_STATUS } from "../../types/prescriptionTypes.js";
 import { ACCOUNT_TYPE } from "../../types/userServiceTypes.js";
 
 export const defaultPassword = "1234";
@@ -19,6 +20,19 @@ export const genericPatient = {
     "password": defaultPassword,
     "firstName": "John",
     "lastName": "Cena",
+    "initials": "JC",
+    "language": "en",
+    "city": "Toronto",
+    "province": "ON",
+    "address": "1254 Military Trail"
+};
+
+export const genericPatient2 = {
+    "email": "patient2@gmail.com",
+    "password": defaultPassword,
+    "firstName": "Silly",
+    "lastName": "Billy",
+    "initials": "SB",
     "language": "en",
     "city": "Toronto",
     "province": "ON",
@@ -39,4 +53,12 @@ export const genericPrescriber = {
     "province": "ON",
     "address": "1254 Military Trail",
     "registered": true
+};
+
+export const genericPrescriberPrescription = {
+    "providerCode": "ON-JC001",
+    "date": "2024-12-34",
+    "initial": "JC",
+    "prescribed": true,
+    "status": PRESCRIBER_PRESCRIPTION_STATUS.NOT_LOGGED
 };

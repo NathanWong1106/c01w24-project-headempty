@@ -1,17 +1,27 @@
 export const ROUTES = {
     BASE: '/',
     LOGIN: '/login',
-    HOME: '/home'
+    HOME: '/home',
+    GREEN_RESOURCES: '/greenResources',
+}
+
+export const REGISTRATION_ROUTE_BASE = '/register' 
+export const REGISTRATION_ROUTES = {
+    PATIENT_REGISTRATION: '/register/patient',
+    PRESCRIBER_REGISTRATION: '/register/:prescriberId'
 }
 
 export const ADMIN_ROUTE_BASE = '/admin'
 export const PRESCRIBER_ROUTE_BASE = '/prescriber'
 export const ADMIN_ROUTES = {
-    PRESCRIBER_MNGMT: `${ADMIN_ROUTE_BASE}/prescriberManagement`
+    PRESCRIBER_MNGMT: `${ADMIN_ROUTE_BASE}/prescriberManagement`,
+    PRESCRIBER_VERIFICATION: `${ADMIN_ROUTE_BASE}/prescriberVerification`,
 }
 
+
+export const PRESCRIBER_ROUTE_BASE = '/prescriber'
 export const PRESCRIBER_ROUTES = {
-    PRESCRIPTIONS: `${PRESCRIBER_ROUTE_BASE}/prescriptionLogs`,
+    PRESCRIPTIONS: `${PRESCRIBER_ROUTE_BASE}/myPrescriptions`
     PRESC_FORM: `${PRESCRIBER_ROUTE_BASE}/prescriptionForm`
 }
 
@@ -22,6 +32,10 @@ const COMMON_LINKS = [
     {
         name: "Home",
         link: ROUTES.HOME
+    },
+    {
+        name: "Green Resources",
+        link: ROUTES.GREEN_RESOURCES
     }
 ]
 
@@ -31,6 +45,10 @@ const ADMIN_LINKS = [
     {
         name: "Prescriber Management",
         link: ADMIN_ROUTES.PRESCRIBER_MNGMT
+    },
+    {
+        name: "Prescriber Verification",
+        link: ADMIN_ROUTES.PRESCRIBER_VERIFICATION
     }
 ]
 

@@ -73,9 +73,9 @@ const PrescriberManagement = () => {
                         <td key={prescriber['providerCode'] + '_' + field} className="p-4">
                             <div className="flex items-center">
                                 {
-                                    prescriber[prescriberField2PrescriberInfo[field]] ?
+                                    prescriber[prescriberField2PrescriberInfo[field]] !== null ?
                                         prescriber[prescriberField2PrescriberInfo[field]].toString() :
-                                        prescriber[prescriberField2PrescriberInfo[field]]
+                                        null
                                 }
                             </div>
                         </td>
