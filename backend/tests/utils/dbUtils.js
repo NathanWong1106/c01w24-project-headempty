@@ -1,6 +1,6 @@
 import { MongoClient, Db } from "mongodb";
 import { COLLECTIONS, SERVER } from "../../constants.js"
-import { genericPatient, genericPrescriber, coordinator, assistant, genericPrescriberPrescription, genericPatientrPrescription } from "./sampleData.js"
+import { genericPatient, genericPrescriber, coordinator, assistant, genericPrescriberPrescription, genericPatientPrescription } from "./sampleData.js"
 import { retryPromiseWithDelay } from "../../utils.js";
 import bcrypt from "bcryptjs"
 
@@ -154,7 +154,7 @@ export const insertPrescriberPrescriptions = async (numPrescriberPrescriptions =
  * @returns {Object} the patientPrescription that was inserted.
  */
 export const insertPatientFrom = async (modifier = {}) => {
-    let patientPrescription = await objWithModifier(genericPatientrPrescription, modifier);
+    let patientPrescription = await objWithModifier(genericPatientPrescription, modifier);
     await db.collection(COLLECTIONS.PATIENT_PRESCRIPTIONS).insertOne(patientPrescription);
     return patientPrescription;
 }

@@ -63,7 +63,7 @@ export const genericPrescriberPrescription = {
     "status": PRESCRIBER_PRESCRIPTION_STATUS.NOT_LOGGED
 };
 
-export const genericPatientrPrescription = {
+export const genericPatientPrescription = {
     "providerCode": "ON-JC001",
     "date": "2024-12-34",
     "initial": "JC",
