@@ -48,14 +48,3 @@ export const prescriptionField2PrescriptionInfo = {
     "Prescribed with Discovery Pass": "prescribed", 
     "Status": "status"
 }
-
-/* User friendly field names (use in table header) */
-export const patientFields = ["Provider Code", "Date", "Patient Initials", "Prescribed with Discovery Pass", "Status"]
-/* Map the above user friendly names to actual field names */
-export const patientField2PatientInfo = {
-    "Provider Code": "providerCode",
-    "Date": "date",
-    "Patient Initials": "initial",
-    "Prescribed with Discovery Pass": "prescribed", 
-    "Status": "status"
-}
