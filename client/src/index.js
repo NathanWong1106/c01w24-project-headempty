@@ -23,7 +23,7 @@ import PrescriberRoute from './routing/PrescriberRoute';
 import PrescriberManagement from './pages/admin/PrescriberManagement';
 import PrescriberVerification from './pages/admin/PrescriberVerification';
 import PrescriberPrescriptions from './pages/prescriber/PrescriberPrescriptions';
-import PatientPrescriptions from './pages/prescriber/PrescriberPrescriptions';
+import PatientPrescriptions from './pages/patient/PatientPrescription';
 import PatientRoute from './routing/PatientRoute';
 
 const router = createBrowserRouter(
