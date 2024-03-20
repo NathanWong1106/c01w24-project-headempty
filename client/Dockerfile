@@ -12,6 +12,7 @@ COPY package.json /app
 COPY package-lock.json /app
 
 ENV NODE_ENV=production
+ENV REACT_APP_API_ADDRESS=https://c01-w24-backend.blueglacier-8f7255ec.canadaeast.azurecontainerapps.io
 ENV DISABLE_ESLINT_PLUGIN=true
 
 # Install dependecies
