@@ -7,7 +7,7 @@ import { getPaginatedPatientPrescription } from "../database/patientServiceDbUti
 export const patientRouter = express.Router();
 
 /**
- * Get a paginated list of all prescription prescriptions from patient.
+ * Get a paginated list of all prescriptions for a patient.
  * 
  * Needs to be authorized (use middleware patientRoute).
  * 
