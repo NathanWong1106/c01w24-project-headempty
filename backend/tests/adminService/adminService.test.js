@@ -1,4 +1,4 @@
-import { clearDB, closeConn, connect, insertAdmins, insertPrescribers } from "../utils/dbUtils.js";
+import { clearDB, closeConn, connect, insertAdmins, insertPrescribers, insertPrescriberPrescriptions } from "../utils/dbUtils.js";
 import { loginAsDefaultCoordinator } from "../utils/testSessionUtils.js";
 import { fetchAsAdmin } from "../utils/fetchUtils.js";
 
@@ -102,4 +102,42 @@ test("/admin/patchPrescriber - patches correct prescriber and protects providerC
     expect(retPrescriber.email).toBe(patches.email);
     expect(retPrescriber.profession).toBe(patches.profession);
     expect(retPrescriber.providerCode).toBe(targetProviderCode);
+})
+
+test("/admin/getAdminPaginatedPrescriberPrescriptions - gets all prescribers paginated Prescription", async () => {
+    await insertPrescriberPrescriptions(40);
+
+    for (let page = 1; page <= 2; page++) {
+        const body = {
+            page: page,
+            pageSize: 20,
+            search: {},
+            thisFieldShouldBeIgnored: "AHHHHHHHHHH",
+        }
+        let res = await fetchAsAdmin(adminToken, "/admin/getAdminPaginatedPrescriberPrescriptions", "POST", body);
+        expect(res.status).toBe(200);
+
+        let resBody = await res.json();
+        expect(resBody.list.length).toBe(20);
+    }
+})
+
+test("/admin/getAdminPrescriberPrescriptions - no results", async () => {
+    await insertPrescriberPrescriptions(40);
+
+    const searchProviderCode = "Should not find anything";
+
+    for (let page = 1; page <= 2; page++) {
+        const body = {
+            page: page,
+            pageSize: 20,
+            search: { providerCode: searchProviderCode },
+            thisFieldShouldBeIgnored: "AHHHHHHHHHH",
+        }
+        let res = await fetchAsAdmin(adminToken, "/admin/getAdminPaginatedPrescriberPrescriptions", "POST", body);
+        expect(res.status).toBe(200);
+
+        let resBody = await res.json();
+        expect(resBody.list.length).toBe(0);
+    }
 })

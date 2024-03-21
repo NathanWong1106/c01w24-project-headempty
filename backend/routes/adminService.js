@@ -3,7 +3,7 @@
  */
 
 import express from "express";
-import { getPaginatedPrescriber, patchSinglePrescriber } from "../database/adminServiceDbUtils.js";
+import { getAdminPaginatedPrescriberPrescription, getPaginatedPrescriber, patchSinglePrescriber } from "../database/adminServiceDbUtils.js";
 
 export const adminRouter = express.Router();
 
@@ -87,6 +87,40 @@ adminRouter.patch("/patchPrescriber", express.json(), async (req, res) => {
         } else {
             return res.status(404).json({ error: `Failed to find prescriber with providerCode: ${providerCode}` });
         }
+    } catch (err) {
+        return res.status(500).json({ error: err.message });
+    }
+})
+
+/**
+ * Get a paginated list of all prescription prescriptions.
+ * 
+ * Needs to be authorized (use middleware adminRoute).
+ * 
+ * Expected body: {
+ *  page: Number (1-indexed)
+ *  pageSize: Number
+ *  search: Object
+ * }
+ * 
+ * Response: { list: PrescriberPrescription[] } | {error: String}
+ * Response Status: 200 - OK, else error
+ */
+adminRouter.post("/getAdminPaginatedPrescriberPrescriptions", express.json(), async (req, res) => {
+    try {
+        const { page, pageSize, search } = req.body;
+
+        if (page === null || pageSize === null) {
+            return res.status(400).json({ error: "A page, pageSize, and optional search object must be provided." });
+        }
+
+        if (page < 1 || pageSize < 1) {
+            return req.status(400).json({ error: "A valid page and pageSize must be provided." })
+        }
+
+        const retList = await getAdminPaginatedPrescriberPrescription(page, pageSize, search);
+
+        return res.status(200).json({ list: retList });
     } catch (err) {
         return res.status(500).json({ error: err.message });
     }
