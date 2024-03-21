@@ -17,13 +17,17 @@ export const prescriberPrescriptionSearchSchema = object({
     status: string()
 }).noUnknown()
 
-export const prescriberPrescriptionPatchSchema = object({
-    providerCode: string().required(),
-    date: string().required(),
-    initial: string().required(),
+export const patientPrescriptionSearchSchema = object({
+    providerCode: string(),
+    date: string(),
+    initial: string(),
     prescribed: boolean(),
-    status: string(),
-    description: string().nullable()
+    firstName: string().required(), 
+    lastName: string().required(), 
+    email: string().required(), 
+    address: string(), 
+    language: string(), 
+    status: string()
 }).noUnknown()
 
 export const prescriberSearchSchema = object({
