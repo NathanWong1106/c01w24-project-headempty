@@ -1,4 +1,4 @@
-import { PRESCRIBER_PRESCRIPTION_STATUS } from "../../types/prescriptionTypes.js";
+import { PATIENT_PRESCRIPTION_STATUS, PRESCRIBER_PRESCRIPTION_STATUS } from "../../types/prescriptionTypes.js";
 import { ACCOUNT_TYPE } from "../../types/userServiceTypes.js";
 
 export const defaultPassword = "1234";
@@ -61,4 +61,17 @@ export const genericPrescriberPrescription = {
     "initial": "JC",
     "prescribed": true,
     "status": PRESCRIBER_PRESCRIPTION_STATUS.NOT_LOGGED
+};
+
+export const genericPatientPrescription = {
+    "providerCode": "ON-JC001",
+    "date": "2024-12-34",
+    "initial": "JC",
+    "prescribed": true,
+    "firstName": "John",
+    "lastName": "Cena",
+    "email": "patient1@gmail.com",
+    "address": "1254 Military Trail",
+    "language": "en",
+    "status": PATIENT_PRESCRIPTION_STATUS.NOT_LOGGED
 };

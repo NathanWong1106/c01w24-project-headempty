@@ -23,3 +23,14 @@ export const fetchAsPrescriber = async (prescriberToken, endpoint, method, body)
         body: JSON.stringify(body)
     })
 }
+
+export const fetchAsPatient = async (patientToken, endpoint, method, body) => {
+    return await fetch(`${SERVER_URL}${endpoint}`, {
+        method: method,
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${patientToken}`
+        },
+        body: JSON.stringify(body)
+    })
+}
