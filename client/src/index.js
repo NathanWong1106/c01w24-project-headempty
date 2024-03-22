@@ -25,7 +25,6 @@ import PrescriberManagement from './pages/admin/PrescriberManagement';
 import PrescriberVerification from './pages/admin/PrescriberVerification';
 import PrescriberPrescriptions from './pages/prescriber/PrescriberPrescriptions';
 import PrescriptionLogs from './pages/prescriber/PrescriptionLog';
-import PrescriptionForm from './pages/prescriber/PrescriptionForm';
 
 
 const router = createBrowserRouter(
@@ -48,7 +47,6 @@ const router = createBrowserRouter(
       </Route>
       <Route path={PRESCRIBER_ROUTE_BASE} elements= {<PrescriberRoute />}>
         <Route path={PRESCRIBER_ROUTES.PRESCRIPTIONS} element={<PrescriptionLogs />} />
-        <Route path={PRESCRIBER_ROUTES.PRESC_FORM} element={<PrescriptionForm />} />
       </Route>
     </Route>
   )

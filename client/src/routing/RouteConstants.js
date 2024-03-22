@@ -19,9 +19,8 @@ export const ADMIN_ROUTES = {
 }
 
 
-export const PRESCRIBER_ROUTE_BASE = '/prescriber'
 export const PRESCRIBER_ROUTES = {
-    PRESCRIPTIONS: `${PRESCRIBER_ROUTE_BASE}/myPrescriptions`
+    PRESCRIPTIONS: `${PRESCRIBER_ROUTE_BASE}/myPrescriptions`,
     PRESC_FORM: `${PRESCRIBER_ROUTE_BASE}/prescriptionForm`
 }
 
