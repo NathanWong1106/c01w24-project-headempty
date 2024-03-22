@@ -4,7 +4,7 @@ import { PrescriberPrescription } from "../types/prescriptionTypes.js";
 import { getDb } from "./dbConnection.js";
 import paginate from "./pagination.js";
 import { objWithFields } from "./utils/dbUtils.js";
-import { prescriberSearchSchema, prescriberPatchSchema, adminPrescriberPrescriptionSearchSchema } from "../schemas.js";
+import { prescriberSearchSchema, prescriberPatchSchema, adminPrescriberPrescriptionSearchSchema, adminPrescriberPrescriptionPatchSchema } from "../schemas.js";
 import { fillPrescriberPrescription } from "./prescriberServiceDbUtils.js";
 
 /**
@@ -54,4 +54,25 @@ export async function getAdminPaginatedPrescriberPrescription(page, pageSize, se
     const collection = getDb().collection(COLLECTIONS.PRESCRIBER_PRESCRIPTIONS);
     const data = await paginate(collection.find(searchObj), page, pageSize).toArray();
     return data.map(x => fillPrescriberPrescription(x));
+}
+
+/**
+ * Patch a single prescriber prescription with patches
+ * @param {string} providerCode provider code of the prescriber
+ * @param {Object} patches fields to patch
+ * @returns {boolean} true if successful, else false
+ */
+export async function patchSinglePrescriberPrescription(providerCode, initial, date, patches) {
+    const patchObj = await objWithFields(patches, adminPrescriberPrescriptionPatchSchema);
+    const collection = getDb().collection(COLLECTIONS.PRESCRIBER_PRESCRIPTIONS);
+    const data = await collection.updateOne(
+        {
+            providerCode: providerCode,
+            initial: initial,
+            date: date,
+        },
+        { $set: patchObj }
+    );
+
+    return data.matchedCount === 1;
 }

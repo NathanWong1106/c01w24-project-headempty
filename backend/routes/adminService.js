@@ -3,7 +3,7 @@
  */
 
 import express from "express";
-import { getAdminPaginatedPrescriberPrescription, getPaginatedPrescriber, patchSinglePrescriber } from "../database/adminServiceDbUtils.js";
+import { getAdminPaginatedPrescriberPrescription, getPaginatedPrescriber, patchSinglePrescriber, patchSinglePrescriberPrescription } from "../database/adminServiceDbUtils.js";
 
 export const adminRouter = express.Router();
 
@@ -121,6 +121,47 @@ adminRouter.post("/getAdminPaginatedPrescriberPrescriptions", express.json(), as
         const retList = await getAdminPaginatedPrescriberPrescription(page, pageSize, search);
 
         return res.status(200).json({ list: retList });
+    } catch (err) {
+        return res.status(500).json({ error: err.message });
+    }
+})
+
+/**
+ * Patch a single prescriber's prescription. 
+ * Valid fields for patch can be found in adminDbUtils. 
+ * Any other fields passed through patches will be ignored.
+ * 
+ * Needs to be authorized (use middleware adminRoute).
+ * 
+ * Expected body: {
+ *  providerCode: String
+ *  initial: String
+ *  date: String
+ *  patches: {
+ *      providerCode: String?
+ *      date: String?
+ *      initial: String?
+ *      prescribed: Boolean?
+ *      status: String?
+ *  }
+ * 
+ * Response: {message: String} | {error: String}
+ * Response status: 200 - OK, else error
+ * }
+ */
+adminRouter.patch("/patchSinglePrescriberPrescription", express.json(), async (req, res) => {
+    try {
+        const { providerCode, initial, date, patches } = req.body;
+
+        if ([providerCode, initial, date, patches].some(ele => ele === null) || [providerCode, initial, date].some(ele => ele === "")) {
+            return res.status(400).json({ error: "A providerCode, initial, date, and patches object must be provided and non-empty." });
+        }
+
+        if (await patchSinglePrescriberPrescription(providerCode, initial, date, patches)) {
+            return res.status(200).json({ message: `Successfully patched prescriber prescription with providerCode: ${providerCode}, initial: ${initial}, date: ${date}.` });
+        } else {
+            return res.status(404).json({ error: `Failed to find prescriber prescription with providerCode: ${providerCode}, initial: ${initial}, date: ${date}.` });
+        }
     } catch (err) {
         return res.status(500).json({ error: err.message });
     }

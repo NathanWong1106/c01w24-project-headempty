@@ -1,6 +1,7 @@
 import { clearDB, closeConn, connect, insertAdmins, insertPrescribers, insertPrescriberPrescriptions } from "../utils/dbUtils.js";
 import { loginAsDefaultCoordinator } from "../utils/testSessionUtils.js";
 import { fetchAsAdmin } from "../utils/fetchUtils.js";
+import { PRESCRIBER_PRESCRIPTION_STATUS } from "../../types/prescriptionTypes.js";
 
 let adminToken = null;
 
@@ -140,4 +141,112 @@ test("/admin/getAdminPrescriberPrescriptions - no results", async () => {
         let resBody = await res.json();
         expect(resBody.list.length).toBe(0);
     }
+})
+
+test("/admin/patchSinglePrescriberPrescription - patches correct prescriber prescription", async () => {
+    await insertPrescriberPrescriptions(20);
+
+    const targetProviderCode = "ON-JC001";
+    const targetInitial = "JC";
+    const targetDate = "2024-12-10";
+    const patches = {
+        "prescribed": true,
+        "status": PRESCRIBER_PRESCRIPTION_STATUS.COMPLETE
+    }
+    const patchBody = {
+        providerCode: targetProviderCode,
+        initial: targetInitial,
+        date: targetDate,
+        patches: patches
+    }
+
+    // Patch prescriber
+    let res = await fetchAsAdmin(adminToken, "/admin/patchSinglePrescriberPrescription", "PATCH", patchBody);
+    expect(res.status).toBe(200);
+
+    const getPageBody = {
+        page: 1,
+        pageSize: 20,
+        search: {
+            providerCode: targetProviderCode,
+            initial: targetInitial,
+            date: targetDate,
+        }
+    }
+
+    // Get resulting list and search for the newly patched prescriber
+    res = await fetchAsAdmin(adminToken, "/admin/getAdminPaginatedPrescriberPrescriptions", "POST", getPageBody);
+    expect(res.status).toBe(200);
+
+    let resBody = await res.json();
+    let retPrescriber = resBody.list[0];
+    expect(resBody.list.length).toBe(1);
+    expect(retPrescriber.prescribed).toBe(patches.prescribed);
+    expect(retPrescriber.status).toBe(patches.status);
+})
+
+test("/admin/patchSinglePrescriberPrescription - invalid patch body, null fields", async () => {
+    await insertPrescriberPrescriptions(20);
+
+    const targetProviderCode = "ON-JC001";
+    const targetInitial = null;
+    const targetDate = "2024-12-10";
+    const patches = {
+        "prescribed": true,
+        "status": PRESCRIBER_PRESCRIPTION_STATUS.COMPLETE
+    }
+    const patchBody = {
+        providerCode: targetProviderCode,
+        initial: targetInitial,
+        date: targetDate,
+        patches: patches
+    }
+
+    // Patch prescriber
+    let res = await fetchAsAdmin(adminToken, "/admin/patchSinglePrescriberPrescription", "PATCH", patchBody);
+    expect(res.status).toBe(400);
+})
+
+test("/admin/patchSinglePrescriberPrescription - invalid patch body, empty fields", async () => {
+    await insertPrescriberPrescriptions(20);
+
+    const targetProviderCode = "ON-JC001";
+    const targetInitial = "";
+    const targetDate = "";
+    const patches = {
+        "prescribed": true,
+        "status": PRESCRIBER_PRESCRIPTION_STATUS.COMPLETE
+    }
+    const patchBody = {
+        providerCode: targetProviderCode,
+        initial: targetInitial,
+        date: targetDate,
+        patches: patches
+    }
+
+    // Patch prescriber
+    let res = await fetchAsAdmin(adminToken, "/admin/patchSinglePrescriberPrescription", "PATCH", patchBody);
+    expect(res.status).toBe(400);
+})
+
+test("/admin/patchSinglePrescriberPrescription - fails to find prescriber prescription", async () => {
+    await insertPrescriberPrescriptions(20);
+
+    const targetProviderCode = "ON-JC001";
+    const targetInitial = "GG";
+    const targetDate = "2024-12-69";
+    const patches = {
+        "prescribed": true,
+        "status": PRESCRIBER_PRESCRIPTION_STATUS.COMPLETE
+    }
+    const patchBody = {
+        providerCode: targetProviderCode,
+        initial: targetInitial,
+        date: targetDate,
+        patches: patches
+    }
+
+    // Patch prescriber
+    let res = await fetchAsAdmin(adminToken, "/admin/patchSinglePrescriberPrescription", "PATCH", patchBody);
+    expect(res.status).toBe(404);
 })
