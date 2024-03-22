@@ -9,6 +9,7 @@ import { connectToMongo } from "./database/dbConnection.js";
 import { adminRouter } from "./routes/adminService.js";
 import { prescriberRouter } from "./routes/prescriberService.js";
 import { verificationRouter } from "./routes/verificationService.js";
+import { patientRouter } from "./routes/patientService.js";
 
 // Give this process an identifiable name so we can kill it
 // after jest tests run.
@@ -38,6 +39,9 @@ app.use("/admin", adminRoute, adminRouter);
 
 // Prescriber service
 app.use("/prescriber", prescriberRoute, prescriberRouter);
+
+// Patient service
+app.use("/patient", patientRoute, patientRouter);
 
 // Prescriber Verification service
 app.use("/verification", adminRoute, verificationRouter);

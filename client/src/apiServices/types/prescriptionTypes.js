@@ -50,3 +50,4 @@ export const prescriptionField2PrescriptionInfo = {
     "Prescribed with Discovery Pass": ["prescribed", "checkbox"],
     "Status": ["status", "text"]
 }
+

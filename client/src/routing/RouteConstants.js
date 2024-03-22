@@ -24,6 +24,11 @@ export const PRESCRIBER_ROUTES = {
     PRESC_FORM: `${PRESCRIBER_ROUTE_BASE}/prescriptionForm`
 }
 
+export const PATIENT_ROUTE_BASE = '/patient'
+export const PATIENT_ROUTES = {
+    PRESCRIPTIONS: `${PATIENT_ROUTE_BASE}/myPrescriptions`
+}
+
 
 
 /* Below is for use in the sidebar / drawer */
@@ -67,4 +72,10 @@ export const PRESCRIBER_LINKS = [
 ];
 
 /* Links for patients */
-export const PATIENT_LINKS = [...COMMON_LINKS]
+export const PATIENT_LINKS = [
+    ...COMMON_LINKS,
+    {
+        name: "My Prescriptions",
+        link: PATIENT_ROUTES.PRESCRIPTIONS
+    }
+];

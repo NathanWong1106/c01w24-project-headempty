@@ -26,6 +26,19 @@ export const prescriberPrescriptionPatchSchema = object({
     description: string().nullable()
 }).noUnknown()
 
+export const patientPrescriptionSearchSchema = object({
+    providerCode: string(),
+    date: string(),
+    initial: string(),
+    prescribed: boolean(),
+    firstName: string().required(), 
+    lastName: string().required(), 
+    email: string().required(), 
+    address: string(), 
+    language: string(), 
+    status: string()
+}).noUnknown()
+
 export const prescriberSearchSchema = object({
     providerCode: string(),
     email: string(),

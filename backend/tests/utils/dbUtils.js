@@ -1,6 +1,6 @@
 import { MongoClient, Db } from "mongodb";
 import { COLLECTIONS, SERVER } from "../../constants.js"
-import { genericPatient, genericPrescriber, coordinator, assistant, genericPrescriberPrescription } from "./sampleData.js"
+import { genericPatient, genericPrescriber, coordinator, assistant, genericPrescriberPrescription, genericPatientPrescription } from "./sampleData.js"
 import { retryPromiseWithDelay } from "../../utils.js";
 import bcrypt from "bcryptjs"
 
@@ -144,6 +144,37 @@ export const insertPrescriberPrescriptions = async (numPrescriberPrescriptions =
     }
 }
 
+/**
+ * Inserts a patient Prescription to the db. If modifier is empty then inserts genericPatientPrescription.
+ * Else, overwrites the specified fields in genericPatientPrescription with the values in 
+ * modifier then inserts the modified patientPrescription.
+ * 
+ * Returns the patientPrescription that was inserted.
+ * @param {Object} modifier optional object to overwrite values in genericPatientPrescription.
+ * @returns {Object} the patientPrescription that was inserted.
+ */
+export const insertPatientFrom = async (modifier = {}) => {
+    let patientPrescription = await objWithModifier(genericPatientPrescription, modifier);
+    await db.collection(COLLECTIONS.PATIENT_PRESCRIPTIONS).insertOne(patientPrescription);
+    return patientPrescription;
+}
+
+/**
+ * Insert numPatientsPrescription Patients into the db. 
+ * Each Patient Prescription is generated from the generic patient Prescription Prescription at
+ * with incrementing date "2024-12-{i}" and 
+ * padded providerCode "ON-JC00{i}"
+ * @param {number} numPatientPrescriptions 
+ */
+export const insertPatientPrescriptions = async (numPatientPrescriptions = 20) => {
+    for (let i = 1; i <= numPatientPrescriptions; i++) {
+        const modifier = {
+            date: `2024-12-${i}`,
+            providerCode: `ON-JC00${i}`
+        }
+        await insertPatientFrom(modifier);
+    }
+}
 
 /**
  * Returns a clone of obj with the KVP's specified in opts
