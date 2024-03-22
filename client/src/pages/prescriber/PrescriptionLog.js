@@ -5,7 +5,6 @@ import { Input, Button, Card, Typography, Select, Option, Form, Modal, FormGroup
 import { useNavigate } from "react-router-dom";
 import { ClosableAlert } from "../../components/ClosableAlert.js";
 import { PRESCRIBER_ROUTES } from "../../routing/RouteConstants.js";
-import { PrescriptionForm } from "./PrescriptionForm.js";
 import { PrescriptionList } from "../../components/PrescriptionList.js";
 import { PrescriptionLogForm } from "../../components/PrescriptionLogForm.js";
 
@@ -22,11 +21,6 @@ const PrescriptionLog = () => {
     // const openForm = () => {
     //     navigate(PRESCRIBER_ROUTES.PRESC_FORM);
     // }
-
-    const openForm = () => {
-        <PrescriptionForm open={open} handleOpen={handleOpen} />
-    }
-
     
     const prescriptions = ['Prescription 1', 'Prescription 2', 'Prescription 3'];
 

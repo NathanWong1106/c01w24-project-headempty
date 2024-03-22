@@ -18,8 +18,9 @@ export const ADMIN_ROUTES = {
     PRESCRIBER_VERIFICATION: `${ADMIN_ROUTE_BASE}/prescriberVerification`,
 }
 
+
 export const PRESCRIBER_ROUTES = {
-    PRESCRIPTIONS: `${PRESCRIBER_ROUTE_BASE}/prescriptionLogs`,
+    PRESCRIPTIONS: `${PRESCRIBER_ROUTE_BASE}/myPrescriptions`,
     PRESC_FORM: `${PRESCRIBER_ROUTE_BASE}/prescriptionForm`
 }
 
