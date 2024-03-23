@@ -4,7 +4,7 @@ import { PatientPrescription, PrescriberPrescription } from "../types/prescripti
 import { getDb } from "./dbConnection.js";
 import paginate from "./pagination.js";
 import { objWithFields } from "./utils/dbUtils.js";
-import { prescriberSearchSchema, prescriberPatchSchema, adminPrescriberPrescriptionSearchSchema, adminPrescriberPrescriptionPatchSchema, adminPatientPrescriptionSearchSchema, adminSinglePatientPrescriptionSearchSchema } from "../schemas.js";
+import { prescriberSearchSchema, prescriberPatchSchema, adminPrescriberPrescriptionSearchSchema, adminPrescriberPrescriptionPatchSchema, adminPatientPrescriptionSearchSchema, adminSinglePatientPrescriptionSearchSchema, adminSinglePrescriberPrescriptionSearchSchema } from "../schemas.js";
 import { fillPrescriberPrescription } from "./prescriberServiceDbUtils.js";
 import { fillPatientPrescription } from "./patientServiceDbUtils.js";
 import { PRESCRIBER_PRESCRIPTION_STATUS, PATIENT_PRESCRIPTION_STATUS } from "../types/prescriptionTypes.js";
@@ -56,6 +56,21 @@ export async function getAdminPaginatedPrescriberPrescription(page, pageSize, se
     const collection = getDb().collection(COLLECTIONS.PRESCRIBER_PRESCRIPTIONS);
     const data = await paginate(collection.find(searchObj), page, pageSize).toArray();
     return data.map(x => fillPrescriberPrescription(x));
+}
+
+/**
+ * Get a patient prescriptions 
+ * @param {Object} search search parameters
+ * @returns {PatientPrescription || null} patient's log prescription
+ */
+export async function getAdminSinglePrescriberPrescription(search) {
+    const searchObj = await objWithFields(search, adminSinglePrescriberPrescriptionSearchSchema);
+    const collection = getDb().collection(COLLECTIONS.PRESCRIBER_PRESCRIPTIONS);
+    const data = await collection.findOne(searchObj);
+    if (!data) {
+        return null;
+    }
+    return fillPrescriberPrescription(data);
 }
 
 /**
@@ -171,4 +186,16 @@ export async function getAdminSinglePatientPrescription(search) {
         return null;
     }
     return fillPatientPrescription(data);
+}
+
+/**
+ * Delete a prescriber prescription
+ * @param {Object} search search parameters
+ * @returns {boolean} true if successful, else false
+ */
+export async function deletePrescriberPrescription(search) {
+    const searchObj = await objWithFields(search, adminSinglePrescriberPrescriptionSearchSchema);
+    const collection = getDb().collection(COLLECTIONS.PRESCRIBER_PRESCRIPTIONS);
+    const data = await collection.deleteOne(searchObj);
+    return data.deletedCount === 1;
 }

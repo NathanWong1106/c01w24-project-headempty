@@ -3,7 +3,16 @@
  */
 
 import express from "express";
-import { getAdminPaginatedPatientPrescription, getAdminPaginatedPrescriberPrescription, getAdminSinglePatientPrescription, getPaginatedPrescriber, patchSinglePrescriber, patchSinglePrescriberPrescription } from "../database/adminServiceDbUtils.js";
+import {
+    getAdminPaginatedPatientPrescription,
+    getAdminPaginatedPrescriberPrescription,
+    getAdminSinglePatientPrescription,
+    getAdminSinglePrescriberPrescription,
+    getPaginatedPrescriber,
+    patchSinglePrescriber,
+    patchSinglePrescriberPrescription,
+    deletePrescriberPrescription,
+} from "../database/adminServiceDbUtils.js";
 
 export const adminRouter = express.Router();
 
@@ -127,6 +136,33 @@ adminRouter.post("/getAdminPaginatedPrescriberPrescriptions", express.json(), as
 })
 
 /**
+ * Get a single prescriber prescription.
+ * 
+ * Needs to be authorized (use middleware adminRoute).
+ * 
+ * Expected body: {
+ *  search: Object
+ * }
+ * 
+ * Response: { prescription: PrescriberPrescription } | {error: String}
+ * Response Status: 200 - OK, else error
+ */
+adminRouter.post("/getAdminSinglePrescriberPrescription", express.json(), async (req, res) => {
+    try {
+        const { search } = req.body;
+
+        const ret = await getAdminSinglePrescriberPrescription(search);
+
+        if (!ret) {
+            return res.status(404).json({ error: `Failed to find prescriber prescription with providerCode: ${search.providerCode}, initial: ${search.initial}, date: ${search.date}` });
+        }
+        return res.status(200).json({ prescription: ret });
+    } catch (err) {
+        return res.status(500).json({ error: err.message });
+    }
+})
+
+/**
  * Patch a single prescriber's prescription. 
  * Valid fields for patch can be found in adminDbUtils. 
  * Any other fields passed through patches will be ignored.
@@ -169,6 +205,33 @@ adminRouter.patch("/patchSinglePrescriberPrescription", express.json(), async (r
 })
 
 /**
+ * Delete a single prescriber prescription.
+ * 
+ * Needs to be authorized (use middleware adminRoute).
+ * 
+ * Expected body: {
+ *  search: Object
+ * }
+ * 
+ * Response: { message: String } | {error: String}
+ * Response Status: 200 - OK, else error
+ */
+adminRouter.post("/deletePrescriberPrescription", express.json(), async (req, res) => {
+    try {
+        const { search } = req.body;
+
+        const ret = await deletePrescriberPrescription(search);
+
+        if (!ret) {
+            return res.status(404).json({ error: `Failed to find prescriber prescription with providerCode: ${search.providerCode}, initial: ${search.initial}, date: ${search.date}` });
+        }
+        return res.status(200).json({ message: `Successfully deleted prescriber prescription with providerCode: ${search.providerCode}, initial: ${search.initial}, date: ${search.date}.` });
+    } catch (err) {
+        return res.status(500).json({ error: err.message });
+    }
+})
+
+/**
  * Get a paginated list of all patient prescriptions.
  * 
  * Needs to be authorized (use middleware adminRoute).
@@ -203,7 +266,7 @@ adminRouter.post("/getAdminPaginatedPatientPrescriptions", express.json(), async
 })
 
 /**
- * Get a paginated list of all patient prescriptions.
+ * Get a single patient prescription.
  * 
  * Needs to be authorized (use middleware adminRoute).
  * 
@@ -221,7 +284,7 @@ adminRouter.post("/getAdminSinglePatientPrescription", express.json(), async (re
         const ret = await getAdminSinglePatientPrescription(search);
 
         if (!ret) {
-            return res.status(404).json({ error: `Failed to find patient with providerCode: ${search.providerCode}, initial: ${search.initial}, date: ${search.date}` });
+            return res.status(404).json({ error: `Failed to find patient prescription with providerCode: ${search.providerCode}, initial: ${search.initial}, date: ${search.date}` });
         }
         return res.status(200).json({ prescription: ret });
     } catch (err) {
