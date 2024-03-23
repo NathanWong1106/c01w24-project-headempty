@@ -4,8 +4,9 @@
  */
 
 import express from "express";
-import { postSinglePrescription, checkMatchingPrescription } from "../database/prescriberServiceDbUtils.js";
+import { postSinglePrescription } from "../database/prescriberServiceDbUtils.js";
 import { getPaginatedPrescriberPrescription } from "../database/prescriberServiceDbUtils.js";
+import { getMatchingPatientPrescription, patchPatientPrescriptionStatus } from "../database/patientServiceDbUtils.js";
 export const prescriberRouter = express.Router();
 
 
@@ -17,7 +18,6 @@ export const prescriberRouter = express.Router();
  * @returns {Promise<ApiResponse>} The response object from the API call.
  */
 prescriberRouter.post("/postPrescription", express.json(), async (req, res) => {
-    console.log("postPrescription");
     try {
         const { providerCode, patches } = req.body;
 
@@ -36,6 +36,37 @@ prescriberRouter.post("/postPrescription", express.json(), async (req, res) => {
     }
 });
 
+prescriberRouter.post("/getMatchingPrescription", express.json(), async (req, res) => {
+        try {
+            const { providerCode, date, initial } = req.body;
+    
+            if (providerCode === null || date === null || initial === null) {
+                return res.status(400).json({ error: "A providerCode, date, and initial must be provided." });
+            }   
+            const ret = await getMatchingPatientPrescription(providerCode, date, initial);
+
+            return res.status(200).json({ bool: ret[0], id: ret[1]});
+        } catch (err) {
+            return res.status(500).json({ error: err.message });
+        }
+});
+
+
+prescriberRouter.patch("/patchPatientStatus", express.json(), async (req, res) => {
+    try {
+        const { id, patStatus } = req.body;
+
+        if (id === null || patStatus === null) {
+            return res.status(400).json({ error: "An id and status must be provided." });
+        }
+
+        const res = await patchPatientPrescriptionStatus(id, patStatus);
+        return res;
+
+    } catch (err) {
+        return res.status(500).json({ error: err.message });
+    }
+});
 
 /**
  * Get a paginated list of all prescription prescriptions from prescriber.

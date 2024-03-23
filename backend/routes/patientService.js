@@ -4,6 +4,7 @@
 
 import express from "express";
 import { getPaginatedPatientPrescription } from "../database/patientServiceDbUtils.js";
+import { getMatchingPatientPrescription } from "../database/patientServiceDbUtils.js";
 export const patientRouter = express.Router();
 
 /**

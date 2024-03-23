@@ -43,11 +43,11 @@ export const visiblePrescFields = ["Provider Code", "Date", "Patient Initials", 
 export const prescriptionFields = ["Provider Code", "Date", "Patient Initials", "Description", "Prescribed with Discovery Pass", "Status"];
 /* Map the above user friendly names to actual field names */
 export const prescriptionField2PrescriptionInfo = {
-    "Provider Code": ["providerCode", "text"],
-    "Date": ["date", "date"],
-    "Patient Initials": ["initial", "text"],
-    "Description": ["description", "text"],
-    "Prescribed with Discovery Pass": ["prescribed", "checkbox"],
-    "Status": ["status", "text"]
+    "Provider Code": "providerCode",
+    "Date": "date",
+    "Patient Initials": "initial",
+    "Description": "description",
+    "Prescribed with Discovery Pass": "prescribed",
+    "Status": "status"
 }
 

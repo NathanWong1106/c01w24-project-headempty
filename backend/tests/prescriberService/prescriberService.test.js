@@ -66,3 +66,31 @@ test("/prescriber/getPaginatedPrescriptions - wrong prescriber code check", asyn
         expect(resBody.list.length).toBe(0);
     }
 })
+
+test("postSinglePrescription - should return success response", async () => {
+    const providerCode = "ON-JC001";
+    const patches = [
+        { providerCode: "ON-JC001", date: "2021-10-01", initial: "JL", prescribed: true, description: "", status: ""},
+    ];
+
+    const res = await postSinglePrescription(providerCode, patches);
+
+    expect(res.status).toBe(200);
+});
+
+test("postSinglePrescription - should return error response for missing initials", async () => {
+    // Mock the necessary data
+    const providerCode = "ON-JC000";
+    const patches = [
+        { providerCode: "ON-JC001", date: "2021-10-01", initial: "", prescribed: true, description: "", status: ""}
+    ];
+
+    // Call the function being tested
+    const res = await postSinglePrescription(providerCode, patches);
+
+    // Assert the response
+    expect(res.status).toBe(400);
+    const responseBody = await res.json();
+    expect(responseBody.success).toBe(false);
+    expect(responseBody.error).toBe("A providerCode, date, and initial must be provided.");
+});
