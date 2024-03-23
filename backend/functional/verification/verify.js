@@ -12,7 +12,7 @@ import { ScraperPE } from "./scrapers/scraperPE.js";
 import { ScraperQC } from "./scrapers/scraperQC.js";
 import { ScraperSK } from "./scrapers/scraperSK.js";
 
-import { createPrescriber, checkIfExistingPrescriber } from "../../database/verificationServiceDbUtils.js";
+import { createPrescriber, getExistingPrescriber } from "../../database/verificationServiceDbUtils.js";
 import { prescriberDataSchema } from "../../schemas.js";
 
 const scraperMapping = {
@@ -73,7 +73,7 @@ export async function verifyPrescribers(inputData) {
         throw new Error("Invalid value for environment variable: RUN_PUPPETEER.");
     }
     
-    for (const prescriber of inputData) {
+    for (let prescriber of inputData) {
         console.debug(`Verifying: ${prescriber.firstName} ${prescriber.lastName}`);
         
         const isValidPrescriberData = await prescriberDataSchema.isValid(prescriber)
@@ -83,12 +83,17 @@ export async function verifyPrescribers(inputData) {
             continue;
         }
 
+        prescriber = prescriberDataSchema.cast(prescriber);
+
         // We do not re-verify prescribers (from valid to invalid).
         // If they have been verified in the past, they won't be checked.
-        const existingPrescriber = await checkIfExistingPrescriber(prescriber);
+        const existingPrescriber = await getExistingPrescriber(prescriber);
         if (existingPrescriber) {
             console.error(`Provided prescriber data for ${prescriber.firstName} ${prescriber.lastName} already exists in database. Skipping.`)
-            verified.push(prescriber);
+            verified.push({
+                ...prescriber,
+                providerCode: existingPrescriber.providerCode,
+            });
             continue;
         }
 
@@ -101,9 +106,12 @@ export async function verifyPrescribers(inputData) {
 
         if (isVerified === true) {
             // Create prescriber stub
-            const res = await createPrescriber(prescriber);
-            if (res) {
-                verified.push(prescriber);
+            const providerCode = await createPrescriber(prescriber);
+            if (providerCode) {
+                verified.push({
+                    ...prescriber,
+                    providerCode: providerCode,
+                });
             }
             else {
                 console.error(`Prescriber ${prescriber.firstName} ${prescriber.lastName} is verified but could not be created in database after a few times. Putting in error.`);
