@@ -92,6 +92,22 @@ export const patchPrescriberPrescription = async (providerCode, initial, date, p
 }
 
 /**
+ * Deletes a single prescriber prescription specified by providerCode, initial, and date.
+ * 
+ * @param {object} search search params (see server endpoint comment)
+ * @returns {boolean} true on success, else false
+ */
+export const deletePrescriberPrescription = async (search) => {
+    const res = await callProtectedEndpoint(
+        SERVER_PATHS.ADMIN_SERVICE.DELETE_PRESCRIBER_PRESCRIPTION,
+        'POST',
+        { search: search }
+    )
+
+    return res.status == 200;
+}
+
+/**
  * Gets a patient prescription
  * 
  * @param {object} search search params (see server endpoint comment)

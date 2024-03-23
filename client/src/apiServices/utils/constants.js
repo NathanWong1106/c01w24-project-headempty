@@ -9,6 +9,7 @@ export const SERVER_PATHS = {
         PATCH_PRESCRIBER: "/admin/patchPrescriber",
         GET_PAGINATED_PRESCRIBER_PRESCRIPTIONS: "/admin/getAdminPaginatedPrescriberPrescriptions",
         PATCH_SINGLE_PRESCRIBER_PRESCRIPTION: "/admin/patchSinglePrescriberPrescription",
+        DELETE_PRESCRIBER_PRESCRIPTION: "/admin/deletePrescriberPrescription",
         GET_SINGLE_PATIENT_PRESCRIPTION: "/admin/getAdminSinglePatientPrescription",
     },
     VERIFY_PRESCRIBERS: "/verification/verifyPrescribers",

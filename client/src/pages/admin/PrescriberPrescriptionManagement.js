@@ -9,6 +9,7 @@ import PaginatedTableWithSearch from "../../components/PaginatedTableWithSearch"
 
 import { getAdminPaginatedPrescriberPrescriptions } from "../../apiServices/adminService";
 import { EditPrescriptionDialog } from "../../components/EditPrescriptionDialog";
+import { DeletePrescriberPrescriptionDialog } from "../../components/DeletePrescriberPrescriptionDialog";
 
 const PAGE_SIZE = 20;
 
@@ -82,6 +83,11 @@ const AdminPrescriberPrescriptions = () => {
                 <td className="p-2">
                     <Tooltip content="Edit Prescription">
                         <EditPrescriptionDialog prescription={prescription} />
+                    </Tooltip>
+                </td>
+                <td className="p-2">
+                    <Tooltip content="Delete Prescription">
+                        <DeletePrescriberPrescriptionDialog prescription={prescription} />
                     </Tooltip>
                 </td>
             </tr>
