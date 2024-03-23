@@ -39,11 +39,15 @@ export const adminPrescriberPrescriptionSearchSchema = object({
 }).noUnknown()
 
 export const adminPatientPrescriptionSearchSchema = object({
-    email: string(),
     providerCode: string(),
     date: string(),
     initial: string(),
     prescribed: boolean(),
+    firstName: string(), 
+    lastName: string(), 
+    email: string(), 
+    address: string(), 
+    language: string(), 
     status: string()
 }).noUnknown()
 

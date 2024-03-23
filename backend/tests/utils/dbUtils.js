@@ -1,6 +1,6 @@
 import { MongoClient, Db } from "mongodb";
 import { COLLECTIONS, SERVER } from "../../constants.js"
-import { genericPatient, genericPrescriber, coordinator, assistant, genericPrescriberPrescription, genericPatientPrescription, genericPatientPrescription } from "./sampleData.js"
+import { genericPatient, genericPrescriber, coordinator, assistant, genericPrescriberPrescription, genericPatientPrescription } from "./sampleData.js"
 import { retryPromiseWithDelay } from "../../utils.js";
 import bcrypt from "bcryptjs"
 
