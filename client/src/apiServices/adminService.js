@@ -1,4 +1,5 @@
 import { PrescriberInfo } from "./types/adminServiceTypes";
+import { PatientPrescription } from "./types/prescriptionTypes";
 import { callProtectedEndpoint } from "./utils/apiUtils"
 import { SERVER_PATHS } from "./utils/constants"
 
@@ -88,4 +89,42 @@ export const patchPrescriberPrescription = async (providerCode, initial, date, p
     )
 
     return res.status == 200;
+}
+
+/**
+ * Gets a paginated list of patient prescriptions
+ * 
+ * @param {number} page the page number
+ * @param {number} pageSize the size of one page
+ * @param {object} search search params (see server endpoint comment)
+ * @returns {Array<PatientPrescription> | null} an array of prescription info if successful, else null
+ */
+export const getAdminPaginatedPatientPrescriptions = async (page, pageSize, search) => {
+    const res = await callProtectedEndpoint(
+        SERVER_PATHS.ADMIN_SERVICE.GET_PAGINATED_PATIENT_PRESCRIPTIONS,
+        'POST',
+        {
+            page: page,
+            pageSize: pageSize,
+            search: search
+        }
+    )
+
+    return res.status != 200 ? null : (await res.json())['list'];
+}
+
+/**
+ * Gets a patient prescription
+ * 
+ * @param {object} search search params (see server endpoint comment)
+ * @returns {PatientPrescription | null} an array of prescription info if successful, else null
+ */
+export const getAdminSinglePatientPrescription = async (search) => {
+    const res = await callProtectedEndpoint(
+        SERVER_PATHS.ADMIN_SERVICE.GET_SINGLE_PATIENT_PRESCRIPTION,
+        'POST',
+        { search: search }
+    )
+
+    return res.status != 200 ? null : (await res.json())['prescription'];
 }

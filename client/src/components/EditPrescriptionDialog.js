@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     Button,
     Dialog,
@@ -9,14 +9,15 @@ import {
     Tooltip,
     Input,
     Select,
-    Option
+    Option,
+    Checkbox
 } from "@material-tailwind/react";
 import { PrescriberPrescription, prescriptionFields, prescriptionField2PrescriptionInfo } from "../apiServices/types/prescriptionTypes";
 
 import { ClosableAlert } from "./ClosableAlert";
 import pencilSVG from "../svgs/pencilSVG";
 import { PRESCRIBER_PRESCRIPTION_STATUS } from "../apiServices/types/prescriptionTypes";
-import { patchPrescriberPrescription } from "../apiServices/adminService";
+import { getAdminSinglePatientPrescription, patchPrescriberPrescription } from "../apiServices/adminService";
 
 
 /**
@@ -42,6 +43,15 @@ export const EditPrescriptionDialog = ({ prescription }) => {
     const [showAlertFailure, setShowFailure] = useState(false);
     const [showAlertSuccess, setShowSuccess] = useState(false);
 
+    const [statusOptions, setStatusOptions] = useState([]);
+    useEffect(() => {
+        async function helper() {
+            const statOps = await getStatusOptions();
+            setStatusOptions(statOps);
+        }
+        helper();
+    }, []);
+
     const buildPatchObj = () => {
         let obj = {};
 
@@ -62,6 +72,32 @@ export const EditPrescriptionDialog = ({ prescription }) => {
         }
 
         handleOpen();
+    }
+
+    const getStatusOptions = async () => {
+        // Uses the state for dynamic update in case these are modified
+        try {
+            let [providerCode] = fieldMapping["Provider Code"];
+            let [initial] = fieldMapping["Patient Initials"];
+            let [date] = fieldMapping["Date"];
+            const correspondingPaPrescription = await getAdminSinglePatientPrescription({
+                providerCode: providerCode,
+                initial: initial,
+                date: date,
+            });
+            if (!correspondingPaPrescription) {
+                return [PRESCRIBER_PRESCRIPTION_STATUS.NOT_LOGGED];
+            }
+            else {
+                return [
+                    PRESCRIBER_PRESCRIPTION_STATUS.LOGGED,
+                    PRESCRIBER_PRESCRIPTION_STATUS.COMPLETE,
+                    PRESCRIBER_PRESCRIPTION_STATUS.COMPLETE_WITH_DISCOVERY_PASS,
+                ];
+            }
+        } catch (err) {
+            return [];
+        }
     }
 
     return (
@@ -85,23 +121,19 @@ export const EditPrescriptionDialog = ({ prescription }) => {
                                     onChange={el => setState(el.target.value)} />);
                             })
                         }
-                        <Select
-                            label="Prescribed with Discovery Pass" 
-                            value={prescribed}
-                            onChange={el => setPrescribed(el.target.value)}
-                        >
-                            <Option>true</Option>
-                            <Option>false</Option>
-                        </Select>
+                        <Checkbox
+                            defaultChecked={prescribed}
+                            label="Prescribed with Discovery Pass"
+                            onChange={el => setPrescribed(el.target.checked)}
+                        />
                         <Select
                             label="Status"
                             value={status}
-                            onChange={el => setStatus(el.target.value)}    
+                            onChange={el => setStatus(el)}
                         >
-                            <Option>{PRESCRIBER_PRESCRIPTION_STATUS.NOT_LOGGED}</Option>
-                            <Option>{PRESCRIBER_PRESCRIPTION_STATUS.LOGGED}</Option>
-                            <Option>{PRESCRIBER_PRESCRIPTION_STATUS.COMPLETE}</Option>
-                            <Option>{PRESCRIBER_PRESCRIPTION_STATUS.COMPLETE_WITH_DISCOVERY_PASS}</Option>
+                            {statusOptions.map((option) => (
+                                <Option key={option} value={option}>{option}</Option>
+                            ))}
                         </Select>
                     </div>
                 </DialogBody>
