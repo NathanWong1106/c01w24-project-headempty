@@ -86,16 +86,22 @@ export async function patchSinglePrescriberPrescription(providerCode, initial, d
                 },
                 { $set: patchObj }
             );
-            return prPrescriptionData.matchedCount === 1;
+            if (prPrescriptionData.matchedCount !== 1) {
+                console.error("Error updating prescriber prescription data in database.");
+                return false;
+            }
+            return true;
         }
         // Shouldn't be allowed to set to any other status if no pa prescription
         else {
+            console.error(`Cannot set status to ${patchObj["status"]}. No corresponding patient prescription.`);
             return false;
         }
     }
 
     // Pa logged, cannot have status pa not logged
     if (patchObj["status"] === PRESCRIBER_PRESCRIPTION_STATUS.NOT_LOGGED) {
+        console.error(`Cannot set status to ${patchObj["status"]}. Found corresponding patient prescription.`);
         return false;
     }
 
@@ -109,7 +115,10 @@ export async function patchSinglePrescriberPrescription(providerCode, initial, d
         },
         { $set: patchObj }
     );
-    if (prPrescriptionData.matchedCount !== 1) return false;
+    if (prPrescriptionData.matchedCount !== 1) {
+        console.error("Error updating prescriber prescription data in database.");
+        return false;
+    }
     
     if ([PRESCRIBER_PRESCRIPTION_STATUS.COMPLETE, PRESCRIBER_PRESCRIPTION_STATUS.COMPLETE_WITH_DISCOVERY_PASS].includes(patchObj["status"])) {
         paPrescriptionData = await paPrescriptionCollection.updateOne(
@@ -120,7 +129,11 @@ export async function patchSinglePrescriberPrescription(providerCode, initial, d
             },
             { $set: { status: patchObj["status"] } }
         );
-        if (paPrescriptionData.matchedCount !== 1) return false;
+        if (paPrescriptionData.matchedCount !== 1) {
+            console.error("Error updating corresponding patient prescription data in database. Prescriber prescription data was updated, desync ocurred, fix in database.");
+            return false;
+        }
+        return true;
     }
     
     return true;
