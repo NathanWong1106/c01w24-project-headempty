@@ -160,20 +160,6 @@ export async function patchSinglePrescriberPrescription(providerCode, initial, d
 }
 
 /**
- * Get a page of patient prescriptions 
- * @param {Number} page the page number
- * @param {Number} pageSize size of the page
- * @param {Object} search search parameters
- * @returns {PatientPrescription[]} an array of the patient's log prescriptions
- */
-export async function getAdminPaginatedPatientPrescription(page, pageSize, search) {
-    const searchObj = await objWithFields(search, adminPatientPrescriptionSearchSchema);
-    const collection = getDb().collection(COLLECTIONS.PATIENT_PRESCRIPTIONS);
-    const data = await paginate(collection.find(searchObj), page, pageSize).toArray();
-    return data.map(x => fillPatientPrescription(x));
-}
-
-/**
  * Get a patient prescriptions 
  * @param {Object} search search parameters
  * @returns {PatientPrescription || null} patient's log prescription
