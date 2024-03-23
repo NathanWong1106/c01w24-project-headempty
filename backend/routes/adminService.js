@@ -211,7 +211,7 @@ adminRouter.post("/getAdminPaginatedPatientPrescriptions", express.json(), async
  *  search: Object
  * }
  * 
- * Response: { prescription: PrescriberPrescription } | {error: String}
+ * Response: { prescription: PatientPrescription } | {error: String}
  * Response Status: 200 - OK, else error
  */
 adminRouter.post("/getAdminSinglePatientPrescription", express.json(), async (req, res) => {
@@ -221,7 +221,7 @@ adminRouter.post("/getAdminSinglePatientPrescription", express.json(), async (re
         const ret = await getAdminSinglePatientPrescription(search);
 
         if (!ret) {
-            return res.status(404).json({ error: `Failed to find prescriber with providerCode: ${search.providerCode}, initial: ${search.initial}, date: ${search.date}` });
+            return res.status(404).json({ error: `Failed to find patient with providerCode: ${search.providerCode}, initial: ${search.initial}, date: ${search.date}` });
         }
         return res.status(200).json({ prescription: ret });
     } catch (err) {

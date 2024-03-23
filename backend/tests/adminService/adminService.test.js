@@ -338,7 +338,7 @@ test("/admin/patchSinglePrescriberPrescription - has pa prescription, no need up
     expect(retPatient.status).toBe(PATIENT_PRESCRIPTION_STATUS.LOGGED);
 })
 
-test("/admin/patchSinglePrescriberPrescription - has pa prescription, update corresponding pa prescription", async () => {
+test("/admin/patchSinglePrescriberPrescription - has pa prescription, update corresponding pa prescription complete", async () => {
     await insertPrescriberPrescription({ status: PRESCRIBER_PRESCRIPTION_STATUS.LOGGED });
     await insertPatientPrescription({ status: PATIENT_PRESCRIPTION_STATUS.LOGGED });
 
@@ -405,6 +405,75 @@ test("/admin/patchSinglePrescriberPrescription - has pa prescription, update cor
     expect(retPatient.date).toBe(patches.date);
     expect(retPatient.prescribed).toBe(patches.prescribed);
     expect(retPatient.status).toBe(PATIENT_PRESCRIPTION_STATUS.COMPLETE);
+})
+
+test("/admin/patchSinglePrescriberPrescription - has pa prescription, update corresponding pa prescription logged", async () => {
+    await insertPrescriberPrescription({ status: PRESCRIBER_PRESCRIPTION_STATUS.COMPLETE });
+    await insertPatientPrescription({ status: PATIENT_PRESCRIPTION_STATUS.COMPLETE });
+
+    const targetProviderCode = "ON-JC001";
+    const targetInitial = "JC";
+    const targetDate = "2024-12-34";
+    const patches = {
+        "providerCode": targetProviderCode,
+        "initial": targetInitial,
+        "date": targetDate,
+        "prescribed": true,
+        "status": PRESCRIBER_PRESCRIPTION_STATUS.LOGGED
+    }
+    const patchBody = {
+        providerCode: targetProviderCode,
+        initial: targetInitial,
+        date: targetDate,
+        patches: patches
+    }
+
+    // Patch prescriber prescription
+    let res = await fetchAsAdmin(adminToken, "/admin/patchSinglePrescriberPrescription", "PATCH", patchBody);
+    expect(res.status).toBe(200);
+
+    // Get resulting list and search for the newly patched prescriber prescription
+    let getPageBody = {
+        page: 1,
+        pageSize: 20,
+        search: {
+            providerCode: targetProviderCode,
+            initial: targetInitial,
+            date: targetDate,
+        }
+    }
+    res = await fetchAsAdmin(adminToken, "/admin/getAdminPaginatedPrescriberPrescriptions", "POST", getPageBody);
+    expect(res.status).toBe(200);
+    let resBody = await res.json();
+    let retPrescriber = resBody.list[0];
+    expect(resBody.list.length).toBe(1);
+    expect(retPrescriber.providerCode).toBe(patches.providerCode);
+    expect(retPrescriber.initial).toBe(patches.initial);
+    expect(retPrescriber.date).toBe(patches.date);
+    expect(retPrescriber.prescribed).toBe(patches.prescribed);
+    expect(retPrescriber.status).toBe(patches.status);
+
+    // Confirm corresponding patient prescription updated
+    // Assumes working getAdminPaginatedPatientPrescription
+    getPageBody = {
+        page: 1,
+        pageSize: 20,
+        search: {
+            providerCode: targetProviderCode,
+            initial: targetInitial,
+            date: targetDate,
+        }
+    }
+    res = await fetchAsAdmin(adminToken, "/admin/getAdminPaginatedPatientPrescriptions", "POST", getPageBody);
+    expect(res.status).toBe(200);
+    resBody = await res.json();
+    let retPatient = resBody.list[0];
+    expect(resBody.list.length).toBe(1);
+    expect(retPatient.providerCode).toBe(patches.providerCode);
+    expect(retPatient.initial).toBe(patches.initial);
+    expect(retPatient.date).toBe(patches.date);
+    expect(retPatient.prescribed).toBe(patches.prescribed);
+    expect(retPatient.status).toBe(PATIENT_PRESCRIPTION_STATUS.LOGGED);
 })
 
 test("/admin/patchSinglePrescriberPrescription - invalid patch body, null fields", async () => {

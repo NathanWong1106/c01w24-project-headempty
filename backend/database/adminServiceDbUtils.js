@@ -103,8 +103,7 @@ export async function patchSinglePrescriberPrescription(providerCode, initial, d
         return `Cannot set status to ${patchObj["status"]} for prescriber prescription with providerCode: ${providerCode}, initial: ${initial}, date: ${date}. Found corresponding patient prescription.`;
     }
 
-    // If status logged or complete, update pr in both cases
-    // Only update pa if complete
+    // If status logged or complete, update both pa & pr correspondingly
     prPrescriptionData = await prPrescriptionCollection.updateOne(
         {
             providerCode: providerCode,
@@ -126,13 +125,22 @@ export async function patchSinglePrescriberPrescription(providerCode, initial, d
             },
             { $set: { status: patchObj["status"] } }
         );
-        if (paPrescriptionData.matchedCount !== 1) {
-            return `Error updating corresponding patient prescription with providerCode: ${providerCode}, initial: ${initial}, date: ${date}. Prescriber prescription data was updated, desync ocurred, fix in database.`;
-
-        }
-        return null;
+    }
+    // PRESCRIBER_PRESCRIPTION_STATUS.LOGGED
+    else {
+        paPrescriptionData = await paPrescriptionCollection.updateOne(
+            {
+                providerCode: providerCode,
+                initial: initial,
+                date: date,
+            },
+            { $set: { status: PATIENT_PRESCRIPTION_STATUS.LOGGED } }
+        );
     }
     
+    if (paPrescriptionData.matchedCount !== 1) {
+        return `Error updating corresponding patient prescription with providerCode: ${providerCode}, initial: ${initial}, date: ${date}. Prescriber prescription data was updated, desync ocurred, fix in database.`;
+    }
     return null;
 }
 
