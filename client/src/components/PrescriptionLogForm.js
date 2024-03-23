@@ -1,16 +1,12 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import {
-    Button, Dialog, DialogHeader, DialogBody, DialogFooter, Input, Checkbox, Popover, PopoverHandler, PopoverContent,
+    Button, Dialog, DialogHeader, DialogBody, DialogFooter, Input, Checkbox,
 } from "@material-tailwind/react";
-import { format } from "date-fns";
-import { DayPicker } from "react-day-picker";
-import { ChevronRightIcon, ChevronLeftIcon } from "@heroicons/react/24/outline";
 import { prescriptionFields, prescriptionField2PrescriptionInfo, PATIENT_PRESCRIPTION_STATUS, PRESCRIBER_PRESCRIPTION_STATUS } from "../apiServices/types/prescriptionTypes";
 import { postPrescription, getMatchingPrescriberPrescription, patchPatientPrescriptionStatus } from "../apiServices/prescriberService";
 import { ClosableAlert } from "./ClosableAlert";
 import { DatePicker } from "./DatePicker";
-import { set } from "lodash";
 
 /**
  * Opens a dialog to log a new prescription.
@@ -58,6 +54,7 @@ export const PrescriptionLogForm = () => {
 
     const handleConfirmChanges = async () => {
         try {
+            //checking if the prescription is already logged by patient
             const ret = await getMatchingPrescriberPrescription(providerCode, prscn_date, patientInit);
             if ((ret)['bool'] === true){
                 if (checked) {
@@ -70,6 +67,7 @@ export const PrescriptionLogForm = () => {
                 //call patchPrescription for corresponding Patient with updated status
                 const stat = await patchPatientPrescriptionStatus(ret['id'], pat_status);
             }
+            //call for posting prescription
             const res = await postPrescription(providerCode, buildPostObj());
             res ? setShowSuccess(true) : setShowFailure(true);
         } catch (err) {
