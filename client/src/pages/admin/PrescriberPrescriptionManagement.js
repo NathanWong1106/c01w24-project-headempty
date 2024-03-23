@@ -90,7 +90,7 @@ const AdminPrescriberPrescriptions = () => {
 
     return (
         <div className="flex flex-col h-screen justify-center items-center">
-            <Typography variant="h3">Prescriptions</Typography>
+            <Typography variant="h3">Prescriber Prescription Management</Typography>
             <PaginatedTableWithSearch
                 dataList={prescriptionList}
                 searchFn={searchFn}
