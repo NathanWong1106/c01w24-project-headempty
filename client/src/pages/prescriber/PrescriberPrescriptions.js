@@ -66,12 +66,11 @@ const PrescriberPrescriptions = () => {
             <tr key={prescription['providerCode'] + prescription['date']}>
                 {
                     prescriptionFields.map(field => (
-                            console.log("boopi:" + field, prescription[prescriptionField2PrescriptionInfo[field][0]]),
                             <td key={prescription['providerCode'] + prescription['date'] + '_' + field} className="p-4">
                                 <div className="flex items-center">
                                     {
-                                        prescription[prescriptionField2PrescriptionInfo[field][0]] !== null ?
-                                            prescription[prescriptionField2PrescriptionInfo[field][0]].toString() :
+                                        prescription[prescriptionField2PrescriptionInfo[field]] !== null ?
+                                            prescription[prescriptionField2PrescriptionInfo[field]].toString() :
                                             null
                                     }
                                 </div>

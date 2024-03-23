@@ -19,12 +19,11 @@ prescriberRouter.post("/postPrescription", express.json(), async (req, res) => {
         if (providerCode === null || patches === null) {
             return res.status(400).json({ error: "A providerCode and patches object must be provided." });
         }
-        const res = await postSinglePrescription(providerCode, patches);
-
-        if (res.status != 200) {
-            return res.status(404).json({ error: `Failed to add prescription` });
+        const ret = await postSinglePrescription(providerCode, patches);
+        if (ret){
+            return res.status(200).json({ message: `Successfully added prescription. Refresh page to see changes.`});
         }
-        return res.status(200).json({ message: `Successfully added prescription. Refresh page to see changes.`});
+        return res.status(404).json({ error: `Failed to add prescription` });
 
     } catch (err) {
         return res.status(500).json({ error: err.message });
