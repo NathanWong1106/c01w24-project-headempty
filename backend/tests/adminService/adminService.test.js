@@ -472,3 +472,46 @@ test("/admin/patchSinglePrescriberPrescription - fails to find prescriber prescr
     let res = await fetchAsAdmin(adminToken, "/admin/patchSinglePrescriberPrescription", "PATCH", patchBody);
     expect(res.status).toBe(404);
 })
+
+test("/admin/getAdminSinglePatientPrescription - gets valid patient prescription", async () => {
+    await insertPatientPrescriptions(40);
+
+    // These don't make sense but whatever, for testing purposes
+    const body = {
+        search: {
+            providerCode: "ON-JC0034",
+            initial: "JC",
+            date: "2024-12-34",
+            thisFieldShouldBeIgnored: "AHHHHHHHHHH",
+        },
+        thisFieldShouldBeIgnored: "AHHHHHHHHHH",
+    }
+    let res = await fetchAsAdmin(adminToken, "/admin/getAdminSinglePatientPrescription", "POST", body);
+    expect(res.status).toBe(200);
+
+    let resBody = await res.json();
+    expect(resBody.prescription.providerCode).toBe(body.search.providerCode);
+    expect(resBody.prescription.date).toBe(body.search.date);
+    expect(resBody.prescription.initial).toBe(body.search.initial);
+    expect(resBody.prescription.prescribed).toBe(true);
+    expect(resBody.prescription.firstName).toBe("John");
+    expect(resBody.prescription.lastName).toBe("Cena");
+    expect(resBody.prescription.email).toBe("patient1@gmail.com");
+    expect(resBody.prescription.status).toBe(PATIENT_PRESCRIPTION_STATUS.NOT_LOGGED);
+})
+
+test("/admin/getAdminSinglePatientPrescription - not found patient prescription", async () => {
+    await insertPatientPrescriptions(40);
+
+    const body = {
+        search: {
+            providerCode: "ON-JC001",
+            initial: "BC",
+            date: "2024-12-69",
+            thisFieldShouldBeIgnored: "AHHHHHHHHHH",
+        },
+        thisFieldShouldBeIgnored: "AHHHHHHHHHH",
+    }
+    let res = await fetchAsAdmin(adminToken, "/admin/getAdminSinglePatientPrescription", "POST", body);
+    expect(res.status).toBe(404);
+})

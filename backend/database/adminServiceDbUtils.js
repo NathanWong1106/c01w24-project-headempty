@@ -4,7 +4,7 @@ import { PatientPrescription, PrescriberPrescription } from "../types/prescripti
 import { getDb } from "./dbConnection.js";
 import paginate from "./pagination.js";
 import { objWithFields } from "./utils/dbUtils.js";
-import { prescriberSearchSchema, prescriberPatchSchema, adminPrescriberPrescriptionSearchSchema, adminPrescriberPrescriptionPatchSchema, adminPatientPrescriptionSearchSchema } from "../schemas.js";
+import { prescriberSearchSchema, prescriberPatchSchema, adminPrescriberPrescriptionSearchSchema, adminPrescriberPrescriptionPatchSchema, adminPatientPrescriptionSearchSchema, adminSinglePatientPrescriptionSearchSchema } from "../schemas.js";
 import { fillPrescriberPrescription } from "./prescriberServiceDbUtils.js";
 import { fillPatientPrescription } from "./patientServiceDbUtils.js";
 import { PRESCRIBER_PRESCRIPTION_STATUS, PATIENT_PRESCRIPTION_STATUS } from "../types/prescriptionTypes.js";
@@ -148,4 +148,19 @@ export async function getAdminPaginatedPatientPrescription(page, pageSize, searc
     const collection = getDb().collection(COLLECTIONS.PATIENT_PRESCRIPTIONS);
     const data = await paginate(collection.find(searchObj), page, pageSize).toArray();
     return data.map(x => fillPatientPrescription(x));
+}
+
+/**
+ * Get a patient prescriptions 
+ * @param {Object} search search parameters
+ * @returns {PatientPrescription || null} patient's log prescription
+ */
+export async function getAdminSinglePatientPrescription(search) {
+    const searchObj = await objWithFields(search, adminSinglePatientPrescriptionSearchSchema);
+    const collection = getDb().collection(COLLECTIONS.PATIENT_PRESCRIPTIONS);
+    const data = await collection.findOne(searchObj);
+    if (!data) {
+        return null;
+    }
+    return fillPatientPrescription(data);
 }

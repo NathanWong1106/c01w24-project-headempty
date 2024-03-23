@@ -3,7 +3,7 @@
  */
 
 import express from "express";
-import { getAdminPaginatedPatientPrescription, getAdminPaginatedPrescriberPrescription, getPaginatedPrescriber, patchSinglePrescriber, patchSinglePrescriberPrescription } from "../database/adminServiceDbUtils.js";
+import { getAdminPaginatedPatientPrescription, getAdminPaginatedPrescriberPrescription, getAdminSinglePatientPrescription, getPaginatedPrescriber, patchSinglePrescriber, patchSinglePrescriberPrescription } from "../database/adminServiceDbUtils.js";
 
 export const adminRouter = express.Router();
 
@@ -197,6 +197,33 @@ adminRouter.post("/getAdminPaginatedPatientPrescriptions", express.json(), async
         const retList = await getAdminPaginatedPatientPrescription(page, pageSize, search);
 
         return res.status(200).json({ list: retList });
+    } catch (err) {
+        return res.status(500).json({ error: err.message });
+    }
+})
+
+/**
+ * Get a paginated list of all patient prescriptions.
+ * 
+ * Needs to be authorized (use middleware adminRoute).
+ * 
+ * Expected body: {
+ *  search: Object
+ * }
+ * 
+ * Response: { prescription: PrescriberPrescription } | {error: String}
+ * Response Status: 200 - OK, else error
+ */
+adminRouter.post("/getAdminSinglePatientPrescription", express.json(), async (req, res) => {
+    try {
+        const { search } = req.body;
+
+        const ret = await getAdminSinglePatientPrescription(search);
+
+        if (!ret) {
+            return res.status(404).json({ error: `Failed to find prescriber with providerCode: ${search.providerCode}, initial: ${search.initial}, date: ${search.date}` });
+        }
+        return res.status(200).json({ prescription: ret });
     } catch (err) {
         return res.status(500).json({ error: err.message });
     }

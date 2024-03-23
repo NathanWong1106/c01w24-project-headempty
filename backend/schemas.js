@@ -51,6 +51,19 @@ export const adminPatientPrescriptionSearchSchema = object({
     status: string()
 }).noUnknown()
 
+export const adminSinglePatientPrescriptionSearchSchema = object({
+    providerCode: string().required(),
+    date: string().required(),
+    initial: string().required(),
+    prescribed: boolean(),
+    firstName: string(), 
+    lastName: string(), 
+    email: string(), 
+    address: string(), 
+    language: string(), 
+    status: string()
+}).noUnknown()
+
 export const adminPrescriberPrescriptionPatchSchema = object({
     providerCode: string(),
     date: string(),
