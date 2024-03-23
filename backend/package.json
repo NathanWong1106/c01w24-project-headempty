@@ -8,7 +8,8 @@
     "run-test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles --runInBand --forceExit ; npm run stop",
     "start": "node server.js",
     "stop": "pkill -15 server",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "insert-sample-data": "node tests/sample/insertSampleDataToDB.js"
   },
   "author": "",
   "license": "ISC",
