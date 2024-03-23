@@ -11,7 +11,7 @@ class ClientUserInfo {
 }
 
 /**
- * Currently unused. Used to implement coordinator (shouldn't be used by assistant) patient stuff later.
+ * All necessary information for a Patient. (Used by coordinator)
  */
 export class PatientInfo extends ClientUserInfo {
     constructor(email, firstName, lastName, language, city, province, address) {
@@ -51,4 +51,16 @@ export const prescriberField2PrescriberInfo = {
     "Licensing College": "licensingCollege",
     "Licence Number": "licenceNumber",
     "Registered": "registered"
+}
+
+export const patientFields = ["Email", "First Name", "Last Name", "Language", "City", "Province", "Address"]
+export const patientPatchFields = ["First Name", "Last Name", "Language", "City", "Province", "Address"]
+export const patientField2PatientInfo = {
+    "Email": "email",
+    "First Name": "firstName",
+    "Last Name": "lastName",
+    "Language": "language",
+    "City": "city",
+    "Province": "province",
+    "Address": "address"
 }
