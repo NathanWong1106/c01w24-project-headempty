@@ -20,6 +20,9 @@ const PatientManagement = () => {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
+    const [province, setProvince] = useState("");
+    const [city, setCity] = useState("");
+    const [address, setAddress] = useState("");
 
     // Search obj
     const [prevSearch, setPrevSearch] = useState({});
@@ -30,6 +33,9 @@ const PatientManagement = () => {
             ...(firstName && { firstName: firstName }),
             ...(lastName && { lastName: lastName }),
             ...(email && { email: email }),
+            ...(province && { province: province }),
+            ...(city && { city: city }),
+            ...(address && { address: address }),
         }
     }
 
@@ -39,6 +45,11 @@ const PatientManagement = () => {
                 <Input size="md" label="First Name" value={firstName} onChange={el => setFirstName(el.target.value)} />
                 <Input size="md" label="Last Name" value={lastName} onChange={el => setLastName(el.target.value)} />
                 <Input size="md" label="Email" value={email} onChange={el => setEmail(el.target.value)} />
+            </div>
+            <div className="mt-2 flex items-start gap-8">
+                <Input size="md" label="Province" value={province} onChange={el => setProvince(el.target.value)} />
+                <Input size="md" label="City" value={city} onChange={el => setCity(el.target.value)} />
+                <Input size="md" label="Address" value={address} onChange={el => setAddress(el.target.value)} />
             </div>
         </div>
     )
