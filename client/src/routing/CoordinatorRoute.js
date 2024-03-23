@@ -4,7 +4,7 @@ import { ACCOUNT_TYPE } from '../apiServices/types/userServiceTypes';
 import { ROUTES } from './RouteConstants';
 
 
-// Wrapper component to navigate to home page if not admin
+// Wrapper component to navigate to home page if not coordinator
 const CoordinatorRoute = ({ children }) => {
     const user = useSelector(state => state.currentUser);
 

@@ -23,6 +23,9 @@ export const coordinatorRouter = express.Router();
  *      email: String?
  *      firstName: String?
  *      lastName: String?
+*       address: String?
+ *      city: String?
+ *      province: String?
  *  }
  * }
  * 

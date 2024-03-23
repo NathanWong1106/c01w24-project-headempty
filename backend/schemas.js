@@ -67,7 +67,10 @@ export const prescriberPatchSchema = object({
 export const patientSearchSchema = object({
     email: string(),
     firstName: string(),
-    lastName: string()
+    lastName: string(),
+    province: mixed().oneOf(PROVINCES),
+    city: string(),
+    address: string()
 }).noUnknown()
 
 export const patientPatchSchema = object({
