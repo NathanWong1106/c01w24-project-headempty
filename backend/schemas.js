@@ -63,3 +63,18 @@ export const prescriberPatchSchema = object({
     licensingCollege: mixed().oneOf(COLLEGES),
     licenceNumber: string(),
 }).noUnknown()
+
+export const patientSearchSchema = object({
+    email: string(),
+    firstName: string(),
+    lastName: string()
+}).noUnknown()
+
+export const patientPatchSchema = object({
+    firstName: string(),
+    lastName: string(),
+    language: string(),
+    address: string(),
+    city: string(),
+    province: mixed().oneOf(PROVINCES)
+}).noUnknown()
