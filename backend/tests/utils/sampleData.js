@@ -68,5 +68,10 @@ export const genericPatientPrescription = {
     "date": "2024-12-34",
     "initial": "JC",
     "prescribed": true,
+    "firstName": "John",
+    "lastName": "Cena",
+    "email": "patient1@gmail.com",
+    "address": "1254 Military Trail",
+    "language": "en",
     "status": PATIENT_PRESCRIPTION_STATUS.NOT_LOGGED
 };

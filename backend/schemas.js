@@ -18,11 +18,15 @@ export const prescriberPrescriptionSearchSchema = object({
 }).noUnknown()
 
 export const patientPrescriptionSearchSchema = object({
-    email: string().required(),
     providerCode: string(),
     date: string(),
     initial: string(),
     prescribed: boolean(),
+    firstName: string().required(), 
+    lastName: string().required(), 
+    email: string().required(), 
+    address: string(), 
+    language: string(), 
     status: string()
 }).noUnknown()
 
