@@ -6,6 +6,7 @@ import paginate from "./pagination.js";
 import { objWithFields } from "./utils/dbUtils.js";
 import { prescriberSearchSchema, prescriberPatchSchema, adminPrescriberPrescriptionSearchSchema, adminPrescriberPrescriptionPatchSchema } from "../schemas.js";
 import { fillPrescriberPrescription } from "./prescriberServiceDbUtils.js";
+import { PRESCRIBER_PRESCRIPTION_STATUS, PATIENT_PRESCRIPTION_STATUS } from "../types/prescriptionTypes.js";
 
 /**
  * Get a page from all prescribers 
@@ -64,8 +65,43 @@ export async function getAdminPaginatedPrescriberPrescription(page, pageSize, se
  */
 export async function patchSinglePrescriberPrescription(providerCode, initial, date, patches) {
     const patchObj = await objWithFields(patches, adminPrescriberPrescriptionPatchSchema);
-    const collection = getDb().collection(COLLECTIONS.PRESCRIBER_PRESCRIPTIONS);
-    const data = await collection.updateOne(
+    const prPrescriptionCollection = getDb().collection(COLLECTIONS.PRESCRIBER_PRESCRIPTIONS);
+    const paPrescriptionCollection = getDb().collection(COLLECTIONS.PATIENT_PRESCRIPTIONS);
+    const prPrescriptionData = null;
+    const paPrescriptionData = null;
+    const paPrescription = await paPrescriptionCollection.findOne({
+        providerCode: providerCode,
+        initial: initial,
+        date: date,
+    });
+    
+    if (!paPrescription) {
+        // No update to status, update other fields
+        if (patchObj["status"] !== PRESCRIBER_PRESCRIPTION_STATUS.NOT_LOGGED) {
+            prPrescriptionData = await prPrescriptionCollection.updateOne(
+                {
+                    providerCode: providerCode,
+                    initial: initial,
+                    date: date,
+                },
+                { $set: patchObj }
+            );
+            return prPrescriptionData.matchedCount === 1;
+        }
+        // Shouldn't be allowed to set to any other status if no pa prescription
+        else {
+            return false;
+        }
+    }
+
+    // Pa logged, cannot have status pa not logged
+    if (patchObj["status"] === PRESCRIBER_PRESCRIPTION_STATUS.NOT_LOGGED) {
+        return false;
+    }
+
+    // If status logged or complete, update pr in both cases
+    // Only update pa if complete
+    prPrescriptionData = await prPrescriptionCollection.updateOne(
         {
             providerCode: providerCode,
             initial: initial,
@@ -73,6 +109,19 @@ export async function patchSinglePrescriberPrescription(providerCode, initial, d
         },
         { $set: patchObj }
     );
-
-    return data.matchedCount === 1;
+    if (prPrescriptionData.matchedCount !== 1) return false;
+    
+    if ([PRESCRIBER_PRESCRIPTION_STATUS.COMPLETE, PRESCRIBER_PRESCRIPTION_STATUS.COMPLETE_WITH_DISCOVERY_PASS].includes(patchObj["status"])) {
+        paPrescriptionData = await paPrescriptionCollection.updateOne(
+            {
+                providerCode: providerCode,
+                initial: initial,
+                date: date,
+            },
+            { $set: { status: patchObj["status"] } }
+        );
+        if (paPrescriptionData.matchedCount !== 1) return false;
+    }
+    
+    return true;
 }
