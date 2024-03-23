@@ -3,7 +3,7 @@
  */
 
 import express from "express";
-import { getAdminPaginatedPrescriberPrescription, getPaginatedPrescriber, patchSinglePrescriber, patchSinglePrescriberPrescription } from "../database/adminServiceDbUtils.js";
+import { getAdminPaginatedPatientPrescription, getAdminPaginatedPrescriberPrescription, getPaginatedPrescriber, patchSinglePrescriber, patchSinglePrescriberPrescription } from "../database/adminServiceDbUtils.js";
 
 export const adminRouter = express.Router();
 
@@ -93,7 +93,7 @@ adminRouter.patch("/patchPrescriber", express.json(), async (req, res) => {
 })
 
 /**
- * Get a paginated list of all prescription prescriptions.
+ * Get a paginated list of all prescriber prescriptions.
  * 
  * Needs to be authorized (use middleware adminRoute).
  * 
@@ -157,11 +157,46 @@ adminRouter.patch("/patchSinglePrescriberPrescription", express.json(), async (r
             return res.status(400).json({ error: "A providerCode, initial, date, and patches object must be provided and non-empty." });
         }
 
-        if (await patchSinglePrescriberPrescription(providerCode, initial, date, patches)) {
+        const patchError = await patchSinglePrescriberPrescription(providerCode, initial, date, patches)
+        if (!patchError) {
             return res.status(200).json({ message: `Successfully patched prescriber prescription with providerCode: ${providerCode}, initial: ${initial}, date: ${date}.` });
         } else {
-            return res.status(404).json({ error: `Failed to find prescriber prescription with providerCode: ${providerCode}, initial: ${initial}, date: ${date}.` });
+            return res.status(404).json({ error: patchError });
         }
+    } catch (err) {
+        return res.status(500).json({ error: err.message });
+    }
+})
+
+/**
+ * Get a paginated list of all patient prescriptions.
+ * 
+ * Needs to be authorized (use middleware adminRoute).
+ * 
+ * Expected body: {
+ *  page: Number (1-indexed)
+ *  pageSize: Number
+ *  search: Object
+ * }
+ * 
+ * Response: { list: PrescriberPrescription[] } | {error: String}
+ * Response Status: 200 - OK, else error
+ */
+adminRouter.post("/getAdminPaginatedPatientPrescriptions", express.json(), async (req, res) => {
+    try {
+        const { page, pageSize, search } = req.body;
+
+        if (page === null || pageSize === null) {
+            return res.status(400).json({ error: "A page, pageSize, and optional search object must be provided." });
+        }
+
+        if (page < 1 || pageSize < 1) {
+            return req.status(400).json({ error: "A valid page and pageSize must be provided." })
+        }
+
+        const retList = await getAdminPaginatedPatientPrescription(page, pageSize, search);
+
+        return res.status(200).json({ list: retList });
     } catch (err) {
         return res.status(500).json({ error: err.message });
     }

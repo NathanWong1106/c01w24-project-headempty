@@ -1,11 +1,12 @@
 import { COLLECTIONS } from "../constants.js"
 import { PrescriberInfo } from "../types/adminServiceTypes.js";
-import { PrescriberPrescription } from "../types/prescriptionTypes.js";
+import { PatientPrescription, PrescriberPrescription } from "../types/prescriptionTypes.js";
 import { getDb } from "./dbConnection.js";
 import paginate from "./pagination.js";
 import { objWithFields } from "./utils/dbUtils.js";
-import { prescriberSearchSchema, prescriberPatchSchema, adminPrescriberPrescriptionSearchSchema, adminPrescriberPrescriptionPatchSchema } from "../schemas.js";
+import { prescriberSearchSchema, prescriberPatchSchema, adminPrescriberPrescriptionSearchSchema, adminPrescriberPrescriptionPatchSchema, adminPatientPrescriptionSearchSchema } from "../schemas.js";
 import { fillPrescriberPrescription } from "./prescriberServiceDbUtils.js";
+import { fillPatientPrescription } from "./patientServiceDbUtils.js";
 import { PRESCRIBER_PRESCRIPTION_STATUS, PATIENT_PRESCRIPTION_STATUS } from "../types/prescriptionTypes.js";
 
 /**
@@ -61,14 +62,14 @@ export async function getAdminPaginatedPrescriberPrescription(page, pageSize, se
  * Patch a single prescriber prescription with patches
  * @param {string} providerCode provider code of the prescriber
  * @param {Object} patches fields to patch
- * @returns {boolean} true if successful, else false
+ * @returns {string || null} relevant error string if error, else null
  */
 export async function patchSinglePrescriberPrescription(providerCode, initial, date, patches) {
     const patchObj = await objWithFields(patches, adminPrescriberPrescriptionPatchSchema);
     const prPrescriptionCollection = getDb().collection(COLLECTIONS.PRESCRIBER_PRESCRIPTIONS);
     const paPrescriptionCollection = getDb().collection(COLLECTIONS.PATIENT_PRESCRIPTIONS);
-    const prPrescriptionData = null;
-    const paPrescriptionData = null;
+    let prPrescriptionData = null;
+    let paPrescriptionData = null;
     const paPrescription = await paPrescriptionCollection.findOne({
         providerCode: providerCode,
         initial: initial,
@@ -77,7 +78,7 @@ export async function patchSinglePrescriberPrescription(providerCode, initial, d
     
     if (!paPrescription) {
         // No update to status, update other fields
-        if (patchObj["status"] !== PRESCRIBER_PRESCRIPTION_STATUS.NOT_LOGGED) {
+        if (patchObj["status"] === PRESCRIBER_PRESCRIPTION_STATUS.NOT_LOGGED) {
             prPrescriptionData = await prPrescriptionCollection.updateOne(
                 {
                     providerCode: providerCode,
@@ -87,22 +88,19 @@ export async function patchSinglePrescriberPrescription(providerCode, initial, d
                 { $set: patchObj }
             );
             if (prPrescriptionData.matchedCount !== 1) {
-                console.error("Error updating prescriber prescription data in database.");
-                return false;
+                return `Error updating / could not find prescriber prescription with providerCode: ${providerCode}, initial: ${initial}, date: ${date}.`;
             }
-            return true;
+            return null;
         }
         // Shouldn't be allowed to set to any other status if no pa prescription
         else {
-            console.error(`Cannot set status to ${patchObj["status"]}. No corresponding patient prescription.`);
-            return false;
+            return `Cannot set status to ${patchObj["status"]} for prescriber prescription with providerCode: ${providerCode}, initial: ${initial}, date: ${date}. No corresponding patient prescription.`;
         }
     }
 
     // Pa logged, cannot have status pa not logged
     if (patchObj["status"] === PRESCRIBER_PRESCRIPTION_STATUS.NOT_LOGGED) {
-        console.error(`Cannot set status to ${patchObj["status"]}. Found corresponding patient prescription.`);
-        return false;
+        return `Cannot set status to ${patchObj["status"]} for prescriber prescription with providerCode: ${providerCode}, initial: ${initial}, date: ${date}. Found corresponding patient prescription.`;
     }
 
     // If status logged or complete, update pr in both cases
@@ -116,8 +114,7 @@ export async function patchSinglePrescriberPrescription(providerCode, initial, d
         { $set: patchObj }
     );
     if (prPrescriptionData.matchedCount !== 1) {
-        console.error("Error updating prescriber prescription data in database.");
-        return false;
+        return `Error updating / could not find prescriber prescription with providerCode: ${providerCode}, initial: ${initial}, date: ${date}.`;
     }
     
     if ([PRESCRIBER_PRESCRIPTION_STATUS.COMPLETE, PRESCRIBER_PRESCRIPTION_STATUS.COMPLETE_WITH_DISCOVERY_PASS].includes(patchObj["status"])) {
@@ -130,11 +127,25 @@ export async function patchSinglePrescriberPrescription(providerCode, initial, d
             { $set: { status: patchObj["status"] } }
         );
         if (paPrescriptionData.matchedCount !== 1) {
-            console.error("Error updating corresponding patient prescription data in database. Prescriber prescription data was updated, desync ocurred, fix in database.");
-            return false;
+            return `Error updating corresponding patient prescription with providerCode: ${providerCode}, initial: ${initial}, date: ${date}. Prescriber prescription data was updated, desync ocurred, fix in database.`;
+
         }
-        return true;
+        return null;
     }
     
-    return true;
+    return null;
+}
+
+/**
+ * Get a page of patient prescriptions 
+ * @param {Number} page the page number
+ * @param {Number} pageSize size of the page
+ * @param {Object} search search parameters
+ * @returns {PatientPrescription[]} an array of the patient's log prescriptions
+ */
+export async function getAdminPaginatedPatientPrescription(page, pageSize, search) {
+    const searchObj = await objWithFields(search, adminPatientPrescriptionSearchSchema);
+    const collection = getDb().collection(COLLECTIONS.PATIENT_PRESCRIPTIONS);
+    const data = await paginate(collection.find(searchObj), page, pageSize).toArray();
+    return data.map(x => fillPatientPrescription(x));
 }
