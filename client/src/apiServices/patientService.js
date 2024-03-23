@@ -1,5 +1,5 @@
 import { PatientPrescription } from "./types/prescriptionTypes";
-import { callProtectedEndpoint } from "./utils/apiUtils"
+import { callProtectedEndpoint, callEndpoint } from "./utils/apiUtils"
 import { SERVER_PATHS } from "./utils/constants"
 
 /**
@@ -22,4 +22,30 @@ export const getPaginatedPatientPrescriptions = async (page, pageSize, search) =
     )
 
     return res.status != 200 ? null : (await res.json())['list'];
+}
+
+export const patchSinglePatientPrescription = async (id, pat_status) => {
+    const res = await callProtectedEndpoint(
+        SERVER_PATHS.PATIENT_SERVICE.PATCH_SINGLE_PRESCRIPTION,
+        'PATCH',
+        {
+            id: id,
+            pat_status: pat_status
+        }
+    )
+    return res.status == 200;
+
+}
+
+export const getMatchingPatientPrescription = async (providerCode, date, initial) => {
+    const res = await callEndpoint(
+        SERVER_PATHS.PATIENT_SERVICE.GET_MATCHING_PRESCRIPTION,
+        'POST',
+        {
+            providerCode: providerCode,
+            date: date,
+            initial: initial
+        }
+    )
+    return res;
 }

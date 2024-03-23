@@ -13,7 +13,6 @@ import { SERVER_PATHS } from "./utils/constants"
  * @returns {Array<PrescriberInfo> | null} an array of prescriber info if successful, else null
  */
 export const getPaginatedPrescriberPrescriptions = async (page, pageSize, search) => {
-    console.log("getPrescription");
     const res = await callProtectedEndpoint(
         SERVER_PATHS.PRESCRIBER_SERVICE.GET_PRESCRIPTIONS,
         'GET',
@@ -28,7 +27,6 @@ export const getPaginatedPrescriberPrescriptions = async (page, pageSize, search
   
   
   export const postPrescription = async (providerCode, patches) => {
-    console.log("postPrescription");
     const res = await callProtectedEndpoint(
         SERVER_PATHS.PRESCRIBER_SERVICE.POST_PRESCRIPTION,
         'POST',
@@ -41,7 +39,6 @@ export const getPaginatedPrescriberPrescriptions = async (page, pageSize, search
   }
 
   export const getMatchingPrescriberPrescription = async (providerCode, date, initial) => {
-    console.log("getMatchingPrescriberPrescription");
     const res = await callProtectedEndpoint(
         SERVER_PATHS.PRESCRIBER_SERVICE.GET_MATCHING_PRESCRIPTION,
         'POST',
@@ -51,6 +48,18 @@ export const getPaginatedPrescriberPrescriptions = async (page, pageSize, search
             initial: initial
         }
     )
-    return res.status == 200;
+    return res.status != 200 ? null : (await res.json());
 
+  }
+
+  export const patchPatientPrescriptionStatus = async (id, patStatus) => {
+    const res = await callProtectedEndpoint(
+        SERVER_PATHS.PRESCRIBER_SERVICE.PATCH_PATIENT_STATUS,
+        'PATCH',
+        {
+            id: id,
+            patStatus: patStatus
+        }
+    )
+    return res.status == 200;
   }
