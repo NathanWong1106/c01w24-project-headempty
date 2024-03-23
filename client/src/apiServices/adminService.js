@@ -43,3 +43,49 @@ export const patchPrescriber = async (providerCode, patches) => {
 
     return res.status == 200;
 }
+
+/**
+ * Gets a paginated list of prescriber prescriptions
+ * 
+ * @param {number} page the page number
+ * @param {number} pageSize the size of one page
+ * @param {object} search search params (see server endpoint comment)
+ * @returns {Array<PrescriberPrescription> | null} an array of prescription info if successful, else null
+ */
+export const getAdminPaginatedPrescriberPrescriptions = async (page, pageSize, search) => {
+    const res = await callProtectedEndpoint(
+        SERVER_PATHS.ADMIN_SERVICE.GET_PAGINATED_PRESCRIBER_PRESCRIPTIONS,
+        'POST',
+        {
+            page: page,
+            pageSize: pageSize,
+            search: search
+        }
+    )
+
+    return res.status != 200 ? null : (await res.json())['list'];
+}
+
+/**
+ * Patches a single prescriber prescription specified by providerCode, initial, and date.
+ * 
+ * @param {string} providerCode the provider code of the prescriber
+ * @param {string} initial the initials of the patient
+ * @param {string} date the date of the prescription
+ * @param {object} patches patches (see server endpoint comment)
+ * @returns {boolean} true on success, else false
+ */
+export const patchPrescriberPrescription = async (providerCode, initial, date, patches) => {
+    const res = await callProtectedEndpoint(
+        SERVER_PATHS.ADMIN_SERVICE.PATCH_SINGLE_PRESCRIBER_PRESCRIPTION,
+        'PATCH',
+        {
+            providerCode: providerCode,
+            initial: initial,
+            date: date,
+            patches: patches
+        }
+    )
+
+    return res.status == 200;
+}

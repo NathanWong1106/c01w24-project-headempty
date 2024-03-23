@@ -23,6 +23,7 @@ import PrescriberRoute from './routing/PrescriberRoute';
 import PrescriberManagement from './pages/admin/PrescriberManagement';
 import PrescriberVerification from './pages/admin/PrescriberVerification';
 import PrescriberPrescriptions from './pages/prescriber/PrescriberPrescriptions';
+import AdminPrescriberPrescriptions from './pages/admin/PrescriberPrescriptionManagement';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -40,6 +41,7 @@ const router = createBrowserRouter(
       </Route>
       <Route path={ADMIN_ROUTE_BASE} element={<AdminRoute />}>
         <Route path={ADMIN_ROUTES.PRESCRIBER_MNGMT} element={<PrescriberManagement />} />
+        <Route path={ADMIN_ROUTES.PRESCRIBER_PRESCRIPTION_MNGMT} element={<AdminPrescriberPrescriptions />} />
         <Route path={ADMIN_ROUTES.PRESCRIBER_VERIFICATION} element={<PrescriberVerification />} />
       </Route>
     </Route>

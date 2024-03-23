@@ -14,6 +14,7 @@ export const REGISTRATION_ROUTES = {
 export const ADMIN_ROUTE_BASE = '/admin'
 export const ADMIN_ROUTES = {
     PRESCRIBER_MNGMT: `${ADMIN_ROUTE_BASE}/prescriberManagement`,
+    PRESCRIBER_PRESCRIPTION_MNGMT: `${ADMIN_ROUTE_BASE}/prescriberPrescriptionManagement`,
     PRESCRIBER_VERIFICATION: `${ADMIN_ROUTE_BASE}/prescriberVerification`,
 }
 
@@ -41,6 +42,10 @@ const ADMIN_LINKS = [
     {
         name: "Prescriber Management",
         link: ADMIN_ROUTES.PRESCRIBER_MNGMT
+    },
+    {
+        name: "Prescriber Prescription Management",
+        link: ADMIN_ROUTES.PRESCRIBER_PRESCRIPTION_MNGMT
     },
     {
         name: "Prescriber Verification",
