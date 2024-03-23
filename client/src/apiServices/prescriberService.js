@@ -1,6 +1,6 @@
 
 import { initial } from "lodash";
-import { PrescriptionInfo } from "./types/prescriberServiceTypes";
+import { PrescriberPrescription } from "./types/prescriptionTypes";
 import { callProtectedEndpoint } from "./utils/apiUtils"
 import { SERVER_PATHS } from "./utils/constants"
 
