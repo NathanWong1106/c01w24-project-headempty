@@ -90,7 +90,7 @@ export const PrescriptionLogForm = () => {
 
                     <div className="flex flex-col justify-between gap-8">
                         
-                         <DatePicker field={"Date"}/>
+                         {/* <DatePicker field={"Date"}/> */}
                         
                         {
                             prescriptionFields.map(field => {

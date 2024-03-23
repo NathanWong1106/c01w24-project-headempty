@@ -19,7 +19,7 @@ export async function postSinglePrescription(providerCode, patches) {
     const collection = getDb().collection(COLLECTIONS.PRESCRIBER_PRESCRIPTIONS);
     const data = await collection.insertOne(patchObj);
     
-    return data.matchedCount === 1;
+    return true;
 }
 
 /**
