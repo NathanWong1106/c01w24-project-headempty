@@ -17,6 +17,7 @@ const ColumnEnum = {
     licensingCollege: 4,
     licenceNumber: 5,
     status: 6,
+    providerCode: 7,
 }
 
 const StatusEnum = {
@@ -98,6 +99,7 @@ const PrescriberVerification = () => {
             worksheet.eachRow((row, rowNumber) => {
                 if (rowNumber === 1) {
                     row.getCell(ColumnEnum.status).value = "Status";
+                    row.getCell(ColumnEnum.providerCode).value = "Provider Code";
                     return
                 }
 
@@ -106,10 +108,11 @@ const PrescriberVerification = () => {
                     lastName: row.getCell(ColumnEnum.lastName).value,
                     province: row.getCell(ColumnEnum.province).value,
                     licensingCollege: row.getCell(ColumnEnum.licensingCollege).value,
-                    licenceNumber: row.getCell(ColumnEnum.licenceNumber).value,
+                    licenceNumber: String(row.getCell(ColumnEnum.licenceNumber).value),
                 };
-                if (vIdx < vLen && _.isEqual(rowData, verified[vIdx])) {
+                if (vIdx < vLen && _.isEqual(rowData, _.omit(verified[vIdx], 'providerCode'))) {
                     row.getCell(ColumnEnum.status).value = StatusEnum.verified;
+                    row.getCell(ColumnEnum.providerCode).value = verified[vIdx].providerCode;
                     vIdx++;
                 }
                 else if (iIdx < iLen && _.isEqual(rowData, invalid[iIdx])) {
