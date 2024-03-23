@@ -17,11 +17,10 @@ export const PRESCRIBER_PRESCRIPTION_STATUS = {
 
 
 class Prescription {
-    constructor(providerCode, date, initial, prescribed, description, status) {
+    constructor(providerCode, date, initial, prescribed, status) {
         this.providerCode = providerCode;
         this.date = date;
         this.initial = initial;
-        this.description = description;
         this.prescribed = prescribed;
         this.status = status;
     }
@@ -29,7 +28,8 @@ class Prescription {
 
 export class PrescriberPrescription extends Prescription {
     constructor(providerCode, date, initial, description, prescribed, status) {
-        super(providerCode, date, initial, description, prescribed, status || PRESCRIBER_PRESCRIPTION_STATUS.NOT_LOGGED);
+        super(providerCode, date, initial, prescribed, status || PRESCRIBER_PRESCRIPTION_STATUS.NOT_LOGGED);
+        this.description = description;
     }
 }
 
