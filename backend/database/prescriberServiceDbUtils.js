@@ -29,7 +29,13 @@ export async function postSinglePrescription(providerCode, patches) {
 export async function getPaginatedPrescriberPrescription(page, pageSize, search) {
     const searchObj = await objWithFields(search, prescriberPrescriptionSearchSchema);
     const collection = getDb().collection(COLLECTIONS.PRESCRIBER_PRESCRIPTIONS);
-    const data = await collection.updateOne({ providerCode: providerCode }, { $set: patchObj });
+    const data = await paginate(collection.find(searchObj), page, pageSize).toArray();
+    return data.map(x => fillPrescriberPrescription(x));
+}
+
+function fillPrescriberPrescription(x) {
+    return new PrescriberPrescription(x.providerCode, x.date, x.initial, x.description, x.prescribed, x.status);
+}
 
     return data.matchedCount === 1;
 }
