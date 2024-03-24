@@ -53,9 +53,9 @@ export const patchPrescriber = async (providerCode, patches) => {
  * @param {object} search search params (see server endpoint comment)
  * @returns {Array<PrescriberPrescription> | null} an array of prescription info if successful, else null
  */
-export const getAdminPaginatedPrescriberPrescriptions = async (page, pageSize, search) => {
+export const getAdminPaginatedPrescriberPrescription = async (page, pageSize, search) => {
     const res = await callProtectedEndpoint(
-        SERVER_PATHS.ADMIN_SERVICE.GET_PAGINATED_PRESCRIBER_PRESCRIPTIONS,
+        SERVER_PATHS.ADMIN_SERVICE.GET_PAGINATED_PRESCRIBER_PRESCRIPTION,
         'POST',
         {
             page: page,

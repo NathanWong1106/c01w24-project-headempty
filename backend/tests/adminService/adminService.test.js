@@ -114,8 +114,8 @@ PRESCRIBER PRESCRIPTIONS
 */
 
 
-describe("/admin/getAdminPaginatedPrescriberPrescriptions", () => {
-    test("/admin/getAdminPaginatedPrescriberPrescriptions - gets all prescribers paginated Prescription", async () => {
+describe("/admin/getAdminPaginatedPrescriberPrescription", () => {
+    test("/admin/getAdminPaginatedPrescriberPrescription - gets all prescribers paginated Prescription", async () => {
         await insertPrescriberPrescriptions(40);
     
         for (let page = 1; page <= 2; page++) {
@@ -125,7 +125,7 @@ describe("/admin/getAdminPaginatedPrescriberPrescriptions", () => {
                 search: {},
                 thisFieldShouldBeIgnored: "AHHHHHHHHHH",
             }
-            let res = await fetchAsAdmin(adminToken, "/admin/getAdminPaginatedPrescriberPrescriptions", "POST", body);
+            let res = await fetchAsAdmin(adminToken, "/admin/getAdminPaginatedPrescriberPrescription", "POST", body);
             expect(res.status).toBe(200);
     
             let resBody = await res.json();
@@ -133,7 +133,7 @@ describe("/admin/getAdminPaginatedPrescriberPrescriptions", () => {
         }
     })
 
-    test("/admin/getAdminPaginatedPrescriberPrescriptions - no results", async () => {
+    test("/admin/getAdminPaginatedPrescriberPrescription - no results", async () => {
         await insertPrescriberPrescriptions(40);
     
         const searchProviderCode = "Should not find anything";
@@ -145,7 +145,7 @@ describe("/admin/getAdminPaginatedPrescriberPrescriptions", () => {
                 search: { providerCode: searchProviderCode },
                 thisFieldShouldBeIgnored: "AHHHHHHHHHH",
             }
-            let res = await fetchAsAdmin(adminToken, "/admin/getAdminPaginatedPrescriberPrescriptions", "POST", body);
+            let res = await fetchAsAdmin(adminToken, "/admin/getAdminPaginatedPrescriberPrescription", "POST", body);
             expect(res.status).toBe(200);
     
             let resBody = await res.json();
@@ -232,7 +232,7 @@ describe("/admin/patchSinglePrescriberPrescription", () => {
         }
     
         // Get resulting list and search for the newly patched prescriber prescription
-        res = await fetchAsAdmin(adminToken, "/admin/getAdminPaginatedPrescriberPrescriptions", "POST", getPageBody);
+        res = await fetchAsAdmin(adminToken, "/admin/getAdminPaginatedPrescriberPrescription", "POST", getPageBody);
         expect(res.status).toBe(200);
     
         let resBody = await res.json();
@@ -357,7 +357,7 @@ describe("/admin/patchSinglePrescriberPrescription", () => {
         }
     
         // Get resulting list and search for the newly patched prescriber prescription
-        res = await fetchAsAdmin(adminToken, "/admin/getAdminPaginatedPrescriberPrescriptions", "POST", getPageBody);
+        res = await fetchAsAdmin(adminToken, "/admin/getAdminPaginatedPrescriberPrescription", "POST", getPageBody);
         expect(res.status).toBe(200);
     
         let resBody = await res.json();
@@ -423,7 +423,7 @@ describe("/admin/patchSinglePrescriberPrescription", () => {
                 date: targetDate,
             }
         }
-        res = await fetchAsAdmin(adminToken, "/admin/getAdminPaginatedPrescriberPrescriptions", "POST", getPageBody);
+        res = await fetchAsAdmin(adminToken, "/admin/getAdminPaginatedPrescriberPrescription", "POST", getPageBody);
         expect(res.status).toBe(200);
         let resBody = await res.json();
         let retPrescriber = resBody.list[0];
@@ -488,7 +488,7 @@ describe("/admin/patchSinglePrescriberPrescription", () => {
                 date: targetDate,
             }
         }
-        res = await fetchAsAdmin(adminToken, "/admin/getAdminPaginatedPrescriberPrescriptions", "POST", getPageBody);
+        res = await fetchAsAdmin(adminToken, "/admin/getAdminPaginatedPrescriberPrescription", "POST", getPageBody);
         expect(res.status).toBe(200);
         let resBody = await res.json();
         let retPrescriber = resBody.list[0];

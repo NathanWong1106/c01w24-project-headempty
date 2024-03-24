@@ -7,7 +7,7 @@ import { useState } from "react";
 import { prescriptionField2PrescriptionInfo, prescriptionFields } from "../../apiServices/types/prescriptionTypes";
 import PaginatedTableWithSearch from "../../components/PaginatedTableWithSearch";
 
-import { getAdminPaginatedPrescriberPrescriptions } from "../../apiServices/adminService";
+import { getAdminPaginatedPrescriberPrescription } from "../../apiServices/adminService";
 import { EditPrescriberPrescriptionDialog } from "../../components/EditPrescriberPrescriptionDialog";
 import { DeletePrescriberPrescriptionDialog } from "../../components/DeletePrescriberPrescriptionDialog";
 
@@ -57,7 +57,7 @@ const AdminPrescriberPrescriptions = () => {
         // If search was pressed reset the state
         searchPressed && setPrevSearch(searchObj);
 
-        const list = await getAdminPaginatedPrescriberPrescriptions(searchPage, PAGE_SIZE, searchObj);
+        const list = await getAdminPaginatedPrescriberPrescription(searchPage, PAGE_SIZE, searchObj);
 
         list === null ? setPrescriptionList([]) : setPrescriptionList(list);
         return list ? list.length : 0;

@@ -117,7 +117,7 @@ adminRouter.patch("/patchPrescriber", express.json(), async (req, res) => {
  * Response: { list: PrescriberPrescription[] } | {error: String}
  * Response Status: 200 - OK, else error
  */
-adminRouter.post("/getAdminPaginatedPrescriberPrescriptions", express.json(), async (req, res) => {
+adminRouter.post("/getAdminPaginatedPrescriberPrescription", express.json(), async (req, res) => {
     try {
         const { page, pageSize, search } = req.body;
 
