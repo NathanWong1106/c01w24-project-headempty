@@ -27,7 +27,7 @@ import { getAdminSinglePatientPrescription, patchPrescriberPrescription } from "
  * 
  * @param {{prescription: PrescriberInfo}} props
  */
-export const BaseEditPrescriptionDialog = ({ prescription, fieldMapping, prescriptionField2InfoMapping, textInputFields, getStatusOptions, patchPrescription }) => {
+export const BaseEditPrescriptionDialog = ({ prescription, fieldMapping, textInputFields, getStatusOptions, patchPrescription }) => {
     const [prescribed, setPrescribed] = fieldMapping["Prescribed with Discovery Pass"];
     const [status, setStatus] = fieldMapping["Status"]
 
@@ -50,7 +50,7 @@ export const BaseEditPrescriptionDialog = ({ prescription, fieldMapping, prescri
 
         prescriptionFields.forEach(field => {
             const [state] = fieldMapping[field];
-            obj[prescriptionField2InfoMapping[field]] = state;
+            obj[prescriptionField2PrescriptionInfo[field]] = state;
         })
 
         return obj;

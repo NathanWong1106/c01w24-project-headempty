@@ -1,15 +1,16 @@
 import { useState } from "react";
-import { PrescriberPrescription, prescriptionFields, prescriptionField2PrescriptionInfo, PRESCRIBER_PRESCRIPTION_STATUS } from "../apiServices/types/prescriptionTypes";
-import { getAdminSinglePatientPrescription, patchPrescriberPrescription } from "../apiServices/adminService";
+import { PrescriberPrescription, prescriptionFields, prescriptionField2PrescriptionInfo, PRESCRIBER_PRESCRIPTION_STATUS, PatientPrescription, PATIENT_PRESCRIPTION_STATUS } from "../apiServices/types/prescriptionTypes";
+import { getAdminSinglePatientPrescription, getAdminSinglePrescriberPrescription, patchPrescriberPrescription } from "../apiServices/adminService";
 import { BaseEditPrescriptionDialog } from "./BaseEditPrescriptionDialog";
+import { patchPatientPrescription } from "../apiServices/coordinatorService";
 
 
 /**
  * Opens the edit dialog for the specified prescriber.
  * 
- * @param {{prescription: PrescriberPrescription}} props
+ * @param {{prescription: PatientPrescription}} props
  */
-export const EditPrescriberPrescriptionDialog = ({ prescription }) => {
+export const EditPatientPrescriptionDialog = ({ prescription }) => {
 
     // Set up a mapping of relevant fields
     const fieldMapping = {};
@@ -23,19 +24,19 @@ export const EditPrescriberPrescriptionDialog = ({ prescription }) => {
             let [providerCode] = fieldMapping["Provider Code"];
             let [initial] = fieldMapping["Patient Initials"];
             let [date] = fieldMapping["Date"];
-            const correspondingPaPrescription = await getAdminSinglePatientPrescription({
+            const correspondingPaPrescription = await getAdminSinglePrescriberPrescription({
                 providerCode: providerCode,
                 initial: initial,
                 date: date,
             });
             if (!correspondingPaPrescription) {
-                return [PRESCRIBER_PRESCRIPTION_STATUS.NOT_LOGGED];
+                return [PATIENT_PRESCRIPTION_STATUS.NOT_LOGGED];
             }
             else {
                 return [
-                    PRESCRIBER_PRESCRIPTION_STATUS.LOGGED,
-                    PRESCRIBER_PRESCRIPTION_STATUS.COMPLETE,
-                    PRESCRIBER_PRESCRIPTION_STATUS.COMPLETE_WITH_DISCOVERY_PASS,
+                    PATIENT_PRESCRIPTION_STATUS.LOGGED,
+                    PATIENT_PRESCRIPTION_STATUS.COMPLETE,
+                    PATIENT_PRESCRIPTION_STATUS.COMPLETE_WITH_DISCOVERY_PASS,
                 ];
             }
         } catch (err) {
@@ -49,7 +50,7 @@ export const EditPrescriberPrescriptionDialog = ({ prescription }) => {
             fieldMapping={fieldMapping}
             textInputFields={["Provider Code", "Date", "Patient Initials"]}
             getStatusOptions={getStatusOptions}
-            patchPrescription={patchPrescriberPrescription}
+            patchPrescription={patchPatientPrescription}
         />
     );
 }

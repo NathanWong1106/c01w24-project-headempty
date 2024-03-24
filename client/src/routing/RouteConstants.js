@@ -20,7 +20,8 @@ export const ADMIN_ROUTES = {
 
 export const COORDINATOR_ROUTE_BASE = "/coordinator"
 export const COORDINATOR_ROUTES = {
-    PATIENT_MNGMT: `${COORDINATOR_ROUTE_BASE}/patientManagement`
+    PATIENT_MNGMT: `${COORDINATOR_ROUTE_BASE}/patientManagement`,
+    PATIENT_PRESCRIPTION_MNGMT: `${COORDINATOR_ROUTE_BASE}/patientPrescriptionManagement`,
 }
 
 export const PRESCRIBER_ROUTE_BASE = '/prescriber'
@@ -72,6 +73,10 @@ export const COORDINATOR_LINKS = [
     {
         name: "Patient Management",
         link: COORDINATOR_ROUTES.PATIENT_MNGMT
+    },
+    {
+        name: "Patient Prescription Management",
+        link: COORDINATOR_ROUTES.PATIENT_PRESCRIPTION_MNGMT,
     }
 ]
 

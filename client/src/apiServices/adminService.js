@@ -1,5 +1,5 @@
 import { PrescriberInfo } from "./types/adminServiceTypes";
-import { PatientPrescription } from "./types/prescriptionTypes";
+import { PatientPrescription, PrescriberPrescription } from "./types/prescriptionTypes";
 import { callProtectedEndpoint } from "./utils/apiUtils"
 import { SERVER_PATHS } from "./utils/constants"
 
@@ -111,11 +111,27 @@ export const deletePrescriberPrescription = async (search) => {
  * Gets a patient prescription
  * 
  * @param {object} search search params (see server endpoint comment)
- * @returns {PatientPrescription | null} an array of prescription info if successful, else null
+ * @returns {PatientPrescription | null} a prescription info if successful, else null
  */
 export const getAdminSinglePatientPrescription = async (search) => {
     const res = await callProtectedEndpoint(
         SERVER_PATHS.ADMIN_SERVICE.GET_SINGLE_PATIENT_PRESCRIPTION,
+        'POST',
+        { search: search }
+    )
+
+    return res.status != 200 ? null : (await res.json())['prescription'];
+}
+
+/**
+ * Gets a prescriber prescription
+ * 
+ * @param {object} search search params (see server endpoint comment)
+ * @returns {PrescriberPrescription | null} a prescription info if successful, else null
+ */
+export const getAdminSinglePrescriberPrescription = async (search) => {
+    const res = await callProtectedEndpoint(
+        SERVER_PATHS.ADMIN_SERVICE.GET_SINGLE_PRESCRIBER_PRESCRIPTION,
         'POST',
         { search: search }
     )

@@ -28,6 +28,7 @@ import PatientPrescriptions from './pages/patient/PatientPrescription';
 import PatientRoute from './routing/PatientRoute';
 import CoordinatorRoute from './routing/CoordinatorRoute';
 import PatientManagement from './pages/coordinator/PatientManagement';
+import CoordinatorPatientPrescriptions from './pages/coordinator/PatientPrescriptionManagement';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -50,6 +51,7 @@ const router = createBrowserRouter(
       </Route>
       <Route path={COORDINATOR_ROUTE_BASE} element={<CoordinatorRoute />}>
         <Route path={COORDINATOR_ROUTES.PATIENT_MNGMT} element={<PatientManagement />}/>
+        <Route path={COORDINATOR_ROUTES.PATIENT_PRESCRIPTION_MNGMT} element={<CoordinatorPatientPrescriptions />}/>
       </Route>
       <Route path={PATIENT_ROUTE_BASE} element={<PatientRoute />}>
         <Route path={PATIENT_ROUTES.PRESCRIPTIONS} element={<PatientPrescriptions />}/>

@@ -43,7 +43,6 @@ export class PatientPrescription extends Prescription {
 
 /* User friendly field names (use in table header) */
 export const prescriptionFields = ["Provider Code", "Date", "Patient Initials", "Prescribed with Discovery Pass", "Status"];
-export const adminPatientPrescriptionFields = [...prescriptionFields, "First Name", "Last Name", "Patient Email"];
 /* Map the above user friendly names to actual field names */
 export const prescriptionField2PrescriptionInfo = {
     "Provider Code": "providerCode",
@@ -51,10 +50,4 @@ export const prescriptionField2PrescriptionInfo = {
     "Patient Initials": "initial",
     "Prescribed with Discovery Pass": "prescribed", 
     "Status": "status"
-}
-export const adminPatientPrescriptionField2PrescriptionInfo = {
-    ...prescriptionField2PrescriptionInfo,
-    "First Name": "firstName",
-    "Last Name": "lastName",
-    "Patient Email": "email",
 }
