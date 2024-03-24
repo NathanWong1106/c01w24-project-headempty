@@ -23,8 +23,8 @@ export const PrescriptionLogForm = () => {
     const [prscn_date, setPrscn_date] = useState(new Date());
     const [patientInit, setPatientInit] = useState("");
     const [checked, setChecked] = useState(false);
-    const [pat_status, setPatStatus] = useState("");
     const providerCode = useSelector(state => state.currentUser.auxInfo.providerCode);
+    
     prescriptionFields.forEach(field => {
         if (prescriptionField2PrescriptionInfo[field] === "providerCode") {
             fieldMapping[field] = useState(providerCode);
@@ -36,7 +36,6 @@ export const PrescriptionLogForm = () => {
     })
     
 
-
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(!open);
     const [showAlertFailure, setShowFailure] = useState(false);
@@ -46,34 +45,38 @@ export const PrescriptionLogForm = () => {
         let obj = {};
         prescriptionFields.forEach(field => {
             const [state] = fieldMapping[field];
+            console.log(state);
             obj[prescriptionField2PrescriptionInfo[field]] = state;
         })
         return obj;
+        
+    }
 
+    const resetStates = () => {
+        //need this otherwise it messes with the checkbox plus its nice to clear out fields anyway 
+        prescriptionFields.forEach(field => {
+            const [state, setState] = fieldMapping[field];
+            if (prescriptionField2PrescriptionInfo[field] === "providerCode") {
+                setState(providerCode);
+            } else if (prescriptionField2PrescriptionInfo[field] === "prescribed") {
+                setState(false);
+            } else {
+                setState("");
+            }
+        })
+        setPrscn_date(new Date());
+        setPatientInit("");
+        setChecked(false);
     }
 
     const handleConfirmChanges = async () => {
         try {
-            //checking if the prescription is already logged by patient
-            const ret = await getMatchingPrescriberPrescription(providerCode, prscn_date, patientInit);
-            if ((ret)['bool'] === true){
-                if (checked) {
-                    fieldMapping["Status"][0] = PRESCRIBER_PRESCRIPTION_STATUS.LOGGED;
-                    setPatStatus(PATIENT_PRESCRIPTION_STATUS.LOGGED);
-                } else {
-                    fieldMapping["Status"][0] = PRESCRIBER_PRESCRIPTION_STATUS.COMPLETE;
-                    setPatStatus(PATIENT_PRESCRIPTION_STATUS.COMPLETE);
-                }
-                //call patchPrescription for corresponding Patient with updated status
-                const stat = await patchPatientPrescriptionStatus(ret['id'], pat_status);
-            }
-            //call for posting prescription
-            const res = await postPrescription(providerCode, buildPostObj());
+            const res = await postPrescription(providerCode, prscn_date, patientInit, checked, buildPostObj());
             res ? setShowSuccess(true) : setShowFailure(true);
         } catch (err) {
             setShowFailure(true);
         }
-
+        resetStates();
         handleOpen();
     }
 

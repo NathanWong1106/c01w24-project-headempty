@@ -26,40 +26,44 @@ export const getPaginatedPrescriberPrescriptions = async (page, pageSize, search
 }
   
   
-  export const postPrescription = async (providerCode, patches) => {
+  export const postPrescription = async (providerCode, prscn_date, patientInit, checked, postObj) => {
     const res = await callProtectedEndpoint(
         SERVER_PATHS.PRESCRIBER_SERVICE.POST_PRESCRIPTION,
         'POST',
         {
             providerCode: providerCode,
-            patches: patches
+            prscn_date: prscn_date,
+            patientInit: patientInit,
+            checked: checked,
+            postObj: postObj
+        
         }
     )
     return res.status == 200;
   }
 
-  export const getMatchingPrescriberPrescription = async (providerCode, date, initial) => {
-    const res = await callProtectedEndpoint(
-        SERVER_PATHS.PRESCRIBER_SERVICE.GET_MATCHING_PRESCRIPTION,
-        'POST',
-        {
-            providerCode: providerCode,
-            date: date,
-            initial: initial
-        }
-    )
-    return res.status != 200 ? null : (await res.json());
+//   export const getMatchingPrescriberPrescription = async (providerCode, date, initial) => {
+//     const res = await callProtectedEndpoint(
+//         SERVER_PATHS.PRESCRIBER_SERVICE.GET_MATCHING_PRESCRIPTION,
+//         'POST',
+//         {
+//             providerCode: providerCode,
+//             date: date,
+//             initial: initial
+//         }
+//     )
+//     return res.status != 200 ? null : (await res.json());
 
-  }
+//   }
 
-  export const patchPatientPrescriptionStatus = async (id, patStatus) => {
-    const res = await callProtectedEndpoint(
-        SERVER_PATHS.PRESCRIBER_SERVICE.PATCH_PATIENT_STATUS,
-        'PATCH',
-        {
-            id: id,
-            patStatus: patStatus
-        }
-    )
-    return res.status == 200;
-  }
+//   export const patchPatientPrescriptionStatus = async (id, patStatus) => {
+//     const res = await callProtectedEndpoint(
+//         SERVER_PATHS.PRESCRIBER_SERVICE.PATCH_PATIENT_STATUS,
+//         'PATCH',
+//         {
+//             id: id,
+//             patStatus: patStatus
+//         }
+//     )
+//     return res.status == 200;
+//   }
