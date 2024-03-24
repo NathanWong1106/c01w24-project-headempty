@@ -10,6 +10,7 @@ import { adminRouter } from "./routes/adminService.js";
 import { prescriberRouter } from "./routes/prescriberService.js";
 import { verificationRouter } from "./routes/verificationService.js";
 import { patientRouter } from "./routes/patientService.js";
+import { coordinatorRouter } from "./routes/coordinatorService.js";
 
 // Give this process an identifiable name so we can kill it
 // after jest tests run.
@@ -36,6 +37,9 @@ app.use("/user", userRouter);
 
 // Admin service
 app.use("/admin", adminRoute, adminRouter);
+
+// Coordinator service
+app.use("/coordinator", coordinatorRoute, coordinatorRouter);
 
 // Prescriber service
 app.use("/prescriber", prescriberRoute, prescriberRouter);

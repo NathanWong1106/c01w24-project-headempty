@@ -100,6 +100,22 @@ export const insertPrescribers = async (numPrescribers = 20) => {
 }
 
 /**
+ * Insert numPatients patients into the db. 
+ * Each patient is generated from the generic patient format
+ * with incrementing email "patient{i}@gmail.com"
+ * @param {number} numPatients 
+ */
+export const insertPatients = async (numPatients = 20) => {
+    for (let i = 1; i <= numPatients; i++) {
+        const modifier = {
+            email: `patient${i}@gmail.com`,
+        }
+        await insertPatient(modifier);
+    }
+}
+
+
+/**
  * Finds a prescriber with the corresponding fields
  * 
  * Returns the id of the prescriber
