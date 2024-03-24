@@ -34,3 +34,29 @@ function fillPrescriberPrescription(x) {
     return new PrescriberPrescription(x.providerCode, x.date, x.initial, x.description, x.prescribed, x.status);
 }
 
+export async function getMatchingPrescriberPrescription(providerCode, date, initial) {
+    const search = {
+        providerCode: providerCode,
+        date: date,
+        initial: initial
+    };
+
+    const searchObj = await objWithFields(search, patientPrescriptionFindSchema);
+    const collection = getDb().collection(COLLECTIONS.PATIENT_PRESCRIPTIONS);
+    const data = await collection.findOne(searchObj);
+    if (data !== null) {
+        return [true, data._id]
+    }
+    return [false, null];
+}
+
+export async function patchPrescriberPrescriptionStatus(id, patStatus) {
+    const collection = getDb().collection(COLLECTIONS.PATIENT_PRESCRIPTIONS);
+    const data = await collection.updateOne({ _id: new ObjectId(id) }, { $set: { status: patStatus } });
+
+    if (data.matchedCount === 1) {
+        return true;
+    } else {
+        return false;
+    }
+}
