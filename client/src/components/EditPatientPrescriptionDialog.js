@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { PrescriberPrescription, prescriptionFields, prescriptionField2PrescriptionInfo, PRESCRIBER_PRESCRIPTION_STATUS, PatientPrescription, PATIENT_PRESCRIPTION_STATUS } from "../apiServices/types/prescriptionTypes";
-import { getAdminSinglePatientPrescription, getAdminSinglePrescriberPrescription, patchPrescriberPrescription } from "../apiServices/adminService";
+import { prescriptionFields, prescriptionField2PrescriptionInfo, PatientPrescription, PATIENT_PRESCRIPTION_STATUS } from "../apiServices/types/prescriptionTypes";
+import { getAdminSinglePrescriberPrescription } from "../apiServices/adminService";
 import { BaseEditPrescriptionDialog } from "./BaseEditPrescriptionDialog";
 import { patchPatientPrescription } from "../apiServices/coordinatorService";
 
 
 /**
- * Opens the edit dialog for the specified prescriber.
+ * Opens the edit dialog for the specified patient.
  * 
  * @param {{prescription: PatientPrescription}} props
  */
@@ -24,6 +24,7 @@ export const EditPatientPrescriptionDialog = ({ prescription }) => {
             let [providerCode] = fieldMapping["Provider Code"];
             let [initial] = fieldMapping["Patient Initials"];
             let [date] = fieldMapping["Date"];
+            const [prescribed] = fieldMapping["Prescribed with Discovery Pass"];
             const correspondingPaPrescription = await getAdminSinglePrescriberPrescription({
                 providerCode: providerCode,
                 initial: initial,
@@ -33,11 +34,13 @@ export const EditPatientPrescriptionDialog = ({ prescription }) => {
                 return [PATIENT_PRESCRIPTION_STATUS.NOT_LOGGED];
             }
             else {
-                return [
-                    PATIENT_PRESCRIPTION_STATUS.LOGGED,
-                    PATIENT_PRESCRIPTION_STATUS.COMPLETE,
-                    PATIENT_PRESCRIPTION_STATUS.COMPLETE_WITH_DISCOVERY_PASS,
-                ];
+                if (prescribed) {
+                    return [
+                        PATIENT_PRESCRIPTION_STATUS.LOGGED,
+                        PATIENT_PRESCRIPTION_STATUS.COMPLETE_WITH_DISCOVERY_PASS,
+                    ]
+                }
+                return [PATIENT_PRESCRIPTION_STATUS.COMPLETE];
             }
         } catch (err) {
             return [];

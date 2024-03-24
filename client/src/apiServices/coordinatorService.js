@@ -76,7 +76,7 @@ export const getCoordinatorPaginatedPatientPrescription = async (page, pageSize,
  * @param {object} patches patches (see server endpoint comment)
  * @returns {boolean} true on success, else false
  */
-export const patchPatientPrescription = async (providerCode, initial, date, patches) => {
+export const patchPatientPrescription = async (providerCode, initial, date, prescribed, patches) => {
     const res = await callProtectedEndpoint(
         SERVER_PATHS.COORDINATOR_SERVICE.PATCH_SINGLE_PATIENT_PRESCRIPTION,
         'PATCH',
@@ -84,6 +84,7 @@ export const patchPatientPrescription = async (providerCode, initial, date, patc
             providerCode: providerCode,
             initial: initial,
             date: date,
+            prescribed: prescribed,
             patches: patches
         }
     )

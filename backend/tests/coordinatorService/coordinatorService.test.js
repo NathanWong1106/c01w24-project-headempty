@@ -164,6 +164,7 @@ describe("/coordinator/patchSinglePatientPrescription", () => {
             providerCode: targetProviderCode,
             initial: targetInitial,
             date: targetDate,
+            prescribed: patches.prescribed,
             patches: patches
         }
     
@@ -194,31 +195,6 @@ describe("/coordinator/patchSinglePatientPrescription", () => {
         expect(retPrescriber.prescribed).toBe(patches.prescribed);
         expect(retPrescriber.status).toBe(patches.status);
     })
-
-    test("/coordinator/patchSinglePatientPrescription - no pr prescription, invalid pa prescription status", async () => {
-        await insertPatientPrescription();
-    
-        const targetProviderCode = "ON-JC001";
-        const targetInitial = "JC";
-        const targetDate = "2024-12-34";
-        const patches = {
-            "providerCode": targetProviderCode,
-            "initial": targetInitial,
-            "date": targetDate,
-            "prescribed": true,
-            "status": PATIENT_PRESCRIPTION_STATUS.COMPLETE
-        }
-        const patchBody = {
-            providerCode: targetProviderCode,
-            initial: targetInitial,
-            date: targetDate,
-            patches: patches
-        }
-    
-        // Patch prescriber prescription
-        let res = await fetchAsAdmin(coordToken, "/coordinator/patchSinglePatientPrescription", "PATCH", patchBody);
-        expect(res.status).toBe(404);
-    })
     
     test("/coordinator/patchSinglePatientPrescription - no pr prescription, invalid pa prescription status", async () => {
         await insertPatientPrescription();
@@ -237,6 +213,7 @@ describe("/coordinator/patchSinglePatientPrescription", () => {
             providerCode: targetProviderCode,
             initial: targetInitial,
             date: targetDate,
+            prescribed: patches.prescribed,
             patches: patches
         }
     
@@ -263,6 +240,7 @@ describe("/coordinator/patchSinglePatientPrescription", () => {
             providerCode: targetProviderCode,
             initial: targetInitial,
             date: targetDate,
+            prescribed: patches.prescribed,
             patches: patches
         }
     
@@ -289,6 +267,7 @@ describe("/coordinator/patchSinglePatientPrescription", () => {
             providerCode: targetProviderCode,
             initial: targetInitial,
             date: targetDate,
+            prescribed: patches.prescribed,
             patches: patches
         }
     
@@ -338,7 +317,7 @@ describe("/coordinator/patchSinglePatientPrescription", () => {
         expect(retPatient.prescription.status).toBe(PRESCRIBER_PRESCRIPTION_STATUS.LOGGED);
     })
 
-    test("/admin/patchSinglePrescriberPrescription - has pa prescription, update corresponding pa prescription complete", async () => {
+    test("/admin/patchSinglePrescriberPrescription - has pr prescription, update corresponding pr prescription complete", async () => {
         await insertPrescriberPrescription({ status: PRESCRIBER_PRESCRIPTION_STATUS.LOGGED });
         await insertPatientPrescription({ status: PATIENT_PRESCRIPTION_STATUS.LOGGED });
     
@@ -349,13 +328,14 @@ describe("/coordinator/patchSinglePatientPrescription", () => {
             "providerCode": targetProviderCode,
             "initial": targetInitial,
             "date": targetDate,
-            "prescribed": true,
+            "prescribed": false,
             "status": PATIENT_PRESCRIPTION_STATUS.COMPLETE
         }
         const patchBody = {
             providerCode: targetProviderCode,
             initial: targetInitial,
             date: targetDate,
+            prescribed: patches.prescribed,
             patches: patches
         }
     
@@ -404,8 +384,8 @@ describe("/coordinator/patchSinglePatientPrescription", () => {
     })
 
     test("/admin/patchSinglePrescriberPrescription - has pa prescription, update corresponding pa prescription logged", async () => {
-        await insertPrescriberPrescription({ status: PRESCRIBER_PRESCRIPTION_STATUS.COMPLETE });
-        await insertPatientPrescription({ status: PATIENT_PRESCRIPTION_STATUS.COMPLETE });
+        await insertPrescriberPrescription({ status: PRESCRIBER_PRESCRIPTION_STATUS.COMPLETE_WITH_DISCOVERY_PASS });
+        await insertPatientPrescription({ status: PATIENT_PRESCRIPTION_STATUS.COMPLETE_WITH_DISCOVERY_PASS });
     
         const targetProviderCode = "ON-JC001";
         const targetInitial = "JC";
@@ -421,6 +401,7 @@ describe("/coordinator/patchSinglePatientPrescription", () => {
             providerCode: targetProviderCode,
             initial: targetInitial,
             date: targetDate,
+            prescribed: patches.prescribed,
             patches: patches
         }
     
@@ -468,6 +449,99 @@ describe("/coordinator/patchSinglePatientPrescription", () => {
         expect(ret.prescription.status).toBe(PRESCRIBER_PRESCRIPTION_STATUS.LOGGED);
     })
 
+    test("/admin/patchSinglePrescriberPrescription - has pr prescription, update corresponding pr prescription complete w/ discovery", async () => {
+        await insertPrescriberPrescription({ status: PRESCRIBER_PRESCRIPTION_STATUS.LOGGED });
+        await insertPatientPrescription({ status: PATIENT_PRESCRIPTION_STATUS.LOGGED });
+    
+        const targetProviderCode = "ON-JC001";
+        const targetInitial = "JC";
+        const targetDate = "2024-12-34";
+        const patches = {
+            "providerCode": targetProviderCode,
+            "initial": targetInitial,
+            "date": targetDate,
+            "prescribed": true,
+            "status": PATIENT_PRESCRIPTION_STATUS.COMPLETE_WITH_DISCOVERY_PASS
+        }
+        const patchBody = {
+            providerCode: targetProviderCode,
+            initial: targetInitial,
+            date: targetDate,
+            prescribed: patches.prescribed,
+            patches: patches
+        }
+    
+        // Patch prescriber prescription
+        let res = await fetchAsAdmin(coordToken, "/coordinator/patchSinglePatientPrescription", "PATCH", patchBody);
+        expect(res.status).toBe(200);
+    
+        // Get resulting list and search for the newly patched prescriber prescription
+        let getPageBody = {
+            page: 1,
+            pageSize: 20,
+            search: {
+                providerCode: targetProviderCode,
+                initial: targetInitial,
+                date: targetDate,
+            }
+        }
+        res = await fetchAsAdmin(coordToken, "/coordinator/getCoordinatorPaginatedPatientPrescription", "POST", getPageBody);
+        expect(res.status).toBe(200);
+        let resBody = await res.json();
+        let retPrescriber = resBody.list[0];
+        expect(resBody.list.length).toBe(1);
+        expect(retPrescriber.providerCode).toBe(patches.providerCode);
+        expect(retPrescriber.initial).toBe(patches.initial);
+        expect(retPrescriber.date).toBe(patches.date);
+        expect(retPrescriber.prescribed).toBe(patches.prescribed);
+        expect(retPrescriber.status).toBe(patches.status);
+    
+        // Confirm corresponding patient prescription updated
+        // Assumes working getAdminSinglePatientPrescription
+        getPageBody = {
+            search: {
+                providerCode: targetProviderCode,
+                initial: targetInitial,
+                date: targetDate,
+            }
+        }
+        res = await fetchAsAdmin(coordToken, "/admin/getAdminSinglePrescriberPrescription", "POST", getPageBody);
+        expect(res.status).toBe(200);
+        let retPatient = await res.json();
+        expect(retPatient.prescription.providerCode).toBe(patches.providerCode);
+        expect(retPatient.prescription.initial).toBe(patches.initial);
+        expect(retPatient.prescription.date).toBe(patches.date);
+        expect(retPatient.prescription.prescribed).toBe(patches.prescribed);
+        expect(retPatient.prescription.status).toBe(PRESCRIBER_PRESCRIPTION_STATUS.COMPLETE_WITH_DISCOVERY_PASS);
+    })
+
+    test("/coordinator/patchSinglePatientPrescription - has pr prescription, invalid status & prescribed combo", async () => {
+        await insertPrescriberPrescription({ status: PRESCRIBER_PRESCRIPTION_STATUS.LOGGED });
+        await insertPatientPrescription({ status: PATIENT_PRESCRIPTION_STATUS.LOGGED });
+    
+        const targetProviderCode = "ON-JC001";
+        const targetInitial = "JC";
+        const targetDate = "2024-12-34";
+        const patches = {
+            "providerCode": targetProviderCode,
+            "initial": targetInitial,
+            "date": targetDate,
+            "prescribed": false,
+            "status": PATIENT_PRESCRIPTION_STATUS.COMPLETE_WITH_DISCOVERY_PASS
+        }
+        const patchBody = {
+            providerCode: targetProviderCode,
+            initial: targetInitial,
+            date: targetDate,
+            prescribed: patches.prescribed,
+            patches: patches
+        }
+    
+        // Patch prescriber prescription
+        let res = await fetchAsAdmin(coordToken, "/coordinator/patchSinglePatientPrescription", "PATCH", patchBody);
+        expect(res.status).toBe(404);
+    })
+
     test("/coordinator/patchSinglePatientPrescription - invalid patch body, null fields", async () => {
         await insertPatientPrescriptions(20);
     
@@ -482,6 +556,7 @@ describe("/coordinator/patchSinglePatientPrescription", () => {
             providerCode: targetProviderCode,
             initial: targetInitial,
             date: targetDate,
+            prescribed: patches.prescribed,
             patches: patches
         }
     
@@ -504,6 +579,7 @@ describe("/coordinator/patchSinglePatientPrescription", () => {
             providerCode: targetProviderCode,
             initial: targetInitial,
             date: targetDate,
+            prescribed: patches.prescribed,
             patches: patches
         }
     
@@ -526,6 +602,7 @@ describe("/coordinator/patchSinglePatientPrescription", () => {
             providerCode: targetProviderCode,
             initial: targetInitial,
             date: targetDate,
+            prescribed: patches.prescribed,
             patches: patches
         }
     
