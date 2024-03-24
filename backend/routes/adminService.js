@@ -175,6 +175,7 @@ adminRouter.post("/getAdminSinglePrescriberPrescription", express.json(), async 
  *  providerCode: String
  *  initial: String
  *  date: String
+ *  prescribed: Boolean
  *  patches: {
  *      providerCode: String?
  *      date: String?
@@ -189,10 +190,10 @@ adminRouter.post("/getAdminSinglePrescriberPrescription", express.json(), async 
  */
 adminRouter.patch("/patchSinglePrescriberPrescription", express.json(), async (req, res) => {
     try {
-        const { providerCode, initial, date, patches } = req.body;
+        const { providerCode, initial, date, prescribed, patches } = req.body;
 
-        if ([providerCode, initial, date, patches].some(ele => ele === null) || [providerCode, initial, date].some(ele => ele === "")) {
-            return res.status(400).json({ error: "A providerCode, initial, date, and patches object must be provided and non-empty." });
+        if ([providerCode, initial, date, prescribed, patches].some(ele => ele === null) || [providerCode, initial, date].some(ele => ele === "")) {
+            return res.status(400).json({ error: "A providerCode, initial, date, prescribed, and patches object must be provided and non-empty." });
         }
 
         const patchError = await patchSinglePrescription(
@@ -200,6 +201,7 @@ adminRouter.patch("/patchSinglePrescriberPrescription", express.json(), async (r
             providerCode,
             initial,
             date,
+            prescribed,
             patches,
         )
         if (!patchError) {

@@ -23,6 +23,7 @@ export const EditPrescriberPrescriptionDialog = ({ prescription }) => {
             let [providerCode] = fieldMapping["Provider Code"];
             let [initial] = fieldMapping["Patient Initials"];
             let [date] = fieldMapping["Date"];
+            const [prescribed] = fieldMapping["Prescribed with Discovery Pass"];
             const correspondingPaPrescription = await getAdminSinglePatientPrescription({
                 providerCode: providerCode,
                 initial: initial,
@@ -32,11 +33,13 @@ export const EditPrescriberPrescriptionDialog = ({ prescription }) => {
                 return [PRESCRIBER_PRESCRIPTION_STATUS.NOT_LOGGED];
             }
             else {
-                return [
-                    PRESCRIBER_PRESCRIPTION_STATUS.LOGGED,
-                    PRESCRIBER_PRESCRIPTION_STATUS.COMPLETE,
-                    PRESCRIBER_PRESCRIPTION_STATUS.COMPLETE_WITH_DISCOVERY_PASS,
-                ];
+                if (prescribed) {
+                    return [
+                        PRESCRIBER_PRESCRIPTION_STATUS.LOGGED,
+                        PRESCRIBER_PRESCRIPTION_STATUS.COMPLETE_WITH_DISCOVERY_PASS,
+                    ]
+                }
+                return [PRESCRIBER_PRESCRIPTION_STATUS.COMPLETE];
             }
         } catch (err) {
             return [];

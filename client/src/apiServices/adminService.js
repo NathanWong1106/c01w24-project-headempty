@@ -73,10 +73,11 @@ export const getAdminPaginatedPrescriberPrescription = async (page, pageSize, se
  * @param {string} providerCode the provider code of the prescriber
  * @param {string} initial the initials of the patient
  * @param {string} date the date of the prescription
+ * @param {boolean} prescribed if Discovery Pass was prescribed
  * @param {object} patches patches (see server endpoint comment)
  * @returns {boolean} true on success, else false
  */
-export const patchPrescriberPrescription = async (providerCode, initial, date, patches) => {
+export const patchPrescriberPrescription = async (providerCode, initial, date, prescribed, patches) => {
     const res = await callProtectedEndpoint(
         SERVER_PATHS.ADMIN_SERVICE.PATCH_SINGLE_PRESCRIBER_PRESCRIPTION,
         'PATCH',
@@ -84,6 +85,7 @@ export const patchPrescriberPrescription = async (providerCode, initial, date, p
             providerCode: providerCode,
             initial: initial,
             date: date,
+            prescribed: prescribed,
             patches: patches
         }
     )
