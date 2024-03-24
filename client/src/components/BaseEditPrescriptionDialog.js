@@ -27,16 +27,9 @@ import { getAdminSinglePatientPrescription, patchPrescriberPrescription } from "
  * 
  * @param {{prescription: PrescriberInfo}} props
  */
-export const EditPrescriptionDialog = ({ prescription }) => {
-
-    // Set up a mapping of relevant fields
-    const fieldMapping = {};
-    prescriptionFields.forEach(field => {
-        fieldMapping[field] = useState(prescription[prescriptionField2PrescriptionInfo[field]]);
-    })
+export const BaseEditPrescriptionDialog = ({ prescription, fieldMapping, prescriptionField2InfoMapping, textInputFields, getStatusOptions, patchPrescription }) => {
     const [prescribed, setPrescribed] = fieldMapping["Prescribed with Discovery Pass"];
     const [status, setStatus] = fieldMapping["Status"]
-    const textInputFields = ["Provider Code", "Date", "Patient Initials"];
 
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(!open);
@@ -57,7 +50,7 @@ export const EditPrescriptionDialog = ({ prescription }) => {
 
         prescriptionFields.forEach(field => {
             const [state] = fieldMapping[field];
-            obj[prescriptionField2PrescriptionInfo[field]] = state;
+            obj[prescriptionField2InfoMapping[field]] = state;
         })
 
         return obj;
@@ -65,39 +58,13 @@ export const EditPrescriptionDialog = ({ prescription }) => {
 
     const handleConfirmChanges = async () => {
         try {
-            const res = await patchPrescriberPrescription(prescription.providerCode, prescription.initial, prescription.date, buildPatchObj());
+            const res = await patchPrescription(prescription.providerCode, prescription.initial, prescription.date, buildPatchObj());
             res ? setShowSuccess(true) : setShowFailure(true);
         } catch (err) {
             setShowFailure(true);
         }
 
         handleOpen();
-    }
-
-    const getStatusOptions = async () => {
-        // Uses the state for dynamic update in case these are modified
-        try {
-            let [providerCode] = fieldMapping["Provider Code"];
-            let [initial] = fieldMapping["Patient Initials"];
-            let [date] = fieldMapping["Date"];
-            const correspondingPaPrescription = await getAdminSinglePatientPrescription({
-                providerCode: providerCode,
-                initial: initial,
-                date: date,
-            });
-            if (!correspondingPaPrescription) {
-                return [PRESCRIBER_PRESCRIPTION_STATUS.NOT_LOGGED];
-            }
-            else {
-                return [
-                    PRESCRIBER_PRESCRIPTION_STATUS.LOGGED,
-                    PRESCRIBER_PRESCRIPTION_STATUS.COMPLETE,
-                    PRESCRIBER_PRESCRIPTION_STATUS.COMPLETE_WITH_DISCOVERY_PASS,
-                ];
-            }
-        } catch (err) {
-            return [];
-        }
     }
 
     return (

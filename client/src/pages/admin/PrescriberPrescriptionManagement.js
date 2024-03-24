@@ -8,7 +8,7 @@ import { prescriptionField2PrescriptionInfo, prescriptionFields } from "../../ap
 import PaginatedTableWithSearch from "../../components/PaginatedTableWithSearch";
 
 import { getAdminPaginatedPrescriberPrescriptions } from "../../apiServices/adminService";
-import { EditPrescriptionDialog } from "../../components/EditPrescriptionDialog";
+import { EditPrescriberPrescriptionDialog } from "../../components/EditPrescriberPrescriptionDialog";
 import { DeletePrescriberPrescriptionDialog } from "../../components/DeletePrescriberPrescriptionDialog";
 
 const PAGE_SIZE = 20;
@@ -82,7 +82,7 @@ const AdminPrescriberPrescriptions = () => {
                 }
                 <td className="p-2">
                     <Tooltip content="Edit Prescription">
-                        <EditPrescriptionDialog prescription={prescription} />
+                        <EditPrescriberPrescriptionDialog prescription={prescription} />
                     </Tooltip>
                 </td>
                 <td className="p-2">
@@ -101,7 +101,7 @@ const AdminPrescriberPrescriptions = () => {
                 dataList={prescriptionList}
                 searchFn={searchFn}
                 searchForm={prescriptionSearchForm}
-                cols={[...prescriptionFields]}
+                cols={[...prescriptionFields, ""]}
                 createRow={createRow}
                 pageSize={PAGE_SIZE}
             />
