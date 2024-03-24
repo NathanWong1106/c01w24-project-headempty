@@ -6,7 +6,7 @@ import { retryPromiseWithDelay } from "../utils.js";
 export async function createPrescriber(prescriber) {
     if (!await prescriberDataSchema.isValid(prescriber)) {
         console.error(`Provided prescriber data for ${prescriber.firstName} ${prescriber.lastName} does not match schema.`);
-        return false;
+        return null;
     }
 
     const providerCode = await getAndIncrementProviderCode(prescriber);
@@ -26,10 +26,10 @@ export async function createPrescriber(prescriber) {
     try {
         const collection = getDb().collection(COLLECTIONS.PRESCRIBER);
         await retryPromiseWithDelay(collection.insertOne(data));
-        return true;
+        return providerCode;
     } catch (err) {
         console.error(`Unable to insert new prescriber: ${prescriber.firstName} ${prescriber.lastName}`);
-        return false;
+        return null;
     }
 }
 
@@ -84,8 +84,8 @@ async function getAndIncrementProviderCode(prescriber) {
     return providerCode;
 }
 
-export async function checkIfExistingPrescriber(prescriber) {
+export async function getExistingPrescriber(prescriber) {
     const prescriberCollection = getDb().collection(COLLECTIONS.PRESCRIBER);
     const foundPrescriber = await retryPromiseWithDelay(prescriberCollection.findOne(prescriber));
-    return foundPrescriber != null;
+    return foundPrescriber;
 }
