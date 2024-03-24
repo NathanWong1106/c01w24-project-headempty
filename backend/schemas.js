@@ -21,12 +21,8 @@ export const patientPrescriptionSearchSchema = object({
     providerCode: string(),
     date: string(),
     initial: string(),
-    prescribed: boolean(),
-    firstName: string().required(), 
-    lastName: string().required(), 
+    prescribed: boolean(), 
     email: string().required(), 
-    address: string(), 
-    language: string(), 
     status: string()
 }).noUnknown()
 
@@ -42,12 +38,8 @@ export const adminPatientPrescriptionSearchSchema = object({
     providerCode: string(),
     date: string(),
     initial: string(),
-    prescribed: boolean(),
-    firstName: string(), 
-    lastName: string(), 
+    prescribed: boolean(), 
     email: string(), 
-    address: string(), 
-    language: string(), 
     status: string()
 }).noUnknown()
 
@@ -64,11 +56,7 @@ export const adminSinglePatientPrescriptionSearchSchema = object({
     date: string().required(),
     initial: string().required(),
     prescribed: boolean(),
-    firstName: string(), 
-    lastName: string(), 
     email: string(), 
-    address: string(), 
-    language: string(), 
     status: string()
 }).noUnknown()
 

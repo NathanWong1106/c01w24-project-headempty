@@ -668,8 +668,6 @@ describe("/admin/getAdminSinglePatientPrescription", () => {
         expect(resBody.prescription.date).toBe(body.search.date);
         expect(resBody.prescription.initial).toBe(body.search.initial);
         expect(resBody.prescription.prescribed).toBe(true);
-        expect(resBody.prescription.firstName).toBe("John");
-        expect(resBody.prescription.lastName).toBe("Cena");
         expect(resBody.prescription.email).toBe("patient1@gmail.com");
         expect(resBody.prescription.status).toBe(PATIENT_PRESCRIPTION_STATUS.NOT_LOGGED);
     })
