@@ -12,13 +12,10 @@ import {
     Option,
     Checkbox
 } from "@material-tailwind/react";
-import { PrescriberPrescription, prescriptionFields, prescriptionField2PrescriptionInfo } from "../apiServices/types/prescriptionTypes";
+import { prescriptionFields } from "../apiServices/types/prescriptionTypes";
 
 import { ClosableAlert } from "./ClosableAlert";
 import pencilSVG from "../svgs/pencilSVG";
-import { PRESCRIBER_PRESCRIPTION_STATUS } from "../apiServices/types/prescriptionTypes";
-import { getAdminSinglePatientPrescription, patchPrescriberPrescription } from "../apiServices/adminService";
-
 
 /**
  * Opens the edit dialog for the specified prescriber.
@@ -36,14 +33,17 @@ export const BaseEditPrescriptionDialog = ({ prescription, fieldMapping, prescri
     const [showAlertFailure, setShowFailure] = useState(false);
     const [showAlertSuccess, setShowSuccess] = useState(false);
 
-    const [statusOptions, setStatusOptions] = useState([]);
-    useEffect(() => {
-        async function helper() {
-            const statOps = await getStatusOptions();
-            setStatusOptions(statOps);
-        }
-        helper();
-    }, []);
+    const [statusOptions, setStatusOptions] = useState([status]);
+
+    const statusHelper = async () => {
+        const statOps = await getStatusOptions();
+        setStatusOptions(statOps);
+    }
+
+    const handleCheckbox = async (el) => {
+        setPrescribed(el.target.checked);
+        await statusHelper();
+    }
 
     const buildPatchObj = () => {
         let obj = {};
@@ -58,7 +58,7 @@ export const BaseEditPrescriptionDialog = ({ prescription, fieldMapping, prescri
 
     const handleConfirmChanges = async () => {
         try {
-            const res = await patchPrescription(prescription.providerCode, prescription.initial, prescription.date, buildPatchObj());
+            const res = await patchPrescription(prescription.providerCode, prescription.initial, prescription.date, prescribed, buildPatchObj());
             res ? setShowSuccess(true) : setShowFailure(true);
         } catch (err) {
             setShowFailure(true);
@@ -91,11 +91,12 @@ export const BaseEditPrescriptionDialog = ({ prescription, fieldMapping, prescri
                         <Checkbox
                             defaultChecked={prescribed}
                             label="Prescribed with Discovery Pass"
-                            onChange={el => setPrescribed(el.target.checked)}
+                            onChange={handleCheckbox}
                         />
                         <Select
                             label="Status"
                             value={status}
+                            onClick={statusHelper}
                             onChange={el => setStatus(el)}
                         >
                             {statusOptions.map((option) => (
