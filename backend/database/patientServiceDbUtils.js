@@ -52,9 +52,9 @@ export async function patchPatientPrescriptionStatus(id, patStatus) {
     const data = await collection.updateOne({ _id: new ObjectId(id) }, { $set: { status: patStatus } });
 
     if (data.matchedCount === 1) {
-        return res.status(200).json({ message: `Successfully updated prescription status.` });
+        return true;
     } else {
-        return res.status(404).json({ error: `Failed to update prescription status.` });
+        return false;
     }
 }
 
