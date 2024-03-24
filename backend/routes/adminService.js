@@ -9,9 +9,11 @@ import {
     getAdminSinglePrescriberPrescription,
     getPaginatedPrescriber,
     patchSinglePrescriber,
-    patchSinglePrescriberPrescription,
+    patchSinglePrescription,
     deletePrescriberPrescription,
 } from "../database/adminServiceDbUtils.js";
+import { adminPrescriberPrescriptionPatchSchema } from "../schemas.js";
+import { PATIENT_PRESCRIPTION_STATUS, PRESCRIBER_PRESCRIPTION_STATUS } from "../types/prescriptionTypes.js";
 
 export const adminRouter = express.Router();
 
@@ -192,7 +194,17 @@ adminRouter.patch("/patchSinglePrescriberPrescription", express.json(), async (r
             return res.status(400).json({ error: "A providerCode, initial, date, and patches object must be provided and non-empty." });
         }
 
-        const patchError = await patchSinglePrescriberPrescription(providerCode, initial, date, patches)
+        const patchError = await patchSinglePrescription(
+            providerCode,
+            initial,
+            date,
+            patches,
+            adminPrescriberPrescriptionPatchSchema,
+            "PRESCRIBER_PRESCRIPTIONS",
+            "PATIENT_PRESCRIPTIONS",
+            PRESCRIBER_PRESCRIPTION_STATUS,
+            PATIENT_PRESCRIPTION_STATUS,
+        )
         if (!patchError) {
             return res.status(200).json({ message: `Successfully patched prescriber prescription with providerCode: ${providerCode}, initial: ${initial}, date: ${date}.` });
         } else {

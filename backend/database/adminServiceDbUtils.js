@@ -74,27 +74,50 @@ export async function getAdminSinglePrescriberPrescription(search) {
 }
 
 /**
- * Patch a single prescriber prescription with patches
+ * Patch a single prescription with patches
+ * This is a generic function where you can then pass main/alt as prescriber/patient or patient/prescriber.
+ * 
  * @param {string} providerCode provider code of the prescriber
+ * @param {string} initial initials of patient
+ * @param {string} date date of prescription
  * @param {Object} patches fields to patch
+ * @param {string} patchSchema schema for casting patches to
+ * @param {string} mainCollection db collection for main type prescription
+ * @param {string} altCollection db collection for alt type prescription
+ * @param {string} mainStatusEnum status enum for main type prescription
+ * @param {string} altStatusEnum status enum for alt type prescription
  * @returns {string || null} relevant error string if error, else null
  */
-export async function patchSinglePrescriberPrescription(providerCode, initial, date, patches) {
-    const patchObj = await objWithFields(patches, adminPrescriberPrescriptionPatchSchema);
-    const prPrescriptionCollection = getDb().collection(COLLECTIONS.PRESCRIBER_PRESCRIPTIONS);
-    const paPrescriptionCollection = getDb().collection(COLLECTIONS.PATIENT_PRESCRIPTIONS);
-    let prPrescriptionData = null;
-    let paPrescriptionData = null;
-    const paPrescription = await paPrescriptionCollection.findOne({
+export async function patchSinglePrescription(
+    providerCode,
+    initial,
+    date,
+    patches,
+    patchSchema,
+    mainCollection,
+    altCollection,
+    mainStatusEnum,
+    altStatusEnum
+) {
+    const mainStr = mainCollection === "PRESCRIBER_PRESCRIPTIONS" ? "prescriber": "patient";
+    const altStr = mainCollection === "PRESCRIBER_PRESCRIPTIONS" ? "patient": "prescriber";
+
+    const patchObj = await objWithFields(patches, patchSchema);
+    const mainPrescriptionCollection = getDb().collection(COLLECTIONS[mainCollection]);
+    const altPrescriptionCollection = getDb().collection(COLLECTIONS[altCollection]);
+
+    let mainPrescriptionData = null;
+    let altPrescriptionData = null;
+    const altPrescription = await altPrescriptionCollection.findOne({
         providerCode: providerCode,
         initial: initial,
         date: date,
     });
     
-    if (!paPrescription) {
+    if (!altPrescription) {
         // No update to status, update other fields
-        if (patchObj["status"] === PRESCRIBER_PRESCRIPTION_STATUS.NOT_LOGGED) {
-            prPrescriptionData = await prPrescriptionCollection.updateOne(
+        if (patchObj["status"] === mainStatusEnum.NOT_LOGGED) {
+            mainPrescriptionData = await mainPrescriptionCollection.updateOne(
                 {
                     providerCode: providerCode,
                     initial: initial,
@@ -102,24 +125,24 @@ export async function patchSinglePrescriberPrescription(providerCode, initial, d
                 },
                 { $set: patchObj }
             );
-            if (prPrescriptionData.matchedCount !== 1) {
-                return `Error updating / could not find prescriber prescription with providerCode: ${providerCode}, initial: ${initial}, date: ${date}.`;
+            if (mainPrescriptionData.matchedCount !== 1) {
+                return `Error updating / could not find ${mainStr} prescription with providerCode: ${providerCode}, initial: ${initial}, date: ${date}.`;
             }
             return null;
         }
         // Shouldn't be allowed to set to any other status if no pa prescription
         else {
-            return `Cannot set status to ${patchObj["status"]} for prescriber prescription with providerCode: ${providerCode}, initial: ${initial}, date: ${date}. No corresponding patient prescription.`;
+            return `Cannot set status to ${patchObj["status"]} for ${mainStr} prescription with providerCode: ${providerCode}, initial: ${initial}, date: ${date}. No corresponding patient prescription.`;
         }
     }
 
     // Pa logged, cannot have status pa not logged
-    if (patchObj["status"] === PRESCRIBER_PRESCRIPTION_STATUS.NOT_LOGGED) {
-        return `Cannot set status to ${patchObj["status"]} for prescriber prescription with providerCode: ${providerCode}, initial: ${initial}, date: ${date}. Found corresponding patient prescription.`;
+    if (patchObj["status"] === mainStatusEnum.NOT_LOGGED) {
+        return `Cannot set status to ${patchObj["status"]} for ${mainStr} prescription with providerCode: ${providerCode}, initial: ${initial}, date: ${date}. Found corresponding patient prescription.`;
     }
 
     // If status logged or complete, update both pa & pr correspondingly
-    prPrescriptionData = await prPrescriptionCollection.updateOne(
+    mainPrescriptionData = await mainPrescriptionCollection.updateOne(
         {
             providerCode: providerCode,
             initial: initial,
@@ -127,12 +150,12 @@ export async function patchSinglePrescriberPrescription(providerCode, initial, d
         },
         { $set: patchObj }
     );
-    if (prPrescriptionData.matchedCount !== 1) {
-        return `Error updating / could not find prescriber prescription with providerCode: ${providerCode}, initial: ${initial}, date: ${date}.`;
+    if (mainPrescriptionData.matchedCount !== 1) {
+        return `Error updating / could not find ${mainStr} prescription with providerCode: ${providerCode}, initial: ${initial}, date: ${date}.`;
     }
     
-    if ([PRESCRIBER_PRESCRIPTION_STATUS.COMPLETE, PRESCRIBER_PRESCRIPTION_STATUS.COMPLETE_WITH_DISCOVERY_PASS].includes(patchObj["status"])) {
-        paPrescriptionData = await paPrescriptionCollection.updateOne(
+    if ([mainStatusEnum.COMPLETE, mainStatusEnum.COMPLETE_WITH_DISCOVERY_PASS].includes(patchObj["status"])) {
+        altPrescriptionData = await altPrescriptionCollection.updateOne(
             {
                 providerCode: providerCode,
                 initial: initial,
@@ -143,18 +166,18 @@ export async function patchSinglePrescriberPrescription(providerCode, initial, d
     }
     // PRESCRIBER_PRESCRIPTION_STATUS.LOGGED
     else {
-        paPrescriptionData = await paPrescriptionCollection.updateOne(
+        altPrescriptionData = await altPrescriptionCollection.updateOne(
             {
                 providerCode: providerCode,
                 initial: initial,
                 date: date,
             },
-            { $set: { status: PATIENT_PRESCRIPTION_STATUS.LOGGED } }
+            { $set: { status: altStatusEnum.LOGGED } }
         );
     }
     
-    if (paPrescriptionData.matchedCount !== 1) {
-        return `Error updating corresponding patient prescription with providerCode: ${providerCode}, initial: ${initial}, date: ${date}. Prescriber prescription data was updated, desync ocurred, fix in database.`;
+    if (altPrescriptionData.matchedCount !== 1) {
+        return `Error updating corresponding ${altStr} prescription with providerCode: ${providerCode}, initial: ${initial}, date: ${date}, whereas ${mainStr} prescription data was updated, desync ocurred, fix in database.`;
     }
     return null;
 }
