@@ -31,7 +31,7 @@ export const COLLEGES = [
     "College of Physicians and Surgeons of Saskatchewan",
 ];
 
-export const PATCH_PRESCRIPTION_TYPES = {
+export const PRESCRIPTION_TYPES = {
     PRESCRIBER: "prescriber",
     PATIENT: "patient",
 }

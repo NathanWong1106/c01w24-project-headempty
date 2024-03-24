@@ -10,11 +10,11 @@ import {
     getPaginatedPrescriber,
     patchSinglePrescriber,
     patchSinglePrescription,
-    deletePrescriberPrescription,
+    deletePrescription,
 } from "../database/adminServiceDbUtils.js";
 import { adminPrescriberPrescriptionPatchSchema } from "../schemas.js";
 import { PATIENT_PRESCRIPTION_STATUS, PRESCRIBER_PRESCRIPTION_STATUS } from "../types/prescriptionTypes.js";
-import { PATCH_PRESCRIPTION_TYPES } from "../constants.js";
+import { PRESCRIPTION_TYPES } from "../constants.js";
 
 export const adminRouter = express.Router();
 
@@ -196,7 +196,7 @@ adminRouter.patch("/patchSinglePrescriberPrescription", express.json(), async (r
         }
 
         const patchError = await patchSinglePrescription(
-            PATCH_PRESCRIPTION_TYPES.PRESCRIBER,
+            PRESCRIPTION_TYPES.PRESCRIBER,
             providerCode,
             initial,
             date,
@@ -228,9 +228,9 @@ adminRouter.post("/deletePrescriberPrescription", express.json(), async (req, re
     try {
         const { search } = req.body;
 
-        const ret = await deletePrescriberPrescription(search);
+        const delError = await deletePrescription(PRESCRIPTION_TYPES.PRESCRIBER, search);
 
-        if (!ret) {
+        if (delError) {
             return res.status(404).json({ error: `Failed to find prescriber prescription with providerCode: ${search.providerCode}, initial: ${search.initial}, date: ${search.date}` });
         }
         return res.status(200).json({ message: `Successfully deleted prescriber prescription with providerCode: ${search.providerCode}, initial: ${search.initial}, date: ${search.date}.` });

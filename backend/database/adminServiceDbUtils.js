@@ -1,4 +1,4 @@
-import { COLLECTIONS, PATCH_PRESCRIPTION_TYPES } from "../constants.js"
+import { COLLECTIONS, PRESCRIPTION_TYPES } from "../constants.js"
 import { PrescriberInfo } from "../types/adminServiceTypes.js";
 import { PatientPrescription, PrescriberPrescription } from "../types/prescriptionTypes.js";
 import { getDb } from "./dbConnection.js";
@@ -77,7 +77,7 @@ export async function getAdminSinglePrescriberPrescription(search) {
  * Patch a single prescription with patches
  * This is a generic function where you can then pass main/alt as prescriber/patient or patient/prescriber.
  * 
- * @param {string} type type of prescription to patch. One of PATCH_PRESCRIPTION_TYPES.
+ * @param {string} type type of prescription to patch. One of PRESCRIPTION_TYPES.
  * @param {string} providerCode provider code of the prescriber
  * @param {string} initial initials of patient
  * @param {string} date date of prescription
@@ -92,19 +92,19 @@ export async function patchSinglePrescription(
     patches,
 ) {
     let mainStr, altStr, patchSchema, mainCollection, altCollection, mainStatusEnum, altStatusEnum;
-    if (type === PATCH_PRESCRIPTION_TYPES.PRESCRIBER) {
-        mainStr = PATCH_PRESCRIPTION_TYPES.PRESCRIBER;
-        altStr = PATCH_PRESCRIPTION_TYPES.PATIENT;
+    if (type === PRESCRIPTION_TYPES.PRESCRIBER) {
+        mainStr = PRESCRIPTION_TYPES.PRESCRIBER;
+        altStr = PRESCRIPTION_TYPES.PATIENT;
         patchSchema = adminPrescriberPrescriptionPatchSchema;
         mainCollection = COLLECTIONS.PRESCRIBER_PRESCRIPTIONS;
         altCollection = COLLECTIONS.PATIENT_PRESCRIPTIONS;
         mainStatusEnum = PRESCRIBER_PRESCRIPTION_STATUS;
         altStatusEnum = PATIENT_PRESCRIPTION_STATUS;
     }
-    // PATCH_PRESCRIPTION_TYPES.PATIENT
+    // PRESCRIPTION_TYPES.PATIENT
     else {
-        mainStr = PATCH_PRESCRIPTION_TYPES.PATIENT;
-        altStr = PATCH_PRESCRIPTION_TYPES.PRESCRIBER;
+        mainStr = PRESCRIPTION_TYPES.PATIENT;
+        altStr = PRESCRIPTION_TYPES.PRESCRIBER;
         patchSchema = adminPatientPrescriptionPatchSchema;
         mainCollection = COLLECTIONS.PATIENT_PRESCRIPTIONS;
         altCollection = COLLECTIONS.PRESCRIBER_PRESCRIPTIONS;
@@ -208,13 +208,45 @@ export async function getAdminSinglePatientPrescription(search) {
 }
 
 /**
- * Delete a prescriber prescription
+ * Delete a prescription
+ * This is a generic function where you can then pass main/alt as prescriber/patient or patient/prescriber.
+ * 
+ * @param {string} type type of prescription to patch. One of PRESCRIPTION_TYPES.
  * @param {Object} search search parameters
- * @returns {boolean} true if successful, else false
+ * @returns {string | null} error message if error, else null
  */
-export async function deletePrescriberPrescription(search) {
-    const searchObj = await objWithFields(search, adminSinglePrescriberPrescriptionSearchSchema);
-    const collection = getDb().collection(COLLECTIONS.PRESCRIBER_PRESCRIPTIONS);
+export async function deletePrescription(type, search) {
+    let mainStr, altStr, searchSchema, mainCollection, altType;
+    if (type === PRESCRIPTION_TYPES.PRESCRIBER) {
+        mainStr = PRESCRIPTION_TYPES.PRESCRIBER;
+        altStr = PRESCRIPTION_TYPES.PATIENT;
+        searchSchema = adminSinglePrescriberPrescriptionSearchSchema;
+        mainCollection = COLLECTIONS.PRESCRIBER_PRESCRIPTIONS;
+        altType = PRESCRIPTION_TYPES.PATIENT;
+    }
+    // PRESCRIPTION_TYPES.PATIENT
+    else {
+        mainStr = PRESCRIPTION_TYPES.PATIENT;
+        altStr = PRESCRIPTION_TYPES.PRESCRIBER;
+        searchSchema = adminSinglePatientPrescriptionSearchSchema;
+        mainCollection = COLLECTIONS.PATIENT_PRESCRIPTIONS;
+        altType = PRESCRIPTION_TYPES.PRESCRIBER;
+    }
+
+    const searchObj = await objWithFields(search, searchSchema);
+    const collection = getDb().collection(mainCollection);
     const data = await collection.deleteOne(searchObj);
-    return data.deletedCount === 1;
+    if (data.deletedCount != 1) {
+        return `Error deleting ${mainStr} prescription with providerCode: ${searchObj.providerCode}, initial: ${searchObj.initial}, date: ${searchObj.date}`;
+    }
+
+    // Update corresponding alt prescription to not logged status
+    const res = await patchSinglePrescription(
+        altType,
+        searchObj.providerCode,
+        searchObj.initial,
+        searchObj.date,
+        { status: PATIENT_PRESCRIPTION_STATUS.NOT_LOGGED }
+    )
+    return res;
 }

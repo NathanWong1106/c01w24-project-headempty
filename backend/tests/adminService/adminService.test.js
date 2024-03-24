@@ -2,6 +2,7 @@ import { clearDB, closeConn, connect, insertAdmins, insertPrescribers, insertPre
 import { loginAsDefaultCoordinator } from "../utils/testSessionUtils.js";
 import { fetchAsAdmin } from "../utils/fetchUtils.js";
 import { PATIENT_PRESCRIPTION_STATUS, PRESCRIBER_PRESCRIPTION_STATUS } from "../../types/prescriptionTypes.js";
+import { ConsoleMessage } from "puppeteer";
 
 let adminToken = null;
 
@@ -586,21 +587,42 @@ describe("/admin/patchSinglePrescriberPrescription", () => {
 });
 
 describe("/admin/deletePrescriberPrescription", () => {
-    test("/admin/deletePrescriberPrescription - delete valid prescriber prescription", async () => {
-        await insertPrescriberPrescriptions(40);
+    test("/admin/deletePrescriberPrescription - delete valid prescriber prescription, update pa prescription", async () => {
+        await insertPrescriberPrescription({ status: PRESCRIBER_PRESCRIPTION_STATUS.COMPLETE });
+        await insertPatientPrescription({ status: PATIENT_PRESCRIPTION_STATUS.COMPLETE });
     
+        const targetProviderCode = "ON-JC001";
+        const targetInitial = "JC";
+        const targetDate = "2024-12-34";
         // These don't make sense but whatever, for testing purposes
-        const body = {
+        let body = {
             search: {
-                providerCode: "ON-JC001",
-                initial: "JC",
-                date: "2024-12-34",
+                providerCode: targetProviderCode,
+                initial: targetInitial,
+                date: targetDate,
                 thisFieldShouldBeIgnored: "AHHHHHHHHHH",
             },
             thisFieldShouldBeIgnored: "AHHHHHHHHHH",
         }
         let res = await fetchAsAdmin(adminToken, "/admin/deletePrescriberPrescription", "POST", body);
         expect(res.status).toBe(200);
+
+        // Confirm corresponding patient prescription updated
+        // Assumes working getAdminSinglePatientPrescription
+        body = {
+            search: {
+                providerCode: targetProviderCode,
+                initial: targetInitial,
+                date: targetDate,
+            }
+        }
+        res = await fetchAsAdmin(adminToken, "/admin/getAdminSinglePatientPrescription", "POST", body);
+        expect(res.status).toBe(200);
+        let retPatient = await res.json();
+        expect(retPatient.prescription.providerCode).toBe(targetProviderCode);
+        expect(retPatient.prescription.initial).toBe(targetInitial);
+        expect(retPatient.prescription.date).toBe(targetDate);
+        expect(retPatient.prescription.status).toBe(PATIENT_PRESCRIPTION_STATUS.NOT_LOGGED);
     })
     
     test("/admin/deletePrescriberPrescription - not found prescriber prescription", async () => {
