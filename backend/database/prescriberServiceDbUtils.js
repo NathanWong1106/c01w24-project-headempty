@@ -5,11 +5,12 @@ import paginate from "./pagination.js";
 import { objWithFields } from "./utils/dbUtils.js";
 import { prescriberPrescriptionSearchSchema } from "../schemas.js"; 
 import { prescriberPrescriptionPatchSchema } from "../schemas.js";
+import { ObjectId } from "mongodb";
 
 
 
-export async function postSinglePrescription(providerCode, postObj) {
-    const patchObj = await objWithFields(postObj, prescriberPrescriptionPatchSchema);
+export async function postSinglePrescription(providerCode, posts) {
+    const postObj = await objWithFields(posts, prescriberPrescriptionPatchSchema);
     const collection = getDb().collection(COLLECTIONS.PRESCRIBER_PRESCRIPTIONS);
     const data = await collection.insertOne(postObj);
     return true;
@@ -41,8 +42,8 @@ export async function getMatchingPrescriberPrescription(providerCode, date, init
         initial: initial
     };
 
-    const searchObj = await objWithFields(search, patientPrescriptionFindSchema);
-    const collection = getDb().collection(COLLECTIONS.PATIENT_PRESCRIPTIONS);
+    const searchObj = await objWithFields(search, prescriberPrescriptionPatchSchema);
+    const collection = getDb().collection(COLLECTIONS.PRESCRIBER_PRESCRIPTIONS);
     const data = await collection.findOne(searchObj);
     if (data !== null) {
         return [true, data._id]
@@ -51,12 +52,12 @@ export async function getMatchingPrescriberPrescription(providerCode, date, init
 }
 
 export async function patchPrescriberPrescriptionStatus(id, patStatus) {
-    const collection = getDb().collection(COLLECTIONS.PATIENT_PRESCRIPTIONS);
+    const collection = getDb().collection(COLLECTIONS.PRESCRIBER_PRESCRIPTIONS);
     const data = await collection.updateOne({ _id: new ObjectId(id) }, { $set: { status: patStatus } });
 
     if (data.matchedCount === 1) {
         return true;
-    } else {
-        return false;
     }
+    return false;
+    
 }

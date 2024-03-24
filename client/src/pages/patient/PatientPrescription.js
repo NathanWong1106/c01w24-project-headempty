@@ -5,8 +5,9 @@ import {
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { getPaginatedPatientPrescriptions } from "../../apiServices/patientService";
-import { prescriptionField2PrescriptionInfo, prescriptionFields } from "../../apiServices/types/prescriptionTypes";
+import { prescriptionField2PrescriptionInfo, prescriptionFieldsPatient } from "../../apiServices/types/prescriptionTypes";
 import PaginatedTableWithSearch from "../../components/PaginatedTableWithSearch";
+import { PrescriptionLogForm } from "../../components/PrescriptionLogForm.js";
 
 const PAGE_SIZE = 20;
 
@@ -22,17 +23,17 @@ const PatientPrescriptions = () => {
     const [prevSearch, setPrevSearch] = useState({});
 
     const email = useSelector(state => state.currentUser.auxInfo.email);
-    const firstName = useSelector(state => state.currentUser.auxInfo.firstName);
-    const lastName = useSelector(state => state.currentUser.auxInfo.lastName);
-    const language = useSelector(state => state.currentUser.auxInfo.language);
+    // const firstName = useSelector(state => state.currentUser.auxInfo.firstName);
+    // const lastName = useSelector(state => state.currentUser.auxInfo.lastName);
+    // const language = useSelector(state => state.currentUser.auxInfo.language);
 
     const getSearchObj = () => {
         // Note: the empty string is falsy in js
         return {
             ...({ email: email }),
-            ...({ firstName: firstName }),
-            ...({ lastName: lastName }),
-            ...({ language: language }),
+            // ...({ firstName: firstName }),
+            // ...({ lastName: lastName }),
+            // ...({ language: language }),
             ...(date && { date: date }),
             ...(initials && { initials: initials }),
             ...(prescribed && { prescribed: prescribed }),
@@ -63,6 +64,7 @@ const PatientPrescriptions = () => {
         const list = await getPaginatedPatientPrescriptions(searchPage, PAGE_SIZE, searchObj);
 
         list === null ? setPrescriptionList([]) : setPrescriptionList(list);
+
         return list ? list.length : 0;
     }
 
@@ -70,31 +72,42 @@ const PatientPrescriptions = () => {
         return (
             <tr key={prescription['providerCode'] + prescription['date']}>
                 {
-                    prescriptionFields.map(field => (
-                            <td key={prescription['providerCode'] + prescription['date'] + '_' + field} className="p-4">
-                                <div className="flex items-center">
-                                    {
-                                        prescription[prescriptionField2PrescriptionInfo[field]] !== null ?
-                                            prescription[prescriptionField2PrescriptionInfo[field]].toString() :
-                                            null
-                                    }
-                                </div>
-                            </td>
-                        )
-                    )
+                    prescriptionFieldsPatient.filter(field => prescriptionField2PrescriptionInfo[field] !== 'email').map(field => (
+                        <td key={prescription['providerCode'] + prescription['date'] + '_' + field} className="p-4">
+                            <div className="flex items-center">
+                                { 
+                                    prescription[prescriptionField2PrescriptionInfo[field]] !== null ?
+                                        prescription[prescriptionField2PrescriptionInfo[field]].toString() :
+                                        null
+                                }
+                            </div>
+                        </td>
+                    ))
                 }
             </tr>
         )
     }
 
     return (
-        <div className="flex flex-col h-screen justify-center items-center">
-            <Typography variant="h3">My Prescriptions</Typography>
+        <div className="flex flex-col h-screen">
+            <div className="mt-12">
+                <div className="flex justify-between">
+                    {/* Column 1 */}
+                    <div className="flex flex-col justify-center items-start ml-10">
+                        <Typography variant="h4"> My Prescriptions </Typography>
+                    </div>
+
+                    {/* Column 2 */}
+                    <div className="flex flex-col justify-center items-end mr-10">
+                        <PrescriptionLogForm/>
+                    </div>
+                </div>
+            </div>
             <PaginatedTableWithSearch
                 dataList={prescriptionList}
                 searchFn={searchFn}
                 searchForm={prescriptionSearchForm}
-                cols={[...prescriptionFields]}
+                cols={[...prescriptionFieldsPatient.filter(field => prescriptionField2PrescriptionInfo[field] !== 'email')]}
                 createRow={createRow}
                 pageSize={PAGE_SIZE}
             />

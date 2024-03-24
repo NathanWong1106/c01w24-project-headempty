@@ -24,28 +24,18 @@ export const getPaginatedPatientPrescriptions = async (page, pageSize, search) =
     return res.status != 200 ? null : (await res.json())['list'];
 }
 
-export const patchSinglePatientPrescription = async (id, pat_status) => {
+export const postPatientPrescription = async (providerCode, prscn_date, patientInit, checked, postObj) => {
     const res = await callProtectedEndpoint(
-        SERVER_PATHS.PATIENT_SERVICE.PATCH_SINGLE_PRESCRIPTION,
-        'PATCH',
-        {
-            id: id,
-            pat_status: pat_status
-        }
-    )
-    return res.status == 200;
-
-}
-
-export const getMatchingPatientPrescription = async (providerCode, date, initial) => {
-    const res = await callEndpoint(
-        SERVER_PATHS.PATIENT_SERVICE.GET_MATCHING_PRESCRIPTION,
+        SERVER_PATHS.PATIENT_SERVICE.POST_PRESCRIPTION,
         'POST',
         {
             providerCode: providerCode,
-            date: date,
-            initial: initial
+            prscn_date: prscn_date,
+            patientInit: patientInit,
+            checked: checked,
+            postObj: postObj
+        
         }
     )
-    return res;
+    return res.status == 200;
 }

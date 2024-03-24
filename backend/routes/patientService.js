@@ -3,8 +3,10 @@
  */
 
 import express from "express";
+import { postSinglePatientPrescription } from "../database/patientServiceDbUtils.js";
 import { getPaginatedPatientPrescription } from "../database/patientServiceDbUtils.js";
 import { getMatchingPrescriberPrescription, patchPrescriberPrescriptionStatus } from "../database/prescriberServiceDbUtils.js";
+import { PATIENT_PRESCRIPTION_STATUS, PRESCRIBER_PRESCRIPTION_STATUS } from "../types/prescriptionTypes.js";
 export const patientRouter = express.Router();
 
 
@@ -27,19 +29,25 @@ patientRouter.post("/postPrescription", express.json(), async (req, res) => {
         //checking if there is a matching prescription logged by a patient
         const match = await getMatchingPrescriberPrescription(providerCode, prscn_date, patientInit);
         if (match[0] === true) {
-            console.log("Match found");
+            let presStatus;
+            console.log("Match found OOGA");
             if (checked) {
-                postObj["status"] = PRESCRIBER_PRESCRIPTION_STATUS.LOGGED;
+                postObj["status"] = PATIENT_PRESCRIPTION_STATUS.LOGGED;
+                presStatus = PRESCRIBER_PRESCRIPTION_STATUS.LOGGED;
     
             } else {
-                postObj["status"] = PRESCRIBER_PRESCRIPTION_STATUS.COMPLETE;
+                postObj["status"] = PATIENT_PRESCRIPTION_STATUS.COMPLETE;
+                presStatus = PRESCRIBER_PRESCRIPTION_STATUS.COMPLETE;
             }
             //updating patient status as well
-            await patchPrescriberPrescriptionStatus(match[1], postObj["status"]);
+            await patchPrescriberPrescriptionStatus(match[1], presStatus);
+        } else {
+            postObj["status"] = PATIENT_PRESCRIPTION_STATUS.NOT_LOGGED;
         }
 
+
         //actually posting the new prescription for the prescriber, now with the status
-        const ret = await postSinglePrescription(providerCode, postObj);
+        const ret = await postSinglePatientPrescription(providerCode, postObj);
         if (ret){
             return res.status(200).json({ message: `Successfully added prescription. Refresh page to see changes.`});
         }

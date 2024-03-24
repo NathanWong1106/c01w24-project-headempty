@@ -13,8 +13,6 @@ export const SERVER_PATHS = {
     PRESCRIBER_SERVICE: {
         GET_PAGINATED_PRESCRIPTIONS: "/prescriber/getPaginatedPrescriptions",
         POST_PRESCRIPTION: "/prescriber/postPrescription",
-        GET_MATCHING_PRESCRIPTION: "/prescriber/getMatchingPrescription",
-        PATCH_PATIENT_STATUS: "/prescriber/patchPatientStatus"
     },
 
     PATIENT_SERVICE: {
