@@ -1,10 +1,10 @@
-import { COLLECTIONS } from "../constants.js"
+import { COLLECTIONS, PATCH_PRESCRIPTION_TYPES } from "../constants.js"
 import { PrescriberInfo } from "../types/adminServiceTypes.js";
 import { PatientPrescription, PrescriberPrescription } from "../types/prescriptionTypes.js";
 import { getDb } from "./dbConnection.js";
 import paginate from "./pagination.js";
 import { objWithFields } from "./utils/dbUtils.js";
-import { prescriberSearchSchema, prescriberPatchSchema, adminPrescriberPrescriptionSearchSchema, adminPrescriberPrescriptionPatchSchema, adminPatientPrescriptionSearchSchema, adminSinglePatientPrescriptionSearchSchema, adminSinglePrescriberPrescriptionSearchSchema } from "../schemas.js";
+import { prescriberSearchSchema, prescriberPatchSchema, adminPrescriberPrescriptionSearchSchema, adminPrescriberPrescriptionPatchSchema, adminPatientPrescriptionSearchSchema, adminSinglePatientPrescriptionSearchSchema, adminSinglePrescriberPrescriptionSearchSchema, adminPatientPrescriptionPatchSchema } from "../schemas.js";
 import { fillPrescriberPrescription } from "./prescriberServiceDbUtils.js";
 import { fillPatientPrescription } from "./patientServiceDbUtils.js";
 import { PRESCRIBER_PRESCRIPTION_STATUS, PATIENT_PRESCRIPTION_STATUS } from "../types/prescriptionTypes.js";
@@ -77,34 +77,44 @@ export async function getAdminSinglePrescriberPrescription(search) {
  * Patch a single prescription with patches
  * This is a generic function where you can then pass main/alt as prescriber/patient or patient/prescriber.
  * 
+ * @param {string} type type of prescription to patch. One of PATCH_PRESCRIPTION_TYPES.
  * @param {string} providerCode provider code of the prescriber
  * @param {string} initial initials of patient
  * @param {string} date date of prescription
  * @param {Object} patches fields to patch
- * @param {string} patchSchema schema for casting patches to
- * @param {string} mainCollection db collection for main type prescription
- * @param {string} altCollection db collection for alt type prescription
- * @param {string} mainStatusEnum status enum for main type prescription
- * @param {string} altStatusEnum status enum for alt type prescription
  * @returns {string || null} relevant error string if error, else null
  */
 export async function patchSinglePrescription(
+    type,
     providerCode,
     initial,
     date,
     patches,
-    patchSchema,
-    mainCollection,
-    altCollection,
-    mainStatusEnum,
-    altStatusEnum
 ) {
-    const mainStr = mainCollection === "PRESCRIBER_PRESCRIPTIONS" ? "prescriber": "patient";
-    const altStr = mainCollection === "PRESCRIBER_PRESCRIPTIONS" ? "patient": "prescriber";
+    let mainStr, altStr, patchSchema, mainCollection, altCollection, mainStatusEnum, altStatusEnum;
+    if (type === PATCH_PRESCRIPTION_TYPES.PRESCRIBER) {
+        mainStr = PATCH_PRESCRIPTION_TYPES.PRESCRIBER;
+        altStr = PATCH_PRESCRIPTION_TYPES.PATIENT;
+        patchSchema = adminPrescriberPrescriptionPatchSchema;
+        mainCollection = COLLECTIONS.PRESCRIBER_PRESCRIPTIONS;
+        altCollection = COLLECTIONS.PATIENT_PRESCRIPTIONS;
+        mainStatusEnum = PRESCRIBER_PRESCRIPTION_STATUS;
+        altStatusEnum = PATIENT_PRESCRIPTION_STATUS;
+    }
+    // PATCH_PRESCRIPTION_TYPES.PATIENT
+    else {
+        mainStr = PATCH_PRESCRIPTION_TYPES.PATIENT;
+        altStr = PATCH_PRESCRIPTION_TYPES.PRESCRIBER;
+        patchSchema = adminPatientPrescriptionPatchSchema;
+        mainCollection = COLLECTIONS.PATIENT_PRESCRIPTIONS;
+        altCollection = COLLECTIONS.PRESCRIBER_PRESCRIPTIONS;
+        mainStatusEnum = PATIENT_PRESCRIPTION_STATUS;
+        altStatusEnum = PRESCRIBER_PRESCRIPTION_STATUS;
+    }
 
     const patchObj = await objWithFields(patches, patchSchema);
-    const mainPrescriptionCollection = getDb().collection(COLLECTIONS[mainCollection]);
-    const altPrescriptionCollection = getDb().collection(COLLECTIONS[altCollection]);
+    const mainPrescriptionCollection = getDb().collection(mainCollection);
+    const altPrescriptionCollection = getDb().collection(altCollection);
 
     let mainPrescriptionData = null;
     let altPrescriptionData = null;
