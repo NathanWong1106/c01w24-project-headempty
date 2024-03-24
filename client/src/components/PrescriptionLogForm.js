@@ -3,10 +3,12 @@ import { useSelector } from "react-redux";
 import {
     Button, Dialog, DialogHeader, DialogBody, DialogFooter, Input, Checkbox,
 } from "@material-tailwind/react";
-import { prescriptionFields, prescriptionField2PrescriptionInfo, PATIENT_PRESCRIPTION_STATUS, PRESCRIBER_PRESCRIPTION_STATUS } from "../apiServices/types/prescriptionTypes";
-import { postPrescription, getMatchingPrescriberPrescription, patchPatientPrescriptionStatus } from "../apiServices/prescriberService";
+import { prescriptionFieldsPrescriber, prescriptionFieldsPatient, prescriptionField2PrescriptionInfo } from "../apiServices/types/prescriptionTypes";
+import { postPrescriberPrescription} from "../apiServices/prescriberService";
+import { postPatientPrescription } from "../apiServices/patientService";
 import { ClosableAlert } from "./ClosableAlert";
 import { DatePicker } from "./DatePicker";
+import { set } from "lodash";
 
 /**
  * Opens a dialog to log a new prescription.
@@ -24,13 +26,20 @@ export const PrescriptionLogForm = () => {
     const [patientInit, setPatientInit] = useState("");
     const [checked, setChecked] = useState(false);
     const providerCode = useSelector(state => state.currentUser.auxInfo.providerCode);
-    
+    const userEmail = useSelector(state => state.currentUser.email);
+    const userType = useSelector(state => state.currentUser.accountType);
+
+    const prescriptionFields = userType === "patient" ? prescriptionFieldsPatient : prescriptionFieldsPrescriber;
+ 
     prescriptionFields.forEach(field => {
-        if (prescriptionField2PrescriptionInfo[field] === "providerCode") {
+        if (prescriptionField2PrescriptionInfo[field] === "providerCode" && userType === "prescriber") {
             fieldMapping[field] = useState(providerCode);
         } else if (prescriptionField2PrescriptionInfo[field] === "prescribed") {
             fieldMapping[field] = useState(false);
-        } else {
+        } else if (prescriptionField2PrescriptionInfo[field] === "email") {
+            fieldMapping[field] = useState(userEmail);
+        }
+         else {
             fieldMapping[field] = useState("");
         }
     })
@@ -45,7 +54,6 @@ export const PrescriptionLogForm = () => {
         let obj = {};
         prescriptionFields.forEach(field => {
             const [state] = fieldMapping[field];
-            console.log(state);
             obj[prescriptionField2PrescriptionInfo[field]] = state;
         })
         return obj;
@@ -60,6 +68,8 @@ export const PrescriptionLogForm = () => {
                 setState(providerCode);
             } else if (prescriptionField2PrescriptionInfo[field] === "prescribed") {
                 setState(false);
+            } else if (prescriptionField2PrescriptionInfo[field] === "email") {
+                setState(userEmail);
             } else {
                 setState("");
             }
@@ -70,8 +80,19 @@ export const PrescriptionLogForm = () => {
     }
 
     const handleConfirmChanges = async () => {
+
         try {
-            const res = await postPrescription(providerCode, prscn_date, patientInit, checked, buildPostObj());
+            const [providerCodePa] = fieldMapping["Provider Code"];
+            const res = await (userType === "patient" ? 
+                postPatientPrescription(
+                    providerCodePa, prscn_date, patientInit, checked,  
+                    buildPostObj()
+                ) : 
+                postPrescriberPrescription(
+                    providerCode, prscn_date, patientInit, checked, 
+                    buildPostObj()
+                )
+            );
             res ? setShowSuccess(true) : setShowFailure(true);
         } catch (err) {
             setShowFailure(true);
@@ -100,8 +121,8 @@ export const PrescriptionLogForm = () => {
                                 let [state, setState] = fieldMapping[field];
 
                                 if (prescriptionField2PrescriptionInfo[field] === "status") {
-                                    return(null);
-                                }
+                                    return("");
+                                } 
                      
                                 if (prescriptionField2PrescriptionInfo[field] === "date") {
                                     const handleDate = (date) => {
@@ -128,10 +149,11 @@ export const PrescriptionLogForm = () => {
                                         value={state}
                                         onChange={handleCheckbox} />);
                                 }
+
                                 const handleInput = (value) => {
                                     if (field === "Patient Initials") {
                                         setPatientInit(value);
-                                    }
+                                    } 
                                     setState(value);
                                 }
                                 

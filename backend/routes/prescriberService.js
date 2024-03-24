@@ -2,7 +2,7 @@ import express from "express";
 import { postSinglePrescription } from "../database/prescriberServiceDbUtils.js";
 import { getPaginatedPrescriberPrescription } from "../database/prescriberServiceDbUtils.js";
 import { getMatchingPatientPrescription, patchPatientPrescriptionStatus } from "../database/patientServiceDbUtils.js";
-import { PRESCRIBER_PRESCRIPTION_STATUS } from "../types/prescriptionTypes.js";
+import { PATIENT_PRESCRIPTION_STATUS, PRESCRIBER_PRESCRIPTION_STATUS } from "../types/prescriptionTypes.js";
 export const prescriberRouter = express.Router();
 
 
@@ -25,16 +25,21 @@ prescriberRouter.post("/postPrescription", express.json(), async (req, res) => {
 
         //checking if there is a matching prescription logged by a patient
         const match = await getMatchingPatientPrescription(providerCode, prscn_date, patientInit);
+        let patStatus;
         if (match[0] === true) {
             console.log("Match found");
             if (checked) {
                 postObj["status"] = PRESCRIBER_PRESCRIPTION_STATUS.LOGGED;
+                patStatus = PATIENT_PRESCRIPTION_STATUS.LOGGED;
     
             } else {
                 postObj["status"] = PRESCRIBER_PRESCRIPTION_STATUS.COMPLETE;
+                patStatus = PATIENT_PRESCRIPTION_STATUS.COMPLETE;
             }
             //updating patient status as well
-            await patchPatientPrescriptionStatus(match[1], postObj["status"]);
+            await patchPatientPrescriptionStatus(match[1], patStatus);
+        } else {
+            postObj["status"] = PRESCRIBER_PRESCRIPTION_STATUS.NOT_LOGGED;
         }
 
         //actually posting the new prescription for the prescriber, now with the status
