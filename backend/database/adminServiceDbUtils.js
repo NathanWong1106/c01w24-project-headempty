@@ -216,13 +216,14 @@ export async function getAdminSinglePatientPrescription(search) {
  * @returns {string | null} error message if error, else null
  */
 export async function deletePrescription(type, search) {
-    let mainStr, altStr, searchSchema, mainCollection, altType;
+    let mainStr, altStr, searchSchema, mainCollection, altType, altStatus;
     if (type === PRESCRIPTION_TYPES.PRESCRIBER) {
         mainStr = PRESCRIPTION_TYPES.PRESCRIBER;
         altStr = PRESCRIPTION_TYPES.PATIENT;
         searchSchema = adminSinglePrescriberPrescriptionSearchSchema;
         mainCollection = COLLECTIONS.PRESCRIBER_PRESCRIPTIONS;
         altType = PRESCRIPTION_TYPES.PATIENT;
+        altStatus = PATIENT_PRESCRIPTION_STATUS
     }
     // PRESCRIPTION_TYPES.PATIENT
     else {
@@ -231,6 +232,7 @@ export async function deletePrescription(type, search) {
         searchSchema = adminSinglePatientPrescriptionSearchSchema;
         mainCollection = COLLECTIONS.PATIENT_PRESCRIPTIONS;
         altType = PRESCRIPTION_TYPES.PRESCRIBER;
+        altStatus = PRESCRIBER_PRESCRIPTION_STATUS;
     }
 
     const searchObj = await objWithFields(search, searchSchema);
@@ -246,7 +248,7 @@ export async function deletePrescription(type, search) {
         searchObj.providerCode,
         searchObj.initial,
         searchObj.date,
-        { status: PATIENT_PRESCRIPTION_STATUS.NOT_LOGGED }
+        { status: altStatus.NOT_LOGGED }
     )
     return res;
 }

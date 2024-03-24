@@ -231,7 +231,7 @@ adminRouter.post("/deletePrescriberPrescription", express.json(), async (req, re
         const delError = await deletePrescription(PRESCRIPTION_TYPES.PRESCRIBER, search);
 
         if (delError) {
-            return res.status(404).json({ error: `Failed to find prescriber prescription with providerCode: ${search.providerCode}, initial: ${search.initial}, date: ${search.date}` });
+            return res.status(404).json({ error: delError });
         }
         return res.status(200).json({ message: `Successfully deleted prescriber prescription with providerCode: ${search.providerCode}, initial: ${search.initial}, date: ${search.date}.` });
     } catch (err) {
