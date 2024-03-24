@@ -42,11 +42,11 @@ const PaginatedTableWithSearch = ({ dataList, searchFn, searchForm, cols, create
 
     return (
         <Card className="h-5/6 w-11/12 mx-20 my-5">
-            <CardHeader floated={false} shadow={false} className="m-0 px-6 pt-3 rounded-none h-1/6">
-                <div className="flex flex-row">
+            <CardHeader floated={false} shadow={false} className="my-0 px-6  rounded-none h-fit">
+                <div className="flex flex-row mt-4 mb-14">
                     {searchForm}
                     <div className="flex flex-grow flex-row-reverse w-1/6 items-center justify-center">
-                        <Button size="md" className="w-3/4 h-1/2" onClick={async () => afterSearch(await searchFn())}>Search/Refresh</Button>
+                        <Button size="md" className="w-3/4" onClick={async () => afterSearch(await searchFn())}>Search/Refresh</Button>
                     </div>
                 </div>
             </CardHeader>

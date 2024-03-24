@@ -12,6 +12,10 @@ export const SERVER_PATHS = {
         DELETE_PRESCRIBER_PRESCRIPTION: "/admin/deletePrescriberPrescription",
         GET_SINGLE_PATIENT_PRESCRIPTION: "/admin/getAdminSinglePatientPrescription",
     },
+    COORDINATOR_SERVICE: {
+        GET_PAGINATED_PATIENTS: "/coordinator/getPaginatedPatients",
+        PATCH_PATIENT: "/coordinator/patchPatient"
+    },
     VERIFY_PRESCRIBERS: "/verification/verifyPrescribers",
     PRESCRIBER_SERVICE: {
         GET_PAGINATED_PRESCRIPTIONS: "/prescriber/getPaginatedPrescriptions"

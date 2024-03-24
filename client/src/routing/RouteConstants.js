@@ -18,6 +18,11 @@ export const ADMIN_ROUTES = {
     PRESCRIBER_VERIFICATION: `${ADMIN_ROUTE_BASE}/prescriberVerification`,
 }
 
+export const COORDINATOR_ROUTE_BASE = "/coordinator"
+export const COORDINATOR_ROUTES = {
+    PATIENT_MNGMT: `${COORDINATOR_ROUTE_BASE}/patientManagement`
+}
+
 export const PRESCRIBER_ROUTE_BASE = '/prescriber'
 export const PRESCRIBER_ROUTES = {
     PRESCRIPTIONS: `${PRESCRIBER_ROUTE_BASE}/myPrescriptions`
@@ -62,7 +67,13 @@ const ADMIN_LINKS = [
 export const ASSISTANT_LINKS = [...ADMIN_LINKS]
 
 /* A coordinator can do everything an assistant can + additionally manage patients. */
-export const COORDINATOR_LINKS = [...ASSISTANT_LINKS]
+export const COORDINATOR_LINKS = [
+    ...ASSISTANT_LINKS,
+    {
+        name: "Patient Management",
+        link: COORDINATOR_ROUTES.PATIENT_MNGMT
+    }
+]
 
 /* Links for prescribers */
 export const PRESCRIBER_LINKS = [
