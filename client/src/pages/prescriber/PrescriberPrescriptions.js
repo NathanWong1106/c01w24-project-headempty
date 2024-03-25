@@ -1,12 +1,14 @@
 import {
     Input,
     Typography,
+    Tooltip
 } from "@material-tailwind/react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { getPaginatedPrescriberPrescriptions } from "../../apiServices/prescriberService";
 import { prescriptionField2PrescriptionInfo, prescriptionFields } from "../../apiServices/types/prescriptionTypes";
 import PaginatedTableWithSearch from "../../components/PaginatedTableWithSearch";
+import CustomizedPDF from "../../components/CustomizedPDF";
 
 const PAGE_SIZE = 20;
 
@@ -77,6 +79,11 @@ const PrescriberPrescriptions = () => {
                         )
                     )
                 }
+                <td className="p-2">
+                    <Tooltip content="Download PDF">
+                        <CustomizedPDF auxInfo={{providerCode: providerCode}}/>
+                    </Tooltip>
+                </td>
             </tr>
         )
     }
@@ -88,7 +95,7 @@ const PrescriberPrescriptions = () => {
                 dataList={prescriptionList}
                 searchFn={searchFn}
                 searchForm={prescriptionSearchForm}
-                cols={[...prescriptionFields]}
+                cols={[...prescriptionFields, "Download PDF"]}
                 createRow={createRow}
                 pageSize={PAGE_SIZE}
             />
