@@ -50,7 +50,6 @@ export const EditPrescriberPrescriptionDialog = ({ prescription }) => {
         <BaseEditPrescriptionDialog
             prescription={prescription}
             fieldMapping={fieldMapping}
-            prescriptionField2InfoMapping={prescriptionField2PrescriptionInfo}
             textInputFields={["Provider Code", "Date", "Patient Initials"]}
             getStatusOptions={getStatusOptions}
             patchPrescription={patchPrescriberPrescription}
