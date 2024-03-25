@@ -31,7 +31,7 @@ const AdminPrescriberPrescriptions = () => {
             ...(providerCode && { providerCode: providerCode }),
             ...(date && { date: date }),
             ...(initials && { initials: initials }),
-            ...(prescribed && { prescribed: prescribed }),
+            ...(prescribed && { prescribed: prescribed === "true" }),
             ...(status && { status: status }),
         }
     }
