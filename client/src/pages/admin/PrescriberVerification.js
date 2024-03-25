@@ -205,7 +205,7 @@ const PrescriberVerification = () => {
 
     return (
         <div className="flex flex-col h-screen justify-center items-center">
-            <Typography variant="h3">Prescriber Management</Typography>
+            <Typography variant="h3">Prescriber Verification</Typography>
             <input className="py-4" type="file" name="file" accept=".xlsx, .xls" onChange={handleFileChange} />
             <Button variant="gradient" className="flex items-center gap-3" onClick={verifyPrescribers} disabled={file == null}>
                 {uploadSVG}
