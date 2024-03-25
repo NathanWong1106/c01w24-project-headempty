@@ -59,9 +59,9 @@ export async function getAdminPaginatedPrescriberPrescription(page, pageSize, se
 }
 
 /**
- * Get a patient prescriptions 
+ * Get a prescriber prescriptions
  * @param {Object} search search parameters
- * @returns {PatientPrescription || null} patient's log prescription
+ * @returns {PatientPrescription || null} prescriber's log prescription
  */
 export async function getAdminSinglePrescriberPrescription(search) {
     const searchObj = await objWithFields(search, adminSinglePrescriberPrescriptionSearchSchema);
@@ -196,7 +196,7 @@ export async function patchSinglePrescription(
 }
 
 /**
- * Get a patient prescriptions 
+ * Get a patient prescription
  * @param {Object} search search parameters
  * @returns {PatientPrescription || null} patient's log prescription
  */

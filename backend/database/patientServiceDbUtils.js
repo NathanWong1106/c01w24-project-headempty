@@ -20,6 +20,6 @@ export async function getPaginatedPatientPrescription(page, pageSize, search) {
 }
 
 export function fillPatientPrescription(x) {
-    return new PatientPrescription(x.providerCode, x.date, x.initial, x.prescribed, x.status, x.firstName, x.lastName, x.email);
+    return new PatientPrescription(x.providerCode, x.date, x.initial, x.prescribed, x.status, x.email);
 }
 

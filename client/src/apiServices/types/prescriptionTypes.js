@@ -33,10 +33,8 @@ export class PrescriberPrescription extends Prescription {
 }
 
 export class PatientPrescription extends Prescription {
-    constructor(providerCode, date, initial, prescribed, status, firstName, lastName, email) {
+    constructor(providerCode, date, initial, prescribed, status, email) {
         super(providerCode, date, initial, prescribed, status || PATIENT_PRESCRIPTION_STATUS.NOT_LOGGED);
-        this.firstName = firstName;
-        this.lastName = lastName;
         this.email = email;
     }
 }
