@@ -19,9 +19,12 @@ const HomePage = () => {
         "https://cdn.create.vista.com/api/media/small/454433312/stock-photo-cabbage-island-british-columbia"
     ];
 
-    // Function to change the image index
+    // Function to change the image index with fade in/out transition
     const changeImage = () => {
-        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % natureImages.length);
+        setImageLoaded(false); // Fade out
+        setTimeout(() => {
+            setCurrentImageIndex((prevIndex) => (prevIndex + 1) % natureImages.length);
+        }, 500); // Wait for fade out transition
     };
 
     useEffect(() => {
@@ -52,12 +55,13 @@ const HomePage = () => {
             <Typography variant="h3" color="blue-gray" className="mt-10 mb-6">
                 Welcome
             </Typography>
-            <div className="w-full max-w-3xl">
+            <div className="w-full max-w-3xl relative overflow-hidden">
                 <img
+                    key={currentImageIndex}
                     src={natureImages[currentImageIndex]}
                     alt="Nature"
-                    className={`w-full max-h-96 rounded-lg ${imageLoaded ? "opacity-100" : "opacity-0"}`}
-                    onLoad={() => setImageLoaded(true)}
+                    className={`w-full max-h-96 rounded-lg transition-opacity duration-1000 ${imageLoaded ? "opacity-100" : "opacity-0"}`}
+                    onLoad={() => setImageLoaded(true)} // Fade in
                 />
             </div>
             <List className="divide-y divide-gray-300 w-full max-w-3xl">
