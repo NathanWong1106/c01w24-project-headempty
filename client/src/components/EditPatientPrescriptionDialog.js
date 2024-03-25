@@ -25,12 +25,12 @@ export const EditPatientPrescriptionDialog = ({ prescription }) => {
             let [initial] = fieldMapping["Patient Initials"];
             let [date] = fieldMapping["Date"];
             const [prescribed] = fieldMapping["Prescribed with Discovery Pass"];
-            const correspondingPaPrescription = await getAdminSinglePrescriberPrescription({
+            const correspondingPrPrescription = await getAdminSinglePrescriberPrescription({
                 providerCode: providerCode,
                 initial: initial,
                 date: date,
             });
-            if (!correspondingPaPrescription) {
+            if (!correspondingPrPrescription) {
                 return [PATIENT_PRESCRIPTION_STATUS.NOT_LOGGED];
             }
             else {

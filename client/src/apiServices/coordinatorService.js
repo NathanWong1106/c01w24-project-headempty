@@ -88,8 +88,9 @@ export const patchPatientPrescription = async (providerCode, initial, date, pres
             patches: patches
         }
     )
+    const resBody = await res.json();
 
-    return res.status == 200;
+    return [res.status == 200, resBody];
 }
 
 /**

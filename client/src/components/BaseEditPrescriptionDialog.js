@@ -12,7 +12,7 @@ import {
     Option,
     Checkbox
 } from "@material-tailwind/react";
-import { prescriptionFields } from "../apiServices/types/prescriptionTypes";
+import { prescriptionField2PrescriptionInfo, prescriptionFields } from "../apiServices/types/prescriptionTypes";
 
 import { ClosableAlert } from "./ClosableAlert";
 import pencilSVG from "../svgs/pencilSVG";
@@ -70,6 +70,7 @@ export const BaseEditPrescriptionDialog = ({ prescription, fieldMapping, textInp
                 setShowFailure(true);
             }
         } catch (err) {
+            await setFailureText(`Something went wrong trying to update. Error: ${err}`);
             setShowFailure(true);
         }
 

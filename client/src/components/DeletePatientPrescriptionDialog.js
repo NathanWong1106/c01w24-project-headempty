@@ -12,12 +12,9 @@ import {
     Option,
     Checkbox
 } from "@material-tailwind/react";
-import { PrescriberPrescription, prescriptionFields, prescriptionField2PrescriptionInfo } from "../apiServices/types/prescriptionTypes";
 
 import { ClosableAlert } from "./ClosableAlert";
 import trashSVG from "../svgs/trashSVG";
-import { PRESCRIBER_PRESCRIPTION_STATUS } from "../apiServices/types/prescriptionTypes";
-import { deletePrescriberPrescription, getAdminSinglePatientPrescription, patchPrescriberPrescription } from "../apiServices/adminService";
 import { PatientInfo } from "../apiServices/types/adminServiceTypes";
 import { deletePatientPrescription } from "../apiServices/coordinatorService";
 
