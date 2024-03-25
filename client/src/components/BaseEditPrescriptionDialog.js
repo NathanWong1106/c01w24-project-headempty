@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
     Button,
     Dialog,
@@ -32,6 +32,8 @@ export const BaseEditPrescriptionDialog = ({ prescription, fieldMapping, textInp
     const handleOpen = () => setOpen(!open);
     const [showAlertFailure, setShowFailure] = useState(false);
     const [showAlertSuccess, setShowSuccess] = useState(false);
+    const [failureText, setFailureText] = useState("");
+    const [successText, setSuccessText] = useState("");
 
     const [statusOptions, setStatusOptions] = useState([status]);
 
@@ -58,8 +60,15 @@ export const BaseEditPrescriptionDialog = ({ prescription, fieldMapping, textInp
 
     const handleConfirmChanges = async () => {
         try {
-            const res = await patchPrescription(prescription.providerCode, prescription.initial, prescription.date, prescribed, buildPatchObj());
-            res ? setShowSuccess(true) : setShowFailure(true);
+            const [res, resBody] = await patchPrescription(prescription.providerCode, prescription.initial, prescription.date, prescribed, buildPatchObj());
+            if (res) {
+                await setSuccessText(resBody.message);
+                setShowSuccess(true);
+            }
+            else {
+                await setFailureText(resBody.error);
+                setShowFailure(true);
+            }
         } catch (err) {
             setShowFailure(true);
         }
@@ -120,8 +129,8 @@ export const BaseEditPrescriptionDialog = ({ prescription, fieldMapping, textInp
                 </DialogFooter>
             </Dialog>
             <div className="fixed flex flex-col items-center left-0 bottom-10 w-screen z-50">
-                <ClosableAlert text="Failed to make changes. Please try again later." color="red" open={showAlertFailure} onDismiss={() => setShowFailure(false)} />
-                <ClosableAlert text="Success! Refresh the list to see your changes." color="green" open={showAlertSuccess} onDismiss={() => setShowSuccess(false)} />
+                <ClosableAlert text={failureText} color="red" open={showAlertFailure} onDismiss={() => setShowFailure(false)} />
+                <ClosableAlert text={successText} color="green" open={showAlertSuccess} onDismiss={() => setShowSuccess(false)} />
             </div>
         </>
     );
