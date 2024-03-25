@@ -6,9 +6,6 @@ import {
 import { useState } from "react";
 import { prescriptionField2PrescriptionInfo, prescriptionFields } from "../../apiServices/types/prescriptionTypes";
 import PaginatedTableWithSearch from "../../components/PaginatedTableWithSearch";
-
-import { EditPrescriberPrescriptionDialog } from "../../components/EditPrescriberPrescriptionDialog";
-import { DeletePrescriberPrescriptionDialog } from "../../components/DeletePrescriberPrescriptionDialog";
 import { getCoordinatorPaginatedPatientPrescription } from "../../apiServices/coordinatorService";
 import { EditPatientPrescriptionDialog } from "../../components/EditPatientPrescriptionDialog";
 import { DeletePatientPrescriptionDialog } from "../../components/DeletePatientPrescriptionDialog";

@@ -11,17 +11,16 @@ import {
 } from "@material-tailwind/react";
 import { ClosableAlert } from "./ClosableAlert";
 import pencilSVG from "../svgs/pencilSVG";
-import { prescriberField2PrescriberInfo } from "../apiServices/types/adminServiceTypes";
 
 /**
  * Base Edit Dialog.
  */
-export const BaseEditDialog = ({ objToPatch, patchFields, doPatch, headerText, tooltipText }) => {
+export const BaseEditDialog = ({ objToPatch, patchFields, patchFieldMapping, doPatch, headerText, tooltipText }) => {
 
     // Set up a mapping of relevant fields
     const fieldMapping = {};
     patchFields.forEach(field => {
-        fieldMapping[field] = useState(objToPatch[prescriberField2PrescriberInfo[field]]);
+        fieldMapping[field] = useState(objToPatch[patchFieldMapping[field]]);
     })
 
     const [open, setOpen] = useState(false);
@@ -34,7 +33,7 @@ export const BaseEditDialog = ({ objToPatch, patchFields, doPatch, headerText, t
 
         patchFields.forEach(field => {
             const [state] = fieldMapping[field];
-            obj[prescriptionField2PrescriptionInfo[field]] = state;
+            obj[patchFieldMapping[field]] = state;
         })
 
         return obj;
