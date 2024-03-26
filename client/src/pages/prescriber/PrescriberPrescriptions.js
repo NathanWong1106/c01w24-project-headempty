@@ -79,23 +79,23 @@ const PrescriberPrescriptions = () => {
                         )
                     )
                 }
-                <td className="p-2">
-                    <Tooltip content="Download PDF">
-                        <CustomizedPDF auxInfo={{providerCode: providerCode}}/>
-                    </Tooltip>
-                </td>
             </tr>
         )
     }
 
     return (
         <div className="flex flex-col h-screen justify-center items-center">
-            <Typography variant="h3">My Prescriptions</Typography>
+            <div className="flex justify-between w-full">
+                <Typography variant="h3" className="mx-20">My Prescriptions</Typography>
+                <div className="mx-40">
+                    <CustomizedPDF auxInfo={{providerCode: providerCode}}/>
+                </div>
+            </div>
             <PaginatedTableWithSearch
                 dataList={prescriptionList}
                 searchFn={searchFn}
                 searchForm={prescriptionSearchForm}
-                cols={[...prescriptionFields, "Download PDF"]}
+                cols={[...prescriptionFields]}
                 createRow={createRow}
                 pageSize={PAGE_SIZE}
             />
