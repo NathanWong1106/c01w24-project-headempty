@@ -16,7 +16,7 @@ const PatientPrescriptions = () => {
     const [prescriptionList, setPrescriptionList] = useState([]);
     // Search fields
     const [date, setDate] = useState("");
-    const [initials, setInitials] = useState("");
+    const [initial, setInitials] = useState("");
     const [prescribed, setPrescribed] = useState("");
     const [status, setStatus] = useState("");
     // Search obj
@@ -29,7 +29,7 @@ const PatientPrescriptions = () => {
         return {
             ...({ email: email }),
             ...(date && { date: date }),
-            ...(initials && { initials: initials }),
+            ...(initial && { initial: initial }),
             ...(prescribed && { prescribed: prescribed }),
             ...(status && { status: status }),
         }
@@ -39,7 +39,7 @@ const PatientPrescriptions = () => {
         <div className="flex flex-col w-5/6">
             <div className="flex items-start gap-8">
                 <Input size="md" label="Date" value={date} onChange={el => setDate(el.target.value)} />
-                <Input size="md" label="Patient Initials" value={initials} onChange={el => setInitials(el.target.value)} />
+                <Input size="md" label="Patient Initials" value={initial} onChange={el => setInitials(el.target.value)} />
             </div>
             <div className="mt-2 flex items-start gap-8">
                 <Input size="md" label="Discovery Pass" value={prescribed} onChange={el => setPrescribed(el.target.value)} />
