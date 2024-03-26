@@ -43,3 +43,21 @@ export const patchPrescriber = async (providerCode, patches) => {
 
     return res.status == 200;
 }
+
+export const addPrescriber = async (prescriber) => {
+    const res = await callProtectedEndpoint(
+        SERVER_PATHS.ADMIN_SERVICE.ADD_PRESCRIBER,
+        'POST',
+        {
+            prescriber: prescriber
+        }
+    )
+    if (res.status != 200) {
+        const err = await res.json();
+        console.log(err);
+        return { data: null, error: err.error }
+    }
+    const result = await res.json()
+    console.log(result);
+    return { data: result.data, error: null }
+}

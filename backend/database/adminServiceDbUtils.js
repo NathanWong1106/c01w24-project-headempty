@@ -4,6 +4,8 @@ import { getDb } from "./dbConnection.js";
 import paginate from "./pagination.js";
 import { objWithFields } from "./utils/dbUtils.js";
 import { prescriberSearchSchema, prescriberPatchSchema } from "../schemas.js";
+import { retryPromiseWithDelay } from "../utils.js";
+import bcrypt from "bcryptjs";
 
 /**
  * Get a page from all prescribers 
@@ -38,4 +40,46 @@ export async function patchSinglePrescriber(providerCode, patches) {
     const data = await collection.updateOne({ providerCode: providerCode }, { $set: patchObj });
 
     return data.matchedCount === 1;
+}
+
+export async function addSinglePrescriber(prescriber) {
+    try {
+        const collection = getDb().collection(COLLECTIONS.PRESCRIBER);
+        const existingUserEmail = await retryPromiseWithDelay(collection.findOne({
+            email: prescriber.email,
+        }))
+
+        if (existingUserEmail) {
+            return { data: null, error: "Email already used" };
+        }
+
+        const existingUserProviderCode = await retryPromiseWithDelay(collection.findOne({
+            providerCode: prescriber.providerCode,
+        }))
+
+        if (existingUserProviderCode) {
+            return { data: null, error: "Provider Code already used" };
+        }
+
+        const hashedPassword = await bcrypt.hash(prescriber.password, 10);
+        const data = await retryPromiseWithDelay(collection.insertOne({
+            email: prescriber.email,
+            password: hashedPassword,
+            firstName: prescriber.firstName,
+            lastName: prescriber.lastName,
+            language: prescriber.language,
+            city: prescriber.city,
+            province: prescriber.province,
+            address: prescriber.address,
+            profession: prescriber.profession,
+            providerCode: prescriber.providerCode,
+            licensingCollege: prescriber.licensingCollege,
+            licenceNumber: prescriber.licenceNumber,
+            registered: prescriber.registered
+        }));
+        return { data: data, error: null };
+    } catch (error) {
+        console.error('Error adding patient:', error.message);
+        return { data: null, error: error };
+    }
 }

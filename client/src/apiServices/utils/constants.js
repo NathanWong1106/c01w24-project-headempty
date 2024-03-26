@@ -6,7 +6,8 @@ export const SERVER_PATHS = {
     PATIENT_REGISTRATION: "/user/register/patient",
     ADMIN_SERVICE: {
         GET_PAGINATED_PRESCRIBERS: "/admin/getPaginatedPrescribers",
-        PATCH_PRESCRIBER: "/admin/patchPrescriber"
+        PATCH_PRESCRIBER: "/admin/patchPrescriber",
+        ADD_PRESCRIBER: "/admin/addPrescriber"
     },
     COORDINATOR_SERVICE: {
         GET_PAGINATED_PATIENTS: "/coordinator/getPaginatedPatients",

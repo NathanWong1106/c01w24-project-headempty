@@ -36,6 +36,7 @@ export class PrescriberInfo extends ClientUserInfo {
 /* User friendly field names (use in table header) */
 export const prescriberFields = ["Email", "First Name", "Last Name", "Language", "City", "Province", "Address", "Profession", "Provider Code", "Licensing College", "Licence Number", "Registered"]
 export const prescriberPatchFields = ["Email", "First Name", "Last Name", "Language", "City", "Province", "Address", "Profession", "Licensing College", "Licence Number"]
+export const prescriberAddFields = ["Email", "Password", "First Name", "Last Name", "Language", "City", "Province", "Address", "Profession", "Provider Code", "Licensing College", "Licence Number", "Registered"]
 
 /* Map the above user friendly names to actual field names */
 export const prescriberField2PrescriberInfo = {
@@ -50,7 +51,8 @@ export const prescriberField2PrescriberInfo = {
     "Provider Code": "providerCode",
     "Licensing College": "licensingCollege",
     "Licence Number": "licenceNumber",
-    "Registered": "registered"
+    "Registered": "registered",
+    "Password": "password"
 }
 
 export const patientFields = ["Email", "First Name", "Last Name", "Language", "City", "Province", "Address"]

@@ -3,7 +3,7 @@
  */
 
 import express from "express";
-import { getPaginatedPrescriber, patchSinglePrescriber } from "../database/adminServiceDbUtils.js";
+import { getPaginatedPrescriber, patchSinglePrescriber, addSinglePrescriber } from "../database/adminServiceDbUtils.js";
 
 export const adminRouter = express.Router();
 
@@ -86,6 +86,30 @@ adminRouter.patch("/patchPrescriber", express.json(), async (req, res) => {
             return res.status(200).json({ message: `Successfully patched prescriber with providerCode: ${providerCode}` });
         } else {
             return res.status(404).json({ error: `Failed to find prescriber with providerCode: ${providerCode}` });
+        }
+    } catch (err) {
+        return res.status(500).json({ error: err.message });
+    }
+})
+
+adminRouter.post("/addPrescriber", express.json(), async (req, res) => {
+    try {
+        const { prescriber } = req.body;
+        console.log(prescriber);
+
+        if (prescriber === null) {
+            return res.status(400).json({ error: "A prescriber object must be provided." });
+        }
+
+        if (prescriber.email === "" || prescriber.providerCode === "") {
+            return res.status(400).json({ error: "email and provider code can't be empty" });
+        }
+
+        let addedPrescriber = await addSinglePrescriber(prescriber);
+        if (addedPrescriber.data) {
+            return res.status(200).json({ data: addedPrescriber.data });
+        } else {
+            return res.status(401).json({ error: addedPrescriber.error });
         }
     } catch (err) {
         return res.status(500).json({ error: err.message });
