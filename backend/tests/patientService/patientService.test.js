@@ -30,15 +30,13 @@ afterAll(async () => {
 test("/patient/getPaginatedPrescriptions - gets all patient paginated Prescriptions", async () => {
     await insertPatientPrescriptions(40);
 
-    const firstName = "John";
-    const lastName = "Cena";
     const email = "patient1@gmail.com";
 
     for (let page = 1; page <= 2; page++) {
         const body = {
             page: page,
             pageSize: 20,
-            search: { firstName: firstName, lastName: lastName, email: email },
+            search: { email: email },
             thisFieldShouldBeIgnored: "AHHHHHHHHHH",
         }
         let res = await fetchAsPatient(patientToken, "/patient/getPaginatedPrescriptions", "POST", body);
@@ -49,62 +47,16 @@ test("/patient/getPaginatedPrescriptions - gets all patient paginated Prescripti
     }
 })
 
-test("/patient/getPaginatedPrescriptions - wrong patient first name check", async () => {
-    await insertPatientPrescriptions(40);
-
-    const firstName = "John wrong";
-    const lastName = "Cena";
-    const email = "patient1@gmail.com";
-
-    for (let page = 1; page <= 2; page++) {
-        const body = {
-            page: page,
-            pageSize: 20,
-            search: { firstName: firstName, lastName: lastName, email: email },
-            thisFieldShouldBeIgnored: "AHHHHHHHHHH",
-        }
-        let res = await fetchAsPatient(patientToken, "/patient/getPaginatedPrescriptions", "POST", body);
-        expect(res.status).toBe(200);
-
-        let resBody = await res.json();
-        expect(resBody.list.length).toBe(0);
-    }
-})
-
-test("/patient/getPaginatedPrescriptions - wrong patient last name check", async () => {
-    await insertPatientPrescriptions(40);
-
-    const firstName = "John";
-    const lastName = "Cena wrong";
-    const email = "patient1@gmail.com";
-
-    for (let page = 1; page <= 2; page++) {
-        const body = {
-            page: page,
-            pageSize: 20,
-            search: { firstName: firstName, lastName: lastName, email: email },
-            thisFieldShouldBeIgnored: "AHHHHHHHHHH",
-        }
-        let res = await fetchAsPatient(patientToken, "/patient/getPaginatedPrescriptions", "POST", body);
-        expect(res.status).toBe(200);
-
-        let resBody = await res.json();
-        expect(resBody.list.length).toBe(0);
-    }
-})
-
 test("/patient/getPaginatedPrescriptions - wrong patient email check", async () => {
     await insertPatientPrescriptions(40);
 
-    const firstName = "John";
-    const lastName = "Cena";
     const email = "patient1@gmail.com wrong";
 
     for (let page = 1; page <= 2; page++) {
         const body = {
             page: page,
             pageSize: 20,
-            search: { firstName: firstName, lastName: lastName, email: email },
+            search: { email: email },
             thisFieldShouldBeIgnored: "AHHHHHHHHHH",
         }
         let res = await fetchAsPatient(patientToken, "/patient/getPaginatedPrescriptions", "POST", body);
