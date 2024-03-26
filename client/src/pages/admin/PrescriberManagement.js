@@ -66,17 +66,21 @@ const PrescriberManagement = () => {
     }
 
     const createRow = (prescriber) => {
+        console.log(prescriber);
+        
         return (
             <tr key={prescriber['providerCode']}>
                 {
                     prescriberFields.map(field => (
                         <td key={prescriber['providerCode'] + '_' + field} className="p-4">
                             <div className="flex items-center">
-                                {
+                                {field === "Registration Link" ? (
+                                    <a href={`/register/${prescriber.id}`}>Registration Link</a>
+                                ) : (
                                     prescriber[prescriberField2PrescriberInfo[field]] !== null ?
                                         prescriber[prescriberField2PrescriberInfo[field]].toString() :
                                         null
-                                }
+                                )}                            
                             </div>
                         </td>
                     ))
