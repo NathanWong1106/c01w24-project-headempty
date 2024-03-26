@@ -3,7 +3,19 @@ import { PatientPrescription } from "../types/prescriptionTypes.js";
 import { getDb } from "./dbConnection.js";
 import paginate from "./pagination.js";
 import { objWithFields } from "./utils/dbUtils.js";
-import { patientPrescriptionSearchSchema, prescriberPrescriptionSearchSchema } from "../schemas.js"; 
+
+import { patientPrescriptionFindSchema, patientPrescriptionSearchSchema, prescriberPrescriptionSearchSchema } from "../schemas.js"; 
+import { ObjectId } from "mongodb";
+
+
+
+export async function postSinglePatientPrescription(providerCode, posts) {
+    const postObj = await objWithFields(posts, patientPrescriptionSearchSchema);
+    const collection = getDb().collection(COLLECTIONS.PATIENT_PRESCRIPTIONS);
+    const data = await collection.insertOne(postObj);
+    return data.acknowledged;
+}
+
 
 /**
  * Get a page from patient's prescriptions 

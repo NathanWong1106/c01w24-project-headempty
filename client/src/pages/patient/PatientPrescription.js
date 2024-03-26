@@ -66,7 +66,7 @@ const PatientPrescriptions = () => {
         return (
             <tr key={prescription['providerCode'] + prescription['date']}>
                 {
-                    prescriptionFields.filter(field => prescriptionField2PrescriptionInfo[field] !== 'email').map(field => (
+                    prescriptionFields.map(field => (
                         <td key={prescription['providerCode'] + prescription['date'] + '_' + field} className="p-4">
                             <div className="flex items-center">
                                 { 
