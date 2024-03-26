@@ -23,17 +23,11 @@ const PatientPrescriptions = () => {
     const [prevSearch, setPrevSearch] = useState({});
 
     const email = useSelector(state => state.currentUser.auxInfo.email);
-    // const firstName = useSelector(state => state.currentUser.auxInfo.firstName);
-    // const lastName = useSelector(state => state.currentUser.auxInfo.lastName);
-    // const language = useSelector(state => state.currentUser.auxInfo.language);
 
     const getSearchObj = () => {
         // Note: the empty string is falsy in js
         return {
             ...({ email: email }),
-            // ...({ firstName: firstName }),
-            // ...({ lastName: lastName }),
-            // ...({ language: language }),
             ...(date && { date: date }),
             ...(initials && { initials: initials }),
             ...(prescribed && { prescribed: prescribed }),
