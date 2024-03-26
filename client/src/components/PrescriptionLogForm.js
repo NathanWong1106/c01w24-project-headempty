@@ -78,6 +78,16 @@ export const PrescriptionLogForm = () => {
         setChecked(false);
     }
 
+    const formatDate = (value) => {
+        return value
+        .replace(/[^0-9]/g, "")
+        .replace(/^(\d{4})(\d{1})$/, "$1-$2")
+        .replace(/^(\d{4})(\d{2})$/, "$1-$2")
+        .replace(/^(\d{4})(\d{2})(\d{1})$/, "$1-$2-$3")
+        .replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3");
+    }
+
+
     const handleConfirmChanges = async () => {
 
         try {
@@ -132,7 +142,7 @@ export const PrescriptionLogForm = () => {
                                     maxLength={10}
                                     key={`field_edit_${field}`}
                                     size="md"
-                                    value={state}
+                                    value={formatDate(state)}
                                     placeholder="YYYY-MM-DD"
                                     onChange={el => handleDate(el.target.value)}/>);
                                 }
