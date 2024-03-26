@@ -66,8 +66,6 @@ const PrescriberManagement = () => {
     }
 
     const createRow = (prescriber) => {
-        console.log(prescriber);
-        
         return (
             <tr key={prescriber['providerCode']}>
                 {
