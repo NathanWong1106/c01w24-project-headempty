@@ -55,11 +55,9 @@ export const addPrescriber = async (prescriber) => {
     )
     if (res.status != 200) {
         const err = await res.json();
-        console.log(err);
         return { data: null, error: err.error }
     }
     const result = await res.json()
-    console.log(result);
     return { data: result.data, error: null }
 }
 /**

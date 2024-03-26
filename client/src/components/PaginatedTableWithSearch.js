@@ -82,7 +82,7 @@ const PaginatedTableWithSearch = ({ dataList, searchFn, searchForm, cols, create
                 <CardFooter className="flex justify-between border-t gap-3 p-4">
                     <div>
                         <Button onClick={() => setOpenNewPatient(true)} size="sm">
-                            Add Perscriber
+                            Add Prescriber
                         </Button>
                         <AddPrescriber open={openNewPatient} setOpenNewPatient={setOpenNewPatient} />
                     </div>

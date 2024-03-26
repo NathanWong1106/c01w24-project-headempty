@@ -3,9 +3,9 @@ import { addPrescriber } from "../apiServices/adminService";
 import { BaseAddPrescriber } from "./BaseAddPrescriber";
 
 /**
- * The edit dialog for the specified prescriber.
+ * The dialog for creating a stub for a new Prescriber.
  * 
- * @param {{prescriber: PrescriberInfo}} props
+ * @param {{open, setOpenNewPatient}} props
  */
 export const AddPrescriber = ({ open, setOpenNewPatient }) => {
 
@@ -15,9 +15,8 @@ export const AddPrescriber = ({ open, setOpenNewPatient }) => {
             setOpen={setOpenNewPatient}
             fields={prescriberAddFields}
             passedFieldMapping={prescriberField2PrescriberInfo}
-            // doAdd={async (patchObj) => await patchPrescriber(prescriber.providerCode, patchObj)}
             doAdd={async (prescriber) => { return await addPrescriber(prescriber) }}
-            headerText={`Add Perscriber`}
+            headerText={`Add Prescriber`}
         />
     );
 }

@@ -6,20 +6,16 @@ import {
     DialogBody,
     DialogFooter,
     Input,
-    Checkbox
 } from "@material-tailwind/react";
 import { ClosableAlert } from "./ClosableAlert";
-import pencilSVG from "../svgs/pencilSVG";
 
-/**
- * Add Patient Dialog.
- */
+
 export const BaseAddPrescriber = ({ open, setOpen, fields, passedFieldMapping, doAdd, headerText }) => {
 
     // Set up a mapping of relevant fields
     const fieldMapping = {};
     fields.forEach(field => {
-        fieldMapping[field] = useState(field === "Registered" ? true : "");
+        fieldMapping[field] = useState("");
     });
 
     const handleOpen = () => {
@@ -27,7 +23,7 @@ export const BaseAddPrescriber = ({ open, setOpen, fields, passedFieldMapping, d
 
         // Reset all field states to their initial values
         Object.keys(fieldMapping).forEach(field => {
-            const initialValue = field === "Registered" ? true : "";
+            const initialValue = "";
             const [, setState] = fieldMapping[field];
             setState(initialValue);
         });
@@ -51,7 +47,6 @@ export const BaseAddPrescriber = ({ open, setOpen, fields, passedFieldMapping, d
     const handleConfirmChanges = async () => {
         try {
             const res = await doAdd(buildPatchObj());
-            console.log(res);
             if (res.data) {
                 setShowSuccess(true);
                 setErrMessage("");
@@ -76,26 +71,16 @@ export const BaseAddPrescriber = ({ open, setOpen, fields, passedFieldMapping, d
                         {
                             fields.map(field => {
                                 let [state, setState] = fieldMapping[field];
-                                if (field === "Registered") {
-                                    return (
-                                        <Checkbox
-                                            label={field}
-                                            key={`field_edit_${field}`}
-                                            checked={state}
-                                            onChange={el => setState(el.target.checked)}
-                                        />
-                                    );
-                                } else {
-                                    return (
-                                        <Input
-                                            label={field}
-                                            key={`field_edit_${field}`}
-                                            size="md"
-                                            value={state}
-                                            onChange={el => setState(el.target.value)}
-                                        />
-                                    );
-                                }
+                                return (
+                                    <Input
+                                        label={field}
+                                        key={`field_edit_${field}`}
+                                        size="md"
+                                        value={state}
+                                        onChange={el => setState(el.target.value)}
+                                    />
+                                );
+
                             })
                         }
                     </div>

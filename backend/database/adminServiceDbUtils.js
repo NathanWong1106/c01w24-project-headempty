@@ -9,7 +9,6 @@ import { fillPrescriberPrescription } from "./prescriberServiceDbUtils.js";
 import { fillPatientPrescription } from "./patientServiceDbUtils.js";
 import { PRESCRIBER_PRESCRIPTION_STATUS, PATIENT_PRESCRIPTION_STATUS } from "../types/prescriptionTypes.js";
 import { retryPromiseWithDelay } from "../utils.js";
-import bcrypt from "bcryptjs";
 
 /**
  * Get a page from all prescribers 
@@ -49,37 +48,32 @@ export async function patchSinglePrescriber(providerCode, patches) {
 export async function addSinglePrescriber(prescriber) {
     try {
         const collection = getDb().collection(COLLECTIONS.PRESCRIBER);
-        const existingUserEmail = await retryPromiseWithDelay(collection.findOne({
-            email: prescriber.email,
-        }))
-
-        if (existingUserEmail) {
-            return { data: null, error: "Email already used" };
-        }
-
-        const existingUserProviderCode = await retryPromiseWithDelay(collection.findOne({
-            providerCode: prescriber.providerCode,
-        }))
-
-        if (existingUserProviderCode) {
-            return { data: null, error: "Provider Code already used" };
-        }
-
-        const hashedPassword = await bcrypt.hash(prescriber.password, 10);
-        const data = await retryPromiseWithDelay(collection.insertOne({
-            email: prescriber.email,
-            password: hashedPassword,
+        const existingUser = await retryPromiseWithDelay(collection.findOne({
             firstName: prescriber.firstName,
             lastName: prescriber.lastName,
-            language: prescriber.language,
-            city: prescriber.city,
             province: prescriber.province,
-            address: prescriber.address,
-            profession: prescriber.profession,
-            providerCode: prescriber.providerCode,
+            licensingCollege: prescriber.licensingCollege,
+            licenceNumber: prescriber.licenceNumber
+        }))
+
+        if (existingUser) {
+            return { data: null, error: "Already added" };
+        }
+
+        const data = await retryPromiseWithDelay(collection.insertOne({
+            email: "",
+            password: "",
+            firstName: prescriber.firstName,
+            lastName: prescriber.lastName,
+            language: "",
+            city: "",
+            province: prescriber.province,
+            address: "",
+            profession: "",
+            providerCode: "",
             licensingCollege: prescriber.licensingCollege,
             licenceNumber: prescriber.licenceNumber,
-            registered: prescriber.registered
+            registered: true
         }));
         return { data: data, error: null };
     } catch (error) {

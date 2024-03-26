@@ -113,8 +113,8 @@ adminRouter.post("/addPrescriber", express.json(), async (req, res) => {
             return res.status(400).json({ error: "A prescriber object must be provided." });
         }
 
-        if (prescriber.email === "" || prescriber.providerCode === "") {
-            return res.status(400).json({ error: "email and provider code can't be empty" });
+        if (prescriber.firstName === "" || prescriber.lastName === "" || prescriber.province === "" || prescriber.licensingCollege === "" || prescriber.licenceNumber === "") {
+            return res.status(400).json({ error: "missing fields" });
         }
 
         let addedPrescriber = await addSinglePrescriber(prescriber);

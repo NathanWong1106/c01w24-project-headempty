@@ -36,7 +36,7 @@ export class PrescriberInfo extends ClientUserInfo {
 /* User friendly field names (use in table header) */
 export const prescriberFields = ["Email", "First Name", "Last Name", "Language", "City", "Province", "Address", "Profession", "Provider Code", "Licensing College", "Licence Number", "Registered"]
 export const prescriberPatchFields = ["Email", "First Name", "Last Name", "Language", "City", "Province", "Address", "Profession", "Licensing College", "Licence Number"]
-export const prescriberAddFields = ["Email", "Password", "First Name", "Last Name", "Language", "City", "Province", "Address", "Profession", "Provider Code", "Licensing College", "Licence Number", "Registered"]
+export const prescriberAddFields = ["First Name", "Last Name", "Province", "Licensing College", "Licence Number"]
 
 /* Map the above user friendly names to actual field names */
 export const prescriberField2PrescriberInfo = {
