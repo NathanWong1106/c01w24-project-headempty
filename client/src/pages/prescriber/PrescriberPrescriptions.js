@@ -1,13 +1,14 @@
 import {
     Input,
     Typography,
+    Tooltip
 } from "@material-tailwind/react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { getPaginatedPrescriberPrescriptions } from "../../apiServices/prescriberService";
 import { prescriptionField2PrescriptionInfo, prescriptionFieldsPrescriber } from "../../apiServices/types/prescriptionTypes";
 import PaginatedTableWithSearch from "../../components/PaginatedTableWithSearch";
-import { PrescriptionLogForm } from "../../components/PrescriptionLogForm.js";
+import CustomizedPDF from "../../components/CustomizedPDF";
 
 const PAGE_SIZE = 20;
 
@@ -83,21 +84,21 @@ const PrescriberPrescriptions = () => {
     }
 
     return (
-        //GUYS THIS IS KILLING ME IF I USE ITEMS-CENTER ON THE HWOLE DIV THE PRESC/BUTTON GO TO THE CENTER BUT IF I DONT
-        //THE TABLE IS OFF CENTER AND ANY OTHER WRAPPING MAKES THE TABLE WONKY PLS HELP PLSPLS
-      <div className="flex flex-col h-screen">
-        <div className="mt-12">
-          <div className="flex justify-between">
-            {/* Column 1 */}
-            <div className="flex flex-col justify-center items-start ml-10">
-              <Typography variant="h4"> My Prescriptions </Typography>
+        <div className="flex flex-col h-screen justify-center items-center">
+            <div className="flex justify-between w-full">
+                <Typography variant="h3" className="mx-20">My Prescriptions</Typography>
+                <div className="mx-40">
+                    <CustomizedPDF auxInfo={{providerCode: providerCode}}/>
+                </div>
             </div>
-
-            {/* Column 2 */}
-            <div className="flex flex-col justify-center items-end mr-10">
-              <PrescriptionLogForm/>
-            </div>
-          </div>
+            <PaginatedTableWithSearch
+                dataList={prescriptionList}
+                searchFn={searchFn}
+                searchForm={prescriptionSearchForm}
+                cols={[...prescriptionFields]}
+                createRow={createRow}
+                pageSize={PAGE_SIZE}
+            />
         </div>
             <PaginatedTableWithSearch
             dataList={prescriptionList}
