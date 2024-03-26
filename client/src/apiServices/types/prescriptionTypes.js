@@ -27,9 +27,8 @@ class Prescription {
 }
 
 export class PrescriberPrescription extends Prescription {
-    constructor(providerCode, date, initial, description, prescribed, status) {
+    constructor(providerCode, date, initial, prescribed, status) {
         super(providerCode, date, initial, prescribed, status || PRESCRIBER_PRESCRIPTION_STATUS.NOT_LOGGED);
-        this.description = description;
     }
 }
 
@@ -43,14 +42,13 @@ export class PatientPrescription extends Prescription {
 
 /* User friendly field names (use in table header) */
 
-export const prescriptionFieldsPrescriber = ["Provider Code", "Date", "Patient Initials", "Description", "Prescribed with Discovery Pass", "Status"];
-export const prescriptionFieldsPatient = ["Email", "Provider Code", "Date", "Patient Initials", "Prescribed with Discovery Pass", "Status"];
+export const prescriptionFields = ["Provider Code", "Date", "Patient Initials", "Prescribed with Discovery Pass", "Status"];
+
 /* Map the above user friendly names to actual field names */
 export const prescriptionField2PrescriptionInfo = {
     "Provider Code": "providerCode",
     "Date": "date",
     "Patient Initials": "initial",
-    "Description": "description",
     "Email": "email",
     "Prescribed with Discovery Pass": "prescribed",
     "Status": "status"

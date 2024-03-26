@@ -70,7 +70,7 @@ test("/prescriber/getPaginatedPrescriptions - wrong prescriber code check", asyn
 test("postSinglePrescription - should return success response", async () => {
     const providerCode = "ON-JC001";
     const patches = [
-        { providerCode: "ON-JC001", date: "2021-10-01", initial: "JL", prescribed: true, description: "", status: ""},
+        { providerCode: "ON-JC001", date: "2021-10-01", initial: "JL", prescribed: true, status: ""},
     ];
 
     const res = await postSinglePrescription(providerCode, patches);
@@ -82,7 +82,7 @@ test("postSinglePrescription - should return error response for missing initials
     // Mock the necessary data
     const providerCode = "ON-JC000";
     const patches = [
-        { providerCode: "ON-JC001", date: "2021-10-01", initial: "", prescribed: true, description: "", status: ""}
+        { providerCode: "ON-JC001", date: "2021-10-01", initial: "", prescribed: true, status: ""}
     ];
 
     // Call the function being tested

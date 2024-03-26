@@ -6,7 +6,7 @@ import {
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { getPaginatedPrescriberPrescriptions } from "../../apiServices/prescriberService";
-import { prescriptionField2PrescriptionInfo, prescriptionFieldsPrescriber } from "../../apiServices/types/prescriptionTypes";
+import { prescriptionField2PrescriptionInfo, prescriptionFields } from "../../apiServices/types/prescriptionTypes";
 import PaginatedTableWithSearch from "../../components/PaginatedTableWithSearch";
 import { PrescriptionLogForm } from "../../components/PrescriptionLogForm.js";
 import CustomizedPDF from "../../components/CustomizedPDF";
@@ -67,7 +67,7 @@ const PrescriberPrescriptions = () => {
         return (
             <tr key={prescription['providerCode'] + prescription['date']}>
                 {
-                    prescriptionFieldsPrescriber.map(field => (
+                    prescriptionFields.map(field => (
                             <td key={prescription['providerCode'] + prescription['date'] + '_' + field} className="p-4">
                                 <div className="flex items-center">
                                     {
@@ -96,12 +96,13 @@ const PrescriberPrescriptions = () => {
               <Typography variant="h4"> My Prescriptions </Typography>
             </div>
 
-            {/* Column 2 */}
-            <div className="mx-40">
-              <CustomizedPDF auxInfo={{providerCode: providerCode}}/>
-            </div>
-            <div className="flex flex-col justify-center items-end mr-10">
-              <PrescriptionLogForm/>
+            <div className="flex justify-between items-end mr-10">
+                <div className="flex flex-col justify-center items-start mr-10">
+                    <CustomizedPDF auxInfo={{providerCode: providerCode}}/>
+                </div>
+                <div className="flex flex-col justify-center items-start">
+                    <PrescriptionLogForm/>
+                </div>
             </div>
           </div>
         </div>
@@ -109,7 +110,7 @@ const PrescriberPrescriptions = () => {
             dataList={prescriptionList}
             searchFn={searchFn}
             searchForm={prescriptionSearchForm}
-            cols={[...prescriptionFieldsPrescriber]}
+            cols={[...prescriptionFields]}
             createRow={createRow}
             pageSize={PAGE_SIZE}
             />

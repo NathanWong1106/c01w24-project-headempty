@@ -7,7 +7,7 @@ import {
 } from "@material-tailwind/react";
 import { format } from "date-fns";
 import { DayPicker } from "react-day-picker";
-import { ChevronRightIcon, ChevronLeftIcon } from "@heroicons/react/24/outline";
+// import { ChevronRightIcon, ChevronLeftIcon } from "@heroicons/react/24/outline";
 
 
 export const DatePicker = (field) => {
@@ -54,14 +54,14 @@ export const DatePicker = (field) => {
                   day_disabled: "text-gray-500 opacity-50",
                   day_hidden: "invisible",
                 }}
-                components={{
-                  IconLeft: ({ ...props }) => (
-                    <ChevronLeftIcon {...props} className="h-4 w-4 stroke-2" />
-                  ),
-                  IconRight: ({ ...props }) => (
-                    <ChevronRightIcon {...props} className="h-4 w-4 stroke-2" />
-                  ),
-                }}
+                // components={{
+                //   IconLeft: ({ ...props }) => (
+                //     <ChevronLeftIcon {...props} className="h-4 w-4 stroke-2" />
+                //   ),
+                //   IconRight: ({ ...props }) => (
+                //     <ChevronRightIcon {...props} className="h-4 w-4 stroke-2" />
+                //   ),
+                // }}
               />
             </PopoverContent>
           </Popover>

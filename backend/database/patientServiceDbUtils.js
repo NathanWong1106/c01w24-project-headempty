@@ -32,8 +32,8 @@ export async function getPaginatedPatientPrescription(page, pageSize, search) {
 }
 
 
-function fillPatientPrescription(x) {
-    return new PatientPrescription(x.providerCode, x.date, x.initial, x.email, x.prescribed, x.status);
+export function fillPatientPrescription(x) {
+    return new PatientPrescription(x.providerCode, x.date, x.initial, x.prescribed, x.status, x.email);
 }
 
 /**
@@ -68,4 +68,5 @@ export async function patchPatientPrescriptionStatus(id, patStatus) {
     } else {
         return false;
     }
+}
 

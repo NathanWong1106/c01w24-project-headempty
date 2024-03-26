@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import {
     Button, Dialog, DialogHeader, DialogBody, DialogFooter, Input, Checkbox,
 } from "@material-tailwind/react";
-import { prescriptionFieldsPrescriber, prescriptionFieldsPatient, prescriptionField2PrescriptionInfo } from "../apiServices/types/prescriptionTypes";
+import { prescriptionFields, prescriptionField2PrescriptionInfo } from "../apiServices/types/prescriptionTypes";
 import { postPrescriberPrescription} from "../apiServices/prescriberService";
 import { postPatientPrescription } from "../apiServices/patientService";
 import { ClosableAlert } from "./ClosableAlert";
@@ -29,16 +29,13 @@ export const PrescriptionLogForm = () => {
     const userEmail = useSelector(state => state.currentUser.email);
     const userType = useSelector(state => state.currentUser.accountType);
 
-    const prescriptionFields = userType === "patient" ? prescriptionFieldsPatient : prescriptionFieldsPrescriber;
- 
+
     prescriptionFields.forEach(field => {
         if (prescriptionField2PrescriptionInfo[field] === "providerCode" && userType === "prescriber") {
             fieldMapping[field] = useState(providerCode);
         } else if (prescriptionField2PrescriptionInfo[field] === "prescribed") {
             fieldMapping[field] = useState(false);
-        } else if (prescriptionField2PrescriptionInfo[field] === "email") {
-            fieldMapping[field] = useState(userEmail);
-        }
+        } 
          else {
             fieldMapping[field] = useState("");
         }
@@ -54,7 +51,11 @@ export const PrescriptionLogForm = () => {
         let obj = {};
         prescriptionFields.forEach(field => {
             const [state] = fieldMapping[field];
+
             obj[prescriptionField2PrescriptionInfo[field]] = state;
+            if (userType === "patient") {
+                obj["email"] = userEmail;
+            }
         })
         return obj;
         
@@ -68,8 +69,6 @@ export const PrescriptionLogForm = () => {
                 setState(providerCode);
             } else if (prescriptionField2PrescriptionInfo[field] === "prescribed") {
                 setState(false);
-            } else if (prescriptionField2PrescriptionInfo[field] === "email") {
-                setState(userEmail);
             } else {
                 setState("");
             }
@@ -104,12 +103,12 @@ export const PrescriptionLogForm = () => {
 
     return (
         <>
-            <Button className="mt-6 bg-moss-green" onClick={handleOpen}>
+            <Button className="mt-6 bg-moss-green border-2 border-moss-green" onClick={handleOpen}>
                 Create New Prescription
             </Button> 
             <Dialog open={open} handler={handleOpen}>
                 <DialogHeader>Log New Prescription</DialogHeader>
-                <DialogBody className="h-[42rem] overflow-scroll">
+                <DialogBody className="h-[24rem] overflow-scroll">
 
 
                     <div className="flex flex-col justify-between gap-8">
@@ -161,7 +160,9 @@ export const PrescriptionLogForm = () => {
                                     key={`field_edit_${field}`}
                                     size="md"
                                     value={state}
-                                    onChange={el => handleInput(el.target.value)} />);
+                                    onChange={el => handleInput(el.target.value)} 
+                                    disabled={prescriptionField2PrescriptionInfo[field] === "providerCode" && userType === "prescriber"}
+                                    />);
                             })
                         }
                     </div>

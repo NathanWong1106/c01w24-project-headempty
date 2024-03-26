@@ -25,14 +25,13 @@ prescriberRouter.post("/postPrescription", express.json(), async (req, res) => {
     try {
         const { providerCode, prscn_date, patientInit, checked, postObj } = req.body;
         if (providerCode === "" || prscn_date === "" || patientInit === ""|| postObj === null) {
-            return res.status(400).json({ error: "All required fields must be provided" });
+            return res.status(400).json({ error: "Provider Code, Prescription Date and Patient Initials must be provided" });
         }
 
         //checking if there is a matching prescription logged by a patient
-        const match = await getMatchingPatientPrescription(providerCode, prscn_date, patientInit);
+        const [matchFound, matchID]= await getMatchingPatientPrescription(providerCode, prscn_date, patientInit);
         let patStatus;
-        if (match[0] === true) {
-            console.log("Match found");
+        if (matchFound) {
             if (checked) {
                 postObj["status"] = PRESCRIBER_PRESCRIPTION_STATUS.LOGGED;
                 patStatus = PATIENT_PRESCRIPTION_STATUS.LOGGED;
@@ -42,7 +41,7 @@ prescriberRouter.post("/postPrescription", express.json(), async (req, res) => {
                 patStatus = PATIENT_PRESCRIPTION_STATUS.COMPLETE;
             }
             //updating patient status as well
-            await patchPatientPrescriptionStatus(match[1], patStatus);
+            await patchPatientPrescriptionStatus(matchID, patStatus);
         } else {
             postObj["status"] = PRESCRIBER_PRESCRIPTION_STATUS.NOT_LOGGED;
         }
