@@ -5,7 +5,7 @@ import {
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { getPaginatedPatientPrescriptions } from "../../apiServices/patientService";
-import { prescriptionField2PrescriptionInfo, prescriptionFieldsPatient } from "../../apiServices/types/prescriptionTypes";
+import { prescriptionField2PrescriptionInfo, prescriptionFields } from "../../apiServices/types/prescriptionTypes";
 import PaginatedTableWithSearch from "../../components/PaginatedTableWithSearch";
 import { PrescriptionLogForm } from "../../components/PrescriptionLogForm.js";
 
@@ -72,7 +72,7 @@ const PatientPrescriptions = () => {
         return (
             <tr key={prescription['providerCode'] + prescription['date']}>
                 {
-                    prescriptionFieldsPatient.filter(field => prescriptionField2PrescriptionInfo[field] !== 'email').map(field => (
+                    prescriptionFields.filter(field => prescriptionField2PrescriptionInfo[field] !== 'email').map(field => (
                         <td key={prescription['providerCode'] + prescription['date'] + '_' + field} className="p-4">
                             <div className="flex items-center">
                                 { 
@@ -107,7 +107,7 @@ const PatientPrescriptions = () => {
                 dataList={prescriptionList}
                 searchFn={searchFn}
                 searchForm={prescriptionSearchForm}
-                cols={[...prescriptionFieldsPatient.filter(field => prescriptionField2PrescriptionInfo[field] !== 'email')]}
+                cols={[...prescriptionFields]}
                 createRow={createRow}
                 pageSize={PAGE_SIZE}
             />

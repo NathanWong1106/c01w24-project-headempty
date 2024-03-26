@@ -19,7 +19,42 @@ export async function getPaginatedPatientPrescription(page, pageSize, search) {
     return data.map(x => fillPatientPrescription(x));
 }
 
+
 export function fillPatientPrescription(x) {
     return new PatientPrescription(x.providerCode, x.date, x.initial, x.prescribed, x.status, x.email);
+}
+
+/**
+ * Check if there is a matching patient prescription in the database.
+ * @param {string} providerCode - The provider code.
+ * @param {Date} date - The date of the prescription.
+ * @param {string} initial - The initial of the prescription.
+ * @returns {boolean} - True if a matching patient prescription exists, false otherwise.
+ */
+export async function getMatchingPatientPrescription(providerCode, date, initial) {
+    const search = {
+        providerCode: providerCode,
+        date: date,
+        initial: initial
+    };
+
+    const searchObj = await objWithFields(search, patientPrescriptionFindSchema);
+    const collection = getDb().collection(COLLECTIONS.PATIENT_PRESCRIPTIONS);
+    const data = await collection.findOne(searchObj);
+    if (data !== null) {
+        return [true, data._id]
+    }
+    return [false, null];
+}
+
+export async function patchPatientPrescriptionStatus(id, patStatus) {
+    const collection = getDb().collection(COLLECTIONS.PATIENT_PRESCRIPTIONS);
+    const data = await collection.updateOne({ _id: new ObjectId(id) }, { $set: { status: patStatus } });
+
+    if (data.matchedCount === 1) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
