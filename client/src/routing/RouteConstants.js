@@ -14,12 +14,14 @@ export const REGISTRATION_ROUTES = {
 export const ADMIN_ROUTE_BASE = '/admin'
 export const ADMIN_ROUTES = {
     PRESCRIBER_MNGMT: `${ADMIN_ROUTE_BASE}/prescriberManagement`,
+    PRESCRIBER_PRESCRIPTION_MNGMT: `${ADMIN_ROUTE_BASE}/prescriberPrescriptionManagement`,
     PRESCRIBER_VERIFICATION: `${ADMIN_ROUTE_BASE}/prescriberVerification`,
 }
 
 export const COORDINATOR_ROUTE_BASE = "/coordinator"
 export const COORDINATOR_ROUTES = {
-    PATIENT_MNGMT: `${COORDINATOR_ROUTE_BASE}/patientManagement`
+    PATIENT_MNGMT: `${COORDINATOR_ROUTE_BASE}/patientManagement`,
+    PATIENT_PRESCRIPTION_MNGMT: `${COORDINATOR_ROUTE_BASE}/patientPrescriptionManagement`,
 }
 
 export const PRESCRIBER_ROUTE_BASE = '/prescriber'
@@ -53,6 +55,10 @@ const ADMIN_LINKS = [
         link: ADMIN_ROUTES.PRESCRIBER_MNGMT
     },
     {
+        name: "Prescriber Prescription Management",
+        link: ADMIN_ROUTES.PRESCRIBER_PRESCRIPTION_MNGMT
+    },
+    {
         name: "Prescriber Verification",
         link: ADMIN_ROUTES.PRESCRIBER_VERIFICATION
     }
@@ -67,6 +73,10 @@ export const COORDINATOR_LINKS = [
     {
         name: "Patient Management",
         link: COORDINATOR_ROUTES.PATIENT_MNGMT
+    },
+    {
+        name: "Patient Prescription Management",
+        link: COORDINATOR_ROUTES.PATIENT_PRESCRIPTION_MNGMT,
     }
 ]
 

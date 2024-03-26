@@ -19,7 +19,7 @@ export async function getPaginatedPrescriberPrescription(page, pageSize, search)
     return data.map(x => fillPrescriberPrescription(x));
 }
 
-function fillPrescriberPrescription(x) {
+export function fillPrescriberPrescription(x) {
     return new PrescriberPrescription(x.providerCode, x.date, x.initial, x.prescribed, x.status);
 }
 
