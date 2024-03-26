@@ -31,3 +31,8 @@ export const COLLEGES = [
     "Collège des médecins du Québec",
     "College of Physicians and Surgeons of Saskatchewan",
 ];
+
+export const PRESCRIPTION_TYPES = {
+    PRESCRIBER: "prescriber",
+    PATIENT: "patient",
+}

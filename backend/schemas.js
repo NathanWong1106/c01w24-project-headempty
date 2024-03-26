@@ -38,8 +38,59 @@ export const patientPrescriptionSearchSchema = object({
     providerCode: string(),
     date: string(),
     initial: string(),
-    prescribed: boolean(),
+    prescribed: boolean(), 
     email: string().required(), 
+    status: string()
+}).noUnknown()
+
+export const adminPrescriberPrescriptionSearchSchema = object({
+    providerCode: string(),
+    date: string(),
+    initial: string(),
+    prescribed: boolean(),
+    status: string()
+}).noUnknown()
+
+export const adminPatientPrescriptionSearchSchema = object({
+    providerCode: string(),
+    date: string(),
+    initial: string(),
+    prescribed: boolean(), 
+    email: string(), 
+    status: string()
+}).noUnknown()
+
+export const adminSinglePrescriberPrescriptionSearchSchema = object({
+    providerCode: string().required(),
+    date: string().required(),
+    initial: string().required(),
+    prescribed: boolean(),
+    status: string()
+}).noUnknown()
+
+export const adminSinglePatientPrescriptionSearchSchema = object({
+    providerCode: string().required(),
+    date: string().required(),
+    initial: string().required(),
+    prescribed: boolean(),
+    email: string(), 
+    status: string()
+}).noUnknown()
+
+export const adminPrescriberPrescriptionPatchSchema = object({
+    providerCode: string(),
+    date: string(),
+    initial: string(),
+    prescribed: boolean(),
+    status: string()
+}).noUnknown()
+
+export const adminPatientPrescriptionPatchSchema = object({
+    email: string(),
+    providerCode: string(),
+    date: string(),
+    initial: string(),
+    prescribed: boolean(),
     status: string()
 }).noUnknown()
 
