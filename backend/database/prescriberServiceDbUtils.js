@@ -13,7 +13,7 @@ export async function postSinglePrescription(providerCode, posts) {
     const postObj = await objWithFields(posts, prescriberPrescriptionPatchSchema);
     const collection = getDb().collection(COLLECTIONS.PRESCRIBER_PRESCRIPTIONS);
     const data = await collection.insertOne(postObj);
-    return true;
+    return data.acknowledged;
 }
 
 /**
