@@ -31,7 +31,6 @@ export class PrescriberInfo extends ClientUserInfo {
         this.licensingCollege = licensingCollege;
         this.licenceNumber = licenceNumber;
         this.registered = registered;
-        this.registrationLink = `/register/${id}`;
     }
 }
 
