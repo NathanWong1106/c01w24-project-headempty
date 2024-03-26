@@ -84,16 +84,19 @@ const PrescriberPrescriptions = () => {
     }
 
     return (
-        <div className="flex flex-col h-screen justify-center items-center">
-            <div className="flex justify-between w-full">
-                <Typography variant="h3" className="mx-20">My Prescriptions</Typography>
-                <div className="mx-40">
-                    <CustomizedPDF auxInfo={{providerCode: providerCode}}/>
-                </div>
+
+        //GUYS THIS IS KILLING ME IF I USE ITEMS-CENTER ON THE HWOLE DIV THE PRESC/BUTTON GO TO THE CENTER BUT IF I DONT
+        //THE TABLE IS OFF CENTER AND ANY OTHER WRAPPING MAKES THE TABLE WONKY PLS HELP PLSPLS
+      <div className="flex flex-col h-screen">
+        <div className="mt-12">
+          <div className="flex justify-between">
+            {/* Column 1 */}
+            <div className="flex flex-col justify-center items-start mx-20">
+              <Typography variant="h4"> My Prescriptions </Typography>
             </div>
 
-            <div className="flex justify-between items-end mr-10">
-                <div className="flex flex-col justify-center items-start mr-10">
+            <div className="flex justify-between gap-5 items-end mr-10">
+                <div className="flex flex-col justify-center items-start">
                     <CustomizedPDF auxInfo={{providerCode: providerCode}}/>
                 </div>
                 <div className="flex flex-col justify-center items-start">
