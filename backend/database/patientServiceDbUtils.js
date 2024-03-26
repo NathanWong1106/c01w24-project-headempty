@@ -3,7 +3,8 @@ import { PatientPrescription } from "../types/prescriptionTypes.js";
 import { getDb } from "./dbConnection.js";
 import paginate from "./pagination.js";
 import { objWithFields } from "./utils/dbUtils.js";
-import { patientPrescriptionFindSchema, patientPrescriptionSearchSchema } from "../schemas.js"; 
+
+import { patientPrescriptionFindSchema, patientPrescriptionSearchSchema, prescriberPrescriptionSearchSchema } from "../schemas.js"; 
 import { ObjectId } from "mongodb";
 
 
@@ -17,11 +18,11 @@ export async function postSinglePatientPrescription(providerCode, posts) {
 
 
 /**
- * Get a page from prescriber's prescriptions 
+ * Get a page from patient's prescriptions 
  * @param {Number} page the page number
  * @param {Number} pageSize size of the page
  * @param {Object} search search parameters
- * @returns {PatientPrescription[]} an array of the prescribers log prescriptions
+ * @returns {PrescriberPrescription[]} an array of the patient's log prescriptions
  */
 export async function getPaginatedPatientPrescription(page, pageSize, search) {
     const searchObj = await objWithFields(search, patientPrescriptionSearchSchema);
@@ -29,6 +30,7 @@ export async function getPaginatedPatientPrescription(page, pageSize, search) {
     const data = await paginate(collection.find(searchObj), page, pageSize).toArray();
     return data.map(x => fillPatientPrescription(x));
 }
+
 
 function fillPatientPrescription(x) {
     return new PatientPrescription(x.providerCode, x.date, x.initial, x.email, x.prescribed, x.status);
@@ -66,5 +68,4 @@ export async function patchPatientPrescriptionStatus(id, patStatus) {
     } else {
         return false;
     }
-}
 

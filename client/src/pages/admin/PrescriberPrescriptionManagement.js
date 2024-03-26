@@ -1,22 +1,23 @@
 import {
     Input,
+    Tooltip,
     Typography,
-    Tooltip
 } from "@material-tailwind/react";
 import { useState } from "react";
-import { useSelector } from "react-redux";
-import { getPaginatedPrescriberPrescriptions } from "../../apiServices/prescriberService";
-import { prescriptionField2PrescriptionInfo, prescriptionFieldsPrescriber } from "../../apiServices/types/prescriptionTypes";
+import { prescriptionField2PrescriptionInfo, prescriptionFields } from "../../apiServices/types/prescriptionTypes";
 import PaginatedTableWithSearch from "../../components/PaginatedTableWithSearch";
-import { PrescriptionLogForm } from "../../components/PrescriptionLogForm.js";
-import CustomizedPDF from "../../components/CustomizedPDF";
+
+import { getAdminPaginatedPrescriberPrescription } from "../../apiServices/adminService";
+import { EditPrescriberPrescriptionDialog } from "../../components/EditPrescriberPrescriptionDialog";
+import { DeletePrescriberPrescriptionDialog } from "../../components/DeletePrescriberPrescriptionDialog";
 
 const PAGE_SIZE = 20;
 
-const PrescriberPrescriptions = () => {
+const AdminPrescriberPrescriptions = () => {
     // List of all prescriptions on the current page
     const [prescriptionList, setPrescriptionList] = useState([]);
     // Search fields
+    const [providerCode, setProviderCode] = useState("");
     const [date, setDate] = useState("");
     const [initials, setInitials] = useState("");
     const [prescribed, setPrescribed] = useState("");
@@ -24,15 +25,13 @@ const PrescriberPrescriptions = () => {
     // Search obj
     const [prevSearch, setPrevSearch] = useState({});
 
-    const providerCode = useSelector(state => state.currentUser.auxInfo.providerCode);
-
     const getSearchObj = () => {
         // Note: the empty string is falsy in js
         return {
-            ...({ providerCode: providerCode }),
+            ...(providerCode && { providerCode: providerCode }),
             ...(date && { date: date }),
             ...(initials && { initials: initials }),
-            ...(prescribed && { prescribed: prescribed }),
+            ...(prescribed && { prescribed: prescribed === "true" }),
             ...(status && { status: status }),
         }
     }
@@ -40,6 +39,7 @@ const PrescriberPrescriptions = () => {
     const prescriptionSearchForm = (
         <div className="flex flex-col w-5/6">
             <div className="flex items-start gap-8">
+                <Input size="md" label="Provider Code" value={providerCode} onChange={el => setProviderCode(el.target.value)} />
                 <Input size="md" label="Date" value={date} onChange={el => setDate(el.target.value)} />
                 <Input size="md" label="Patient Initials" value={initials} onChange={el => setInitials(el.target.value)} />
             </div>
@@ -57,7 +57,7 @@ const PrescriberPrescriptions = () => {
         // If search was pressed reset the state
         searchPressed && setPrevSearch(searchObj);
 
-        const list = await getPaginatedPrescriberPrescriptions(searchPage, PAGE_SIZE, searchObj);
+        const list = await getAdminPaginatedPrescriberPrescription(searchPage, PAGE_SIZE, searchObj);
 
         list === null ? setPrescriptionList([]) : setPrescriptionList(list);
         return list ? list.length : 0;
@@ -67,7 +67,7 @@ const PrescriberPrescriptions = () => {
         return (
             <tr key={prescription['providerCode'] + prescription['date']}>
                 {
-                    prescriptionFieldsPrescriber.map(field => (
+                    prescriptionFields.map(field => (
                             <td key={prescription['providerCode'] + prescription['date'] + '_' + field} className="p-4">
                                 <div className="flex items-center">
                                     {
@@ -80,41 +80,33 @@ const PrescriberPrescriptions = () => {
                         )
                     )
                 }
+                <td className="p-2">
+                    <Tooltip content="Edit Prescription">
+                        <EditPrescriberPrescriptionDialog prescription={prescription} />
+                    </Tooltip>
+                </td>
+                <td className="p-2">
+                    <Tooltip content="Delete Prescription">
+                        <DeletePrescriberPrescriptionDialog prescription={prescription} />
+                    </Tooltip>
+                </td>
             </tr>
         )
     }
 
     return (
-
-        //GUYS THIS IS KILLING ME IF I USE ITEMS-CENTER ON THE HWOLE DIV THE PRESC/BUTTON GO TO THE CENTER BUT IF I DONT
-        //THE TABLE IS OFF CENTER AND ANY OTHER WRAPPING MAKES THE TABLE WONKY PLS HELP PLSPLS
-      <div className="flex flex-col h-screen">
-        <div className="mt-12">
-          <div className="flex justify-between">
-            {/* Column 1 */}
-            <div className="flex flex-col justify-center items-start ml-10">
-              <Typography variant="h4"> My Prescriptions </Typography>
-            </div>
-
-            {/* Column 2 */}
-            <div className="mx-40">
-              <CustomizedPDF auxInfo={{providerCode: providerCode}}/>
-            </div>
-            <div className="flex flex-col justify-center items-end mr-10">
-              <PrescriptionLogForm/>
-            </div>
-          </div>
-        </div>
+        <div className="flex flex-col h-screen justify-center items-center">
+            <Typography variant="h3">Prescriber Prescription Management</Typography>
             <PaginatedTableWithSearch
-            dataList={prescriptionList}
-            searchFn={searchFn}
-            searchForm={prescriptionSearchForm}
-            cols={[...prescriptionFieldsPrescriber]}
-            createRow={createRow}
-            pageSize={PAGE_SIZE}
+                dataList={prescriptionList}
+                searchFn={searchFn}
+                searchForm={prescriptionSearchForm}
+                cols={[...prescriptionFields, ""]}
+                createRow={createRow}
+                pageSize={PAGE_SIZE}
             />
-      </div>
-    );
+        </div>
+    )
 }
 
-export default PrescriberPrescriptions;
+export default AdminPrescriberPrescriptions;

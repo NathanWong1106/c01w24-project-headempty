@@ -100,6 +100,22 @@ export const insertPrescribers = async (numPrescribers = 20) => {
 }
 
 /**
+ * Insert numPatients patients into the db. 
+ * Each patient is generated from the generic patient format
+ * with incrementing email "patient{i}@gmail.com"
+ * @param {number} numPatients 
+ */
+export const insertPatients = async (numPatients = 20) => {
+    for (let i = 1; i <= numPatients; i++) {
+        const modifier = {
+            email: `patient${i}@gmail.com`,
+        }
+        await insertPatient(modifier);
+    }
+}
+
+
+/**
  * Finds a prescriber with the corresponding fields
  * 
  * Returns the id of the prescriber
@@ -122,7 +138,7 @@ export const findPrescriberId = async (prescriber) => {
  * @param {Object} modifier optional object to overwrite values in genericPrescriberPrescription .
  * @returns {Object} the prescriberPrescription that was inserted.
  */
-export const insertPrescriberFrom = async (modifier = {}) => {
+export const insertPrescriberPrescription = async (modifier = {}) => {
     let prescriberPrescription = await objWithModifier(genericPrescriberPrescription, modifier);
     await db.collection(COLLECTIONS.PRESCRIBER_PRESCRIPTIONS).insertOne(prescriberPrescription);
     return prescriberPrescription;
@@ -140,7 +156,7 @@ export const insertPrescriberPrescriptions = async (numPrescriberPrescriptions =
         const modifier = {
             date: `2024-12-${i}`
         }
-        await insertPrescriberFrom(modifier);
+        await insertPrescriberPrescription(modifier);
     }
 }
 
@@ -153,7 +169,7 @@ export const insertPrescriberPrescriptions = async (numPrescriberPrescriptions =
  * @param {Object} modifier optional object to overwrite values in genericPatientPrescription.
  * @returns {Object} the patientPrescription that was inserted.
  */
-export const insertPatientFrom = async (modifier = {}) => {
+export const insertPatientPrescription = async (modifier = {}) => {
     let patientPrescription = await objWithModifier(genericPatientPrescription, modifier);
     await db.collection(COLLECTIONS.PATIENT_PRESCRIPTIONS).insertOne(patientPrescription);
     return patientPrescription;
@@ -172,7 +188,7 @@ export const insertPatientPrescriptions = async (numPatientPrescriptions = 20) =
             date: `2024-12-${i}`,
             providerCode: `ON-JC00${i}`
         }
-        await insertPatientFrom(modifier);
+        await insertPatientPrescription(modifier);
     }
 }
 

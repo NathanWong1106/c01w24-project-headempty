@@ -34,7 +34,7 @@ export class PrescriberPrescription extends Prescription {
 }
 
 export class PatientPrescription extends Prescription {
-    constructor(providerCode, date, initial, email, prescribed, status) {
+    constructor(providerCode, date, initial, prescribed, status, email) {
         super(providerCode, date, initial, prescribed, status || PATIENT_PRESCRIPTION_STATUS.NOT_LOGGED);
         this.email = email;
     }
@@ -42,6 +42,7 @@ export class PatientPrescription extends Prescription {
 
 
 /* User friendly field names (use in table header) */
+
 export const prescriptionFieldsPrescriber = ["Provider Code", "Date", "Patient Initials", "Description", "Prescribed with Discovery Pass", "Status"];
 export const prescriptionFieldsPatient = ["Email", "Provider Code", "Date", "Patient Initials", "Prescribed with Discovery Pass", "Status"];
 /* Map the above user friendly names to actual field names */
