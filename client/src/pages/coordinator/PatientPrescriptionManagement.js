@@ -1,21 +1,22 @@
 import {
     Input,
+    Tooltip,
     Typography,
-    Tooltip
 } from "@material-tailwind/react";
 import { useState } from "react";
-import { useSelector } from "react-redux";
-import { getPaginatedPrescriberPrescriptions } from "../../apiServices/prescriberService";
 import { prescriptionField2PrescriptionInfo, prescriptionFields } from "../../apiServices/types/prescriptionTypes";
 import PaginatedTableWithSearch from "../../components/PaginatedTableWithSearch";
-import CustomizedPDF from "../../components/CustomizedPDF";
+import { getCoordinatorPaginatedPatientPrescription } from "../../apiServices/coordinatorService";
+import { EditPatientPrescriptionDialog } from "../../components/EditPatientPrescriptionDialog";
+import { DeletePatientPrescriptionDialog } from "../../components/DeletePatientPrescriptionDialog";
 
 const PAGE_SIZE = 20;
 
-const PrescriberPrescriptions = () => {
+const CoordinatorPatientPrescriptions = () => {
     // List of all prescriptions on the current page
     const [prescriptionList, setPrescriptionList] = useState([]);
     // Search fields
+    const [providerCode, setProviderCode] = useState("");
     const [date, setDate] = useState("");
     const [initials, setInitials] = useState("");
     const [prescribed, setPrescribed] = useState("");
@@ -23,12 +24,10 @@ const PrescriberPrescriptions = () => {
     // Search obj
     const [prevSearch, setPrevSearch] = useState({});
 
-    const providerCode = useSelector(state => state.currentUser.auxInfo.providerCode);
-
     const getSearchObj = () => {
         // Note: the empty string is falsy in js
         return {
-            ...({ providerCode: providerCode }),
+            ...(providerCode && { providerCode: providerCode }),
             ...(date && { date: date }),
             ...(initials && { initials: initials }),
             ...(prescribed && { prescribed: prescribed }),
@@ -39,6 +38,7 @@ const PrescriberPrescriptions = () => {
     const prescriptionSearchForm = (
         <div className="flex flex-col w-5/6">
             <div className="flex items-start gap-8">
+                <Input size="md" label="Provider Code" value={providerCode} onChange={el => setProviderCode(el.target.value)} />
                 <Input size="md" label="Date" value={date} onChange={el => setDate(el.target.value)} />
                 <Input size="md" label="Patient Initials" value={initials} onChange={el => setInitials(el.target.value)} />
             </div>
@@ -56,7 +56,7 @@ const PrescriberPrescriptions = () => {
         // If search was pressed reset the state
         searchPressed && setPrevSearch(searchObj);
 
-        const list = await getPaginatedPrescriberPrescriptions(searchPage, PAGE_SIZE, searchObj);
+        const list = await getCoordinatorPaginatedPatientPrescription(searchPage, PAGE_SIZE, searchObj);
 
         list === null ? setPrescriptionList([]) : setPrescriptionList(list);
         return list ? list.length : 0;
@@ -79,23 +79,28 @@ const PrescriberPrescriptions = () => {
                         )
                     )
                 }
+                <td className="p-2">
+                    <Tooltip content="Edit Prescription">
+                        <EditPatientPrescriptionDialog prescription={prescription} /> 
+                    </Tooltip>
+                </td>
+                <td className="p-2">
+                    <Tooltip content="Delete Prescription">
+                        <DeletePatientPrescriptionDialog prescription={prescription} />
+                    </Tooltip>
+                </td>
             </tr>
         )
     }
 
     return (
         <div className="flex flex-col h-screen justify-center items-center">
-            <div className="flex justify-between w-full">
-                <Typography variant="h3" className="mx-20">My Prescriptions</Typography>
-                <div className="mx-40">
-                    <CustomizedPDF auxInfo={{providerCode: providerCode}}/>
-                </div>
-            </div>
+            <Typography variant="h3">Patient Prescription Management</Typography>
             <PaginatedTableWithSearch
                 dataList={prescriptionList}
                 searchFn={searchFn}
                 searchForm={prescriptionSearchForm}
-                cols={[...prescriptionFields]}
+                cols={[...prescriptionFields, ""]}
                 createRow={createRow}
                 pageSize={PAGE_SIZE}
             />
@@ -103,4 +108,4 @@ const PrescriberPrescriptions = () => {
     )
 }
 
-export default PrescriberPrescriptions;
+export default CoordinatorPatientPrescriptions;

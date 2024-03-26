@@ -23,10 +23,12 @@ import PrescriberRoute from './routing/PrescriberRoute';
 import PrescriberManagement from './pages/admin/PrescriberManagement';
 import PrescriberVerification from './pages/admin/PrescriberVerification';
 import PrescriberPrescriptions from './pages/prescriber/PrescriberPrescriptions';
+import AdminPrescriberPrescriptions from './pages/admin/PrescriberPrescriptionManagement';
 import PatientPrescriptions from './pages/patient/PatientPrescription';
 import PatientRoute from './routing/PatientRoute';
 import CoordinatorRoute from './routing/CoordinatorRoute';
 import PatientManagement from './pages/coordinator/PatientManagement';
+import CoordinatorPatientPrescriptions from './pages/coordinator/PatientPrescriptionManagement';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -44,10 +46,12 @@ const router = createBrowserRouter(
       </Route>
       <Route path={ADMIN_ROUTE_BASE} element={<AdminRoute />}>
         <Route path={ADMIN_ROUTES.PRESCRIBER_MNGMT} element={<PrescriberManagement />} />
+        <Route path={ADMIN_ROUTES.PRESCRIBER_PRESCRIPTION_MNGMT} element={<AdminPrescriberPrescriptions />} />
         <Route path={ADMIN_ROUTES.PRESCRIBER_VERIFICATION} element={<PrescriberVerification />} />
       </Route>
       <Route path={COORDINATOR_ROUTE_BASE} element={<CoordinatorRoute />}>
         <Route path={COORDINATOR_ROUTES.PATIENT_MNGMT} element={<PatientManagement />}/>
+        <Route path={COORDINATOR_ROUTES.PATIENT_PRESCRIPTION_MNGMT} element={<CoordinatorPatientPrescriptions />}/>
       </Route>
       <Route path={PATIENT_ROUTE_BASE} element={<PatientRoute />}>
         <Route path={PATIENT_ROUTES.PRESCRIPTIONS} element={<PatientPrescriptions />}/>
