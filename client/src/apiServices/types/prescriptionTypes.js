@@ -49,7 +49,6 @@ export const prescriptionField2PrescriptionInfo = {
     "Provider Code": "providerCode",
     "Date": "date",
     "Patient Initials": "initial",
-    "Email": "email",
     "Prescribed with Discovery Pass": "prescribed",
     "Status": "status"
 }

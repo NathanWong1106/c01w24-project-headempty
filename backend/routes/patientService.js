@@ -39,11 +39,14 @@ patientRouter.post("/postPrescription", express.json(), async (req, res) => {
                 presStatus = PRESCRIBER_PRESCRIPTION_STATUS.COMPLETE;
             }
             //updating patient status as well
-            const presPatched = await patchPrescriberPrescriptionStatus(matchID, presStatus);
+            const patched = await patchPrescriberPrescriptionStatus(matchID, presStatus);
+            if (!patched){
+                return res.status(404).json({ error: `Failed to update corresponding prescriber status` });
+            }
         } else {
             postObj["status"] = PATIENT_PRESCRIPTION_STATUS.NOT_LOGGED;
         }
-
+        console
 
         //actually posting the new prescription for the prescriber, now with the status
         const ret = await postSinglePatientPrescription(providerCode, postObj);
