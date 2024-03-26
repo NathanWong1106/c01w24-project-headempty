@@ -1,12 +1,14 @@
 import {
     Input,
     Typography,
+    Tooltip
 } from "@material-tailwind/react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { getPaginatedPrescriberPrescriptions } from "../../apiServices/prescriberService";
 import { prescriptionField2PrescriptionInfo, prescriptionFields } from "../../apiServices/types/prescriptionTypes";
 import PaginatedTableWithSearch from "../../components/PaginatedTableWithSearch";
+import CustomizedPDF from "../../components/CustomizedPDF";
 
 const PAGE_SIZE = 20;
 
@@ -83,7 +85,12 @@ const PrescriberPrescriptions = () => {
 
     return (
         <div className="flex flex-col h-screen justify-center items-center">
-            <Typography variant="h3">My Prescriptions</Typography>
+            <div className="flex justify-between w-full">
+                <Typography variant="h3" className="mx-20">My Prescriptions</Typography>
+                <div className="mx-40">
+                    <CustomizedPDF auxInfo={{providerCode: providerCode}}/>
+                </div>
+            </div>
             <PaginatedTableWithSearch
                 dataList={prescriptionList}
                 searchFn={searchFn}
