@@ -92,12 +92,12 @@ const PrescriberPrescriptions = () => {
         <div className="mt-12">
           <div className="flex justify-between">
             {/* Column 1 */}
-            <div className="flex flex-col justify-center items-start ml-10">
+            <div className="flex flex-col justify-center items-start mx-20">
               <Typography variant="h4"> My Prescriptions </Typography>
             </div>
 
-            <div className="flex justify-between items-end mr-10">
-                <div className="flex flex-col justify-center items-start mr-10">
+            <div className="flex justify-between gap-5 items-end mr-10">
+                <div className="flex flex-col justify-center items-start">
                     <CustomizedPDF auxInfo={{providerCode: providerCode}}/>
                 </div>
                 <div className="flex flex-col justify-center items-start">
