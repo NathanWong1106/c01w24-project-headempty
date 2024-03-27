@@ -41,8 +41,9 @@ export const ActionNeededDialog = ({ patient, headerText}) => {
         patchFields.forEach(field => {
             const [state] = fieldMapping[field];
             obj[patchFieldMapping[field]] = state;
-            obj["email"] = patient.email
         })
+
+        obj["email"] = patient.email
 
         return obj;
     }

@@ -83,7 +83,7 @@ const PatientPrescriptions = () => {
                 }
                 {
                     (prescription.prescribed && (!address || !province || !city)) ? <td className="p-2">
-                        <Tooltip content="Add address">
+                        <Tooltip content="Address Needed">
                             <ActionNeededDialog patient={patient} headerText={`Edit ${patient.firstName} ${patient.lastName} | ${patient.email}`}/>
                         </Tooltip>
                     </td> : <div></div>
