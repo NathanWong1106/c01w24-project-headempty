@@ -1,7 +1,8 @@
 import {
     Input,
     Typography,
-    Tooltip
+    Tooltip,
+    Button
 } from "@material-tailwind/react";
 import { useState } from "react";
 import { getPaginatedPrescribers } from "../../apiServices/adminService";
@@ -66,6 +67,20 @@ const PrescriberManagement = () => {
     }
 
     const createRow = (prescriber) => {
+
+
+        const copyToClipboard = async (path) => {
+            const fullUrl = `${window.location.origin}${path}`;
+
+            try {
+                await navigator.clipboard.writeText(fullUrl);
+                // Show a message or tooltip indicating success
+                alert("Link copied to clipboard!"); // Consider using a more elegant solution like a tooltip or snackbar
+            } catch (err) {
+                console.error("Failed to copy!", err);
+            }
+        }
+    
         return (
             <tr key={prescriber['providerCode']}>
                 {
@@ -73,8 +88,10 @@ const PrescriberManagement = () => {
                         <td key={prescriber['providerCode'] + '_' + field} className="p-4">
                             <div className="flex items-center">
                                 {field === "Registration Link" ? (
-                                    <a href={`/register/${prescriber.id}`}>Registration Link</a>
-                                ) : (
+                                <Button size="sm" color="blue" onClick={() => copyToClipboard(`/register/${prescriber.id}`)}>
+                                Copy Registration Link
+                                </Button>
+                            ) : (
                                     prescriber[prescriberField2PrescriberInfo[field]] !== null ?
                                         prescriber[prescriberField2PrescriberInfo[field]].toString() :
                                         null
@@ -91,7 +108,7 @@ const PrescriberManagement = () => {
             </tr>
         )
     }
-
+    
     return (
         <div className="flex flex-col h-screen justify-center items-center">
             <Typography variant="h3">Prescriber Management</Typography>
