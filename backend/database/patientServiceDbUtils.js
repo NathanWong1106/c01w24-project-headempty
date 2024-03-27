@@ -13,7 +13,7 @@ export async function postSinglePatientPrescription(providerCode, posts) {
     const postObj = await objWithFields(posts, patientPrescriptionSearchSchema);
     const collection = getDb().collection(COLLECTIONS.PATIENT_PRESCRIPTIONS);
     const data = await collection.insertOne(postObj);
-    return data.acknowledged;
+    return true;
 }
 
 
@@ -59,9 +59,9 @@ export async function getMatchingPatientPrescription(providerCode, date, initial
     return [false, null];
 }
 
-export async function patchPatientPrescriptionStatus(id, patStatus) {
+export async function patchPatientPrescriptionStatus(id, checked, patStatus) {
     const collection = getDb().collection(COLLECTIONS.PATIENT_PRESCRIPTIONS);
-    const data = await collection.updateOne({ _id: new ObjectId(id) }, { $set: { status: patStatus } });
+    const data = await collection.updateOne({ _id: new ObjectId(id) }, { $set: { status: patStatus, prescribed: checked} });
 
     if (data.matchedCount === 1) {
         return true;
