@@ -9,6 +9,7 @@ import { fillPrescriberPrescription } from "./prescriberServiceDbUtils.js";
 import { fillPatientPrescription } from "./patientServiceDbUtils.js";
 import { PRESCRIBER_PRESCRIPTION_STATUS, PATIENT_PRESCRIPTION_STATUS } from "../types/prescriptionTypes.js";
 import { retryPromiseWithDelay } from "../utils.js";
+import { createPrescriber, getExistingPrescriber } from "./verificationServiceDbUtils.js"
 
 /**
  * Get a page from all prescribers 
@@ -47,35 +48,15 @@ export async function patchSinglePrescriber(providerCode, patches) {
 
 export async function addSinglePrescriber(prescriber) {
     try {
-        const collection = getDb().collection(COLLECTIONS.PRESCRIBER);
-        const existingUser = await retryPromiseWithDelay(collection.findOne({
-            firstName: prescriber.firstName,
-            lastName: prescriber.lastName,
-            province: prescriber.province,
-            licensingCollege: prescriber.licensingCollege,
-            licenceNumber: prescriber.licenceNumber
-        }))
-
-        if (existingUser) {
+        if (await getExistingPrescriber(prescriber)) {
             return { data: null, error: "Already added" };
         }
 
-        const data = await retryPromiseWithDelay(collection.insertOne({
-            email: "",
-            password: "",
-            firstName: prescriber.firstName,
-            lastName: prescriber.lastName,
-            language: "",
-            city: "",
-            province: prescriber.province,
-            address: "",
-            profession: "",
-            providerCode: "",
-            licensingCollege: prescriber.licensingCollege,
-            licenceNumber: prescriber.licenceNumber,
-            registered: true
-        }));
-        return { data: data, error: null };
+        if (!(await createPrescriber(prescriber))) {
+            return { data: null, error: "Failed to create prescriber" };
+        } else {
+            return { data: "Success", error: null }
+        }
     } catch (error) {
         console.error('Error adding patient:', error.message);
         return { data: null, error: error };

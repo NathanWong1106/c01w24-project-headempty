@@ -7,12 +7,12 @@ import { BaseAddPrescriber } from "./BaseAddPrescriber";
  * 
  * @param {{open, setOpenNewPatient}} props
  */
-export const AddPrescriber = ({ open, setOpenNewPatient }) => {
+export const AddPrescriber = ({ open, setOpenNewPrescriber }) => {
 
     return (
         <BaseAddPrescriber
             open={open}
-            setOpen={setOpenNewPatient}
+            setOpen={setOpenNewPrescriber}
             fields={prescriberAddFields}
             passedFieldMapping={prescriberField2PrescriberInfo}
             doAdd={async (prescriber) => { return await addPrescriber(prescriber) }}

@@ -7,11 +7,10 @@ import {
     CardFooter,
 } from "@material-tailwind/react";
 import { useState } from "react";
-import { AddPrescriber } from "./AddPrescriber"
 
 const PaginatedTableWithSearch = ({ dataList, searchFn, searchForm, cols, createRow, pageSize }) => {
 
-    const [openNewPatient, setOpenNewPatient] = useState(false);
+
 
     // State to enable pagination
     const [page, setPage] = useState(1);
@@ -79,13 +78,7 @@ const PaginatedTableWithSearch = ({ dataList, searchFn, searchForm, cols, create
                 </table>
             </CardBody>
             <div className="flex flex-grow flex-col-reverse">
-                <CardFooter className="flex justify-between border-t gap-3 p-4">
-                    <div>
-                        <Button onClick={() => setOpenNewPatient(true)} size="sm">
-                            Add Prescriber
-                        </Button>
-                        <AddPrescriber open={openNewPatient} setOpenNewPatient={setOpenNewPatient} />
-                    </div>
+                <CardFooter className="flex justify-end border-t gap-3 p-4">
                     <div className="flex gap-3">
                         <Button disabled={!prevEnabled} onClick={prevPage} size="sm">
                             Previous
