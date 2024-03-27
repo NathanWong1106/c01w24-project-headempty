@@ -9,6 +9,7 @@ import { getPaginatedPrescribers } from "../../apiServices/adminService";
 import { prescriberField2PrescriberInfo, prescriberFields } from "../../apiServices/types/adminServiceTypes";
 import { EditPrescriberDialog } from "../../components/EditPrescriberDialog";
 import PaginatedTableWithSearch from "../../components/PaginatedTableWithSearch";
+import { AddPrescriber } from "../../components/AddPrescriber"
 
 const PAGE_SIZE = 20;
 
@@ -23,6 +24,7 @@ const PrescriberManagement = () => {
     const [providerCode, setProviderCode] = useState("");
     const [licensingCollege, setlicensingCollege] = useState("");
     const [licenceNumber, setLicenceNumber] = useState("");
+    const [openNewPrescriber, setOpenNewPrescriber] = useState(false);
 
     // Search obj
     const [prevSearch, setPrevSearch] = useState({});
@@ -80,7 +82,7 @@ const PrescriberManagement = () => {
                 console.error("Failed to copy!", err);
             }
         }
-    
+
         return (
             <tr key={prescriber['providerCode']}>
                 {
@@ -88,14 +90,14 @@ const PrescriberManagement = () => {
                         <td key={prescriber['providerCode'] + '_' + field} className="p-4">
                             <div className="flex items-center">
                                 {field === "Registration Link" ? (
-                                <Button size="sm" color="blue" onClick={() => copyToClipboard(`/register/${prescriber.id}`)}>
-                                Copy Registration Link
-                                </Button>
-                            ) : (
+                                    <Button size="sm" color="blue" onClick={() => copyToClipboard(`/register/${prescriber.id}`)}>
+                                        Copy Registration Link
+                                    </Button>
+                                ) : (
                                     prescriber[prescriberField2PrescriberInfo[field]] !== null ?
                                         prescriber[prescriberField2PrescriberInfo[field]].toString() :
                                         null
-                                )}                            
+                                )}
                             </div>
                         </td>
                     ))
@@ -108,10 +110,25 @@ const PrescriberManagement = () => {
             </tr>
         )
     }
-    
+
     return (
-        <div className="flex flex-col h-screen justify-center items-center">
-            <Typography variant="h3">Prescriber Management</Typography>
+        <div className="flex flex-col h-screen">
+            <div className="mt-12">
+                <div className="flex justify-between">
+                    {/* Column 1 */}
+                    <div className="flex flex-col justify-center items-start ml-10">
+                        <Typography variant="h4"> Prescriber Management </Typography>
+                    </div>
+
+                    {/* Column 2 */}
+                    <div className="flex flex-col justify-center items-end mr-10">
+                        <Button className="mt-6 bg-moss-green border-2 border-moss-green" onClick={() => setOpenNewPrescriber(true)}>
+                            Add Prescriber
+                        </Button>
+                        <AddPrescriber open={openNewPrescriber} setOpenNewPrescriber={setOpenNewPrescriber} />
+                    </div>
+                </div>
+            </div>
             <PaginatedTableWithSearch
                 dataList={prescriberList}
                 searchFn={searchFn}
