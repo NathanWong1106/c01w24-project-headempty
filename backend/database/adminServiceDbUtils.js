@@ -25,7 +25,7 @@ export async function getPaginatedPrescriber(page, pageSize, search) {
 }
 
 function fillPrescriber(x) {
-    return new PrescriberInfo(x.email, x.firstName, x.lastName,
+    return new PrescriberInfo(x._id, x.email, x.firstName, x.lastName,
         x.language, x.city, x.province,
         x.address, x.profession, x.providerCode,
         x.licensingCollege, x.licenceNumber, x.registered);
