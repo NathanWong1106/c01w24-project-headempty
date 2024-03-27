@@ -1,5 +1,5 @@
 import { PatientPrescription } from "./types/prescriptionTypes";
-import { callProtectedEndpoint } from "./utils/apiUtils"
+import { callProtectedEndpoint, callEndpoint } from "./utils/apiUtils"
 import { SERVER_PATHS } from "./utils/constants"
 
 /**
@@ -22,4 +22,20 @@ export const getPaginatedPatientPrescriptions = async (page, pageSize, search) =
     )
 
     return res.status != 200 ? null : (await res.json())['list'];
+}
+
+export const postPatientPrescription = async (providerCode, prscn_date, patientInit, checked, postObj) => {
+    const res = await callProtectedEndpoint(
+        SERVER_PATHS.PATIENT_SERVICE.POST_PRESCRIPTION,
+        'POST',
+        {
+            providerCode: providerCode,
+            prscn_date: prscn_date,
+            patientInit: patientInit,
+            checked: checked,
+            postObj: postObj
+        
+        }
+    )
+    return res.status == 200;
 }

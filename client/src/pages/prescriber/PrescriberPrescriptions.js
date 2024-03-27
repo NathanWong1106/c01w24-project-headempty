@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import { getPaginatedPrescriberPrescriptions } from "../../apiServices/prescriberService";
 import { prescriptionField2PrescriptionInfo, prescriptionFields } from "../../apiServices/types/prescriptionTypes";
 import PaginatedTableWithSearch from "../../components/PaginatedTableWithSearch";
+import { PrescriptionLogForm } from "../../components/PrescriptionLogForm.js";
 import CustomizedPDF from "../../components/CustomizedPDF";
 
 const PAGE_SIZE = 20;
@@ -17,7 +18,7 @@ const PrescriberPrescriptions = () => {
     const [prescriptionList, setPrescriptionList] = useState([]);
     // Search fields
     const [date, setDate] = useState("");
-    const [initials, setInitials] = useState("");
+    const [initial, setInitials] = useState("");
     const [prescribed, setPrescribed] = useState("");
     const [status, setStatus] = useState("");
     // Search obj
@@ -30,7 +31,7 @@ const PrescriberPrescriptions = () => {
         return {
             ...({ providerCode: providerCode }),
             ...(date && { date: date }),
-            ...(initials && { initials: initials }),
+            ...(initial && { initial: initial }),
             ...(prescribed && { prescribed: prescribed }),
             ...(status && { status: status }),
         }
@@ -40,7 +41,7 @@ const PrescriberPrescriptions = () => {
         <div className="flex flex-col w-5/6">
             <div className="flex items-start gap-8">
                 <Input size="md" label="Date" value={date} onChange={el => setDate(el.target.value)} />
-                <Input size="md" label="Patient Initials" value={initials} onChange={el => setInitials(el.target.value)} />
+                <Input size="md" label="Patient Initials" value={initial} onChange={el => setInitials(el.target.value)} />
             </div>
             <div className="mt-2 flex items-start gap-8">
                 <Input size="md" label="Discovery Pass" value={prescribed} onChange={el => setPrescribed(el.target.value)} />
@@ -84,23 +85,37 @@ const PrescriberPrescriptions = () => {
     }
 
     return (
-        <div className="flex flex-col h-screen justify-center items-center">
-            <div className="flex justify-between w-full">
-                <Typography variant="h3" className="mx-20">My Prescriptions</Typography>
-                <div className="mx-40">
+
+        //GUYS THIS IS KILLING ME IF I USE ITEMS-CENTER ON THE HWOLE DIV THE PRESC/BUTTON GO TO THE CENTER BUT IF I DONT
+        //THE TABLE IS OFF CENTER AND ANY OTHER WRAPPING MAKES THE TABLE WONKY PLS HELP PLSPLS
+      <div className="flex flex-col h-screen">
+        <div className="mt-12">
+          <div className="flex justify-between">
+            {/* Column 1 */}
+            <div className="flex flex-col justify-center items-start mx-20">
+              <Typography variant="h4"> My Prescriptions </Typography>
+            </div>
+
+            <div className="flex justify-between gap-5 items-end mr-10">
+                <div className="flex flex-col justify-center items-start">
                     <CustomizedPDF auxInfo={{providerCode: providerCode}}/>
                 </div>
+                <div className="flex flex-col justify-center items-start">
+                    <PrescriptionLogForm/>
+                </div>
             </div>
-            <PaginatedTableWithSearch
-                dataList={prescriptionList}
-                searchFn={searchFn}
-                searchForm={prescriptionSearchForm}
-                cols={[...prescriptionFields]}
-                createRow={createRow}
-                pageSize={PAGE_SIZE}
-            />
+          </div>
         </div>
-    )
+            <PaginatedTableWithSearch
+            dataList={prescriptionList}
+            searchFn={searchFn}
+            searchForm={prescriptionSearchForm}
+            cols={[...prescriptionFields]}
+            createRow={createRow}
+            pageSize={PAGE_SIZE}
+            />
+      </div>
+    );
 }
 
 export default PrescriberPrescriptions;

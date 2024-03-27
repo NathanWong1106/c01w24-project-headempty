@@ -20,11 +20,15 @@ export const SERVER_PATHS = {
         PATCH_SINGLE_PATIENT_PRESCRIPTION: "/coordinator/patchSinglePatientPrescription",
         DELETE_PATIENT_PRESCRIPTION: "/coordinator/deletePatientPrescription",
     },
+
     VERIFY_PRESCRIBERS: "/verification/verifyPrescribers",
     PRESCRIBER_SERVICE: {
-        GET_PAGINATED_PRESCRIPTIONS: "/prescriber/getPaginatedPrescriptions"
+        GET_PAGINATED_PRESCRIPTIONS: "/prescriber/getPaginatedPrescriptions",
+        POST_PRESCRIPTION: "/prescriber/postPrescription",
     },
+
     PATIENT_SERVICE: {
-        GET_PAGINATED_PRESCRIPTIONS: "/patient/getPaginatedPrescriptions"
+        GET_PAGINATED_PRESCRIPTIONS: "/patient/getPaginatedPrescriptions",
+        POST_PRESCRIPTION: "/patient/postPrescription",
     }
 }
