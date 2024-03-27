@@ -66,17 +66,3 @@ export const patchAddress = createAsyncThunk(
         }
     }
 )
-
-/*
-export const patchAddress = async (email, patches) => {
-    const res = await callProtectedEndpoint(
-        SERVER_PATHS.PATIENT_SERVICE.PATCH_ADDRESS,
-        'PATCH',
-        {
-            email: email,
-            patches: patches
-        }
-    )
-    return await res.json();
-}
-*/

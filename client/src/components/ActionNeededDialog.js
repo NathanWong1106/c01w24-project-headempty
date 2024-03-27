@@ -41,6 +41,7 @@ export const ActionNeededDialog = ({ patient, headerText}) => {
         patchFields.forEach(field => {
             const [state] = fieldMapping[field];
             obj[patchFieldMapping[field]] = state;
+            obj["email"] = patient.email
         })
 
         return obj;
@@ -48,9 +49,7 @@ export const ActionNeededDialog = ({ patient, headerText}) => {
 
     const handleConfirmChanges = async () => {
         try {
-            const input = { email : patient.email, address : fieldMapping["Address"][0], city : fieldMapping["City"][0], province : fieldMapping["Province"][0]}
-            const res = await dispatch(patchAddress(input)).unwrap();
-//            const res = await patchAddress(patient.email, buildPatchObj());
+            const res = await dispatch(patchAddress(buildPatchObj())).unwrap();
             res ? setShowSuccess(true) : setShowFailure(true);
         } catch (err) {
             setShowFailure(true);
