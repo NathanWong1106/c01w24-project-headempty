@@ -8,7 +8,6 @@ import { prescriberSearchSchema, prescriberPatchSchema, adminPrescriberPrescript
 import { fillPrescriberPrescription } from "./prescriberServiceDbUtils.js";
 import { fillPatientPrescription } from "./patientServiceDbUtils.js";
 import { PRESCRIBER_PRESCRIPTION_STATUS, PATIENT_PRESCRIPTION_STATUS } from "../types/prescriptionTypes.js";
-import { retryPromiseWithDelay } from "../utils.js";
 import { createPrescriber, getExistingPrescriber } from "./verificationServiceDbUtils.js"
 
 /**
