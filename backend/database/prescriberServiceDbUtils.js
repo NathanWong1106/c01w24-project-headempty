@@ -14,6 +14,7 @@ export async function postSinglePrescription(providerCode, posts) {
     const collection = getDb().collection(COLLECTIONS.PRESCRIBER_PRESCRIPTIONS);
     const data = await collection.insertOne(postObj);
     return true;
+}
 
 /**
  * Get a page from prescriber's prescriptions 
