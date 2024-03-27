@@ -7,6 +7,7 @@ export const COLLECTIONS = {
     PATIENT_PRESCRIPTIONS: "patient_prescriptions",
     PRESCRIBER_PRESCRIPTIONS: "prescriber_prescriptions",
     PROVIDER_CODE_NUMBER: "provider_code_number",
+    PATIENT_PRESCRIPTIONS: "patient_prescriptions"
 }
 
 export const SERVER = {
@@ -30,3 +31,8 @@ export const COLLEGES = [
     "Collège des médecins du Québec",
     "College of Physicians and Surgeons of Saskatchewan",
 ];
+
+export const PRESCRIPTION_TYPES = {
+    PRESCRIBER: "prescriber",
+    PATIENT: "patient",
+}

@@ -59,7 +59,7 @@ export const BaseEditDialog = ({ objToPatch, patchFields, patchFieldMapping, doP
             </Tooltip>
             <Dialog open={open} handler={handleOpen}>
                 <DialogHeader>{headerText}</DialogHeader>
-                <DialogBody className="h-[42rem] overflow-scroll">
+                <DialogBody className="overflow-y-auto max-h-[calc(100vh-157px)]">
                     <div className="flex flex-col justify-between gap-8">
                         {
                             patchFields.map(field => {
