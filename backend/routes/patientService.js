@@ -7,6 +7,7 @@ import { postSinglePatientPrescription } from "../database/patientServiceDbUtils
 import { getPaginatedPatientPrescription } from "../database/patientServiceDbUtils.js";
 import { getMatchingPrescriberPrescription, patchPrescriberPrescriptionStatus } from "../database/prescriberServiceDbUtils.js";
 import { PATIENT_PRESCRIPTION_STATUS, PRESCRIBER_PRESCRIPTION_STATUS } from "../types/prescriptionTypes.js";
+import { patchPatientAddress } from "../database/patientServiceDbUtils.js";
 export const patientRouter = express.Router();
 
 
@@ -92,6 +93,39 @@ patientRouter.post("/getPaginatedPrescriptions", express.json(), async (req, res
         const retList = await getPaginatedPatientPrescription(page, pageSize, search);
 
         return res.status(200).json({ list: retList });
+    } catch (err) {
+        return res.status(500).json({ error: err.message });
+    }
+})
+
+/**
+ * Patch a single patient's address.
+ * 
+ * Needs to be authorized (use middleware patientRoute).
+ * 
+ * Expected body: {
+ *  email: String
+ *  address: String?
+ *  city: String?
+ *  province: String?
+ * 
+ * Response: { patient } | {error: String}
+ * Response status: 200 - OK, else error
+ * }
+ */
+patientRouter.patch("/patchAddress", express.json(), async (req, res) => {
+    try {
+        const { email, address, city, province } = req.body;
+
+        if (email === null || address === null || city == null || province == null) {
+            return res.status(400).json({ error: "An email and patches object must be provided." });
+        }
+        const data =  await patchPatientAddress(email, address, city, province)
+        if (data) {
+            return res.status(200).json(data);
+        } else {
+            return res.status(404).json({ error: `Failed to find patient with email: ${email}` });
+        }
     } catch (err) {
         return res.status(500).json({ error: err.message });
     }

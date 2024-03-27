@@ -1,6 +1,7 @@
 import {
     Input,
     Typography,
+    Tooltip
 } from "@material-tailwind/react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -8,6 +9,7 @@ import { getPaginatedPatientPrescriptions } from "../../apiServices/patientServi
 import { prescriptionField2PrescriptionInfo, prescriptionFields } from "../../apiServices/types/prescriptionTypes";
 import PaginatedTableWithSearch from "../../components/PaginatedTableWithSearch";
 import { PrescriptionLogForm } from "../../components/PrescriptionLogForm.js";
+import { ActionNeededDialog } from "../../components/ActionNeededDialog.js";
 
 const PAGE_SIZE = 20;
 
@@ -22,7 +24,8 @@ const PatientPrescriptions = () => {
     // Search obj
     const [prevSearch, setPrevSearch] = useState({});
 
-    const email = useSelector(state => state.currentUser.auxInfo.email);
+    const patient = useSelector(state => state.currentUser.auxInfo);
+    const { email, address, province, city } = patient;
 
     const getSearchObj = () => {
         // Note: the empty string is falsy in js
@@ -78,6 +81,13 @@ const PatientPrescriptions = () => {
                         </td>
                     ))
                 }
+                {
+                    (prescription.prescribed && (!address || !province || !city)) ? <td className="p-2">
+                        <Tooltip content="Add address">
+                            <ActionNeededDialog patient={patient} headerText={`Edit ${patient.firstName} ${patient.lastName} | ${patient.email}`}/>
+                        </Tooltip>
+                    </td> : <div></div>
+                }
             </tr>
         )
     }
@@ -101,7 +111,7 @@ const PatientPrescriptions = () => {
                 dataList={prescriptionList}
                 searchFn={searchFn}
                 searchForm={prescriptionSearchForm}
-                cols={[...prescriptionFields]}
+                cols={[...prescriptionFields, ""]}
                 createRow={createRow}
                 pageSize={PAGE_SIZE}
             />

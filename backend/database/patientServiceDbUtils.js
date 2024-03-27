@@ -4,7 +4,7 @@ import { getDb } from "./dbConnection.js";
 import paginate from "./pagination.js";
 import { objWithFields } from "./utils/dbUtils.js";
 
-import { patientPrescriptionFindSchema, patientPrescriptionSearchSchema, prescriberPrescriptionSearchSchema } from "../schemas.js"; 
+import { patientPrescriptionFindSchema, patientPrescriptionSearchSchema, prescriberPrescriptionSearchSchema, patientPatchSchema } from "../schemas.js"; 
 import { ObjectId } from "mongodb";
 
 
@@ -70,3 +70,18 @@ export async function patchPatientPrescriptionStatus(id, checked, patStatus) {
     }
 }
 
+/**
+ * Patch a single patient with patches
+ * @param {string} email email of the patient
+ * @param {String} address updated address
+ * @param {String} city updated city
+ * @param {String} province updated province
+ * @returns {Object} return updated patient document
+ */
+export async function patchPatientAddress(email, address, city, province) {
+    const collection = getDb().collection(COLLECTIONS.PATIENT);
+    const data = await collection.findOneAndUpdate({ email: email },  
+        { $set: { address, city, province } },
+        { returnDocument: 'after' });
+    return data
+}

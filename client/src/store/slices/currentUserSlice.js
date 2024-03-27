@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { loginUser } from "../../apiServices/authService";
+import { patchAddress } from "../../apiServices/patientService";
 import { setAPIToken } from "../../apiServices/utils/apiUtils";
 
 export const currentUserSlice = createSlice({
@@ -40,8 +41,13 @@ export const currentUserSlice = createSlice({
             .addCase(loginUser.rejected, (state, action) => {
                 setAPIToken ("");
             })
+            .addCase(patchAddress.fulfilled, (state, action) => {
+                state.auxInfo = action.payload;
+            })
     }
 })
+
+
 
 export const { logoutUser } = currentUserSlice.actions;
 
