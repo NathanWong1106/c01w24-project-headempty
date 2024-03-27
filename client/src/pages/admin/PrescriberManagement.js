@@ -142,9 +142,4 @@ const PrescriberManagement = () => {
 
 }
 
-{/* <Button onClick={() => setopenNewPrescriber(true)} size="sm">
-                            Add Prescriber
-                        </Button>
-                        <AddPrescriber open={openNewPrescriber} setopenNewPrescriber={setopenNewPrescriber} /> */}
-
 export default PrescriberManagement;
