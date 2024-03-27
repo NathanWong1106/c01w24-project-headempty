@@ -27,10 +27,12 @@ patientRouter.post("/postPrescription", express.json(), async (req, res) => {
         }
 
         //checking if there is a matching prescription logged by a patient
-        const [matchFound, matchID ] = await getMatchingPrescriberPrescription(providerCode, prscn_date, patientInit);
+        const [matchFound, matchID, matchCheck ] = await getMatchingPrescriberPrescription(providerCode, prscn_date, patientInit);
         if (matchFound) {
+            console.log(matchCheck);
+            postObj["prescribed"] = matchCheck;
             let presStatus;
-            if (checked) {
+            if (matchCheck) {
                 postObj["status"] = PATIENT_PRESCRIPTION_STATUS.LOGGED;
                 presStatus = PRESCRIBER_PRESCRIPTION_STATUS.LOGGED;
     
@@ -46,8 +48,7 @@ patientRouter.post("/postPrescription", express.json(), async (req, res) => {
         } else {
             postObj["status"] = PATIENT_PRESCRIPTION_STATUS.NOT_LOGGED;
         }
-        console
-
+        
         //actually posting the new prescription for the prescriber, now with the status
         const ret = await postSinglePatientPrescription(providerCode, postObj);
         if (ret){
