@@ -29,7 +29,6 @@ patientRouter.post("/postPrescription", express.json(), async (req, res) => {
         //checking if there is a matching prescription logged by a patient
         const [matchFound, matchID, matchCheck ] = await getMatchingPrescriberPrescription(providerCode, prscn_date, patientInit);
         if (matchFound) {
-            console.log(matchCheck);
             postObj["prescribed"] = matchCheck;
             let presStatus;
             if (matchCheck) {
