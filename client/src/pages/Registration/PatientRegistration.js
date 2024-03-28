@@ -28,7 +28,7 @@ const PatientRegistration = () => {
         let error = '';
 
         // Check if any of the required fields are empty
-        if (!email || !fName || !lName || !initials || !preferredLanguage || !address || !city || !province || !password || !retypepassword) {
+        if (!email || !fName || !lName || !initials || !preferredLanguage || !password || !retypepassword) {
             // Construct the error message
             error = "Please fill in the following fields: ";
             if (!email) error += "Email, ";
@@ -36,9 +36,6 @@ const PatientRegistration = () => {
             if (!lName) error += "Last Name, ";
             if (!initials) error += "Initials, ";
             if (!preferredLanguage) error += "Preferred Language, ";
-            if (!address) error += "Address, ";
-            if (!city) error += "City, ";
-            if (!province) error += "Province, ";
             if (!password) error += "Password, ";
             if (!retypepassword) error += "Re-type Password, ";
             error = error.slice(0, -2);
@@ -171,7 +168,7 @@ const PatientRegistration = () => {
                             </div>
                             {/* Add more pairs of input fields and labels here */}
                             <Typography variant="h6" className="mb-1 mt-2">
-                                Address
+                                Address (optional)
                             </Typography>
                             <Input
                                 size="lg"
@@ -184,7 +181,7 @@ const PatientRegistration = () => {
                                 onChange={el => setAddress(el.target.value)}
                             />
                             <Typography variant="h6" className="mb-1 mt-2">
-                                City
+                                City (optional)
                             </Typography>
                             <Input
                                 size="lg"
@@ -197,7 +194,7 @@ const PatientRegistration = () => {
                                 onChange={el => setCity(el.target.value)}
                             />
                             <Typography variant="h6" className="mb-1 mt-2">
-                                Province
+                                Province (optional)
                             </Typography>
                             <Input
                                 size="lg"

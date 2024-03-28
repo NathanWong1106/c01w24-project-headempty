@@ -11,6 +11,7 @@ import {
     patchSinglePrescriber,
     patchSinglePrescription,
     deletePrescription,
+    addSinglePrescriber
 } from "../database/adminServiceDbUtils.js";
 import { adminPrescriberPrescriptionPatchSchema } from "../schemas.js";
 import { PATIENT_PRESCRIPTION_STATUS, PRESCRIBER_PRESCRIPTION_STATUS } from "../types/prescriptionTypes.js";
@@ -103,17 +104,40 @@ adminRouter.patch("/patchPrescriber", express.json(), async (req, res) => {
     }
 })
 
+adminRouter.post("/addPrescriber", express.json(), async (req, res) => {
+    try {
+        const { prescriber } = req.body;
+        console.log(prescriber);
+
+        if (prescriber === null) {
+            return res.status(400).json({ error: "A prescriber object must be provided." });
+        }
+
+        if (prescriber.firstName === "" || prescriber.lastName === "" || prescriber.province === "" || prescriber.licensingCollege === "" || prescriber.licenceNumber === "") {
+            return res.status(400).json({ error: "missing fields" });
+        }
+
+        let addedPrescriber = await addSinglePrescriber(prescriber);
+        if (addedPrescriber.data) {
+            return res.status(200).json({ data: addedPrescriber.data });
+        } else {
+            return res.status(401).json({ error: addedPrescriber.error });
+        }
+    } catch (err) {
+        return res.status(500).json({ error: err.message });
+    }
+})
 /**
  * Get a paginated list of all prescriber prescriptions.
- * 
+ *
  * Needs to be authorized (use middleware adminRoute).
- * 
+ *
  * Expected body: {
  *  page: Number (1-indexed)
  *  pageSize: Number
  *  search: Object
  * }
- * 
+ *
  * Response: { list: PrescriberPrescription[] } | {error: String}
  * Response Status: 200 - OK, else error
  */
@@ -139,13 +163,13 @@ adminRouter.post("/getAdminPaginatedPrescriberPrescription", express.json(), asy
 
 /**
  * Get a single prescriber prescription.
- * 
+ *
  * Needs to be authorized (use middleware adminRoute).
- * 
+ *
  * Expected body: {
  *  search: Object
  * }
- * 
+ *
  * Response: { prescription: PrescriberPrescription } | {error: String}
  * Response Status: 200 - OK, else error
  */
@@ -165,12 +189,12 @@ adminRouter.post("/getAdminSinglePrescriberPrescription", express.json(), async 
 })
 
 /**
- * Patch a single prescriber's prescription. 
- * Valid fields for patch can be found in adminDbUtils. 
+ * Patch a single prescriber's prescription.
+ * Valid fields for patch can be found in adminDbUtils.
  * Any other fields passed through patches will be ignored.
- * 
+ *
  * Needs to be authorized (use middleware adminRoute).
- * 
+ *
  * Expected body: {
  *  providerCode: String
  *  initial: String
@@ -183,7 +207,7 @@ adminRouter.post("/getAdminSinglePrescriberPrescription", express.json(), async 
  *      prescribed: Boolean?
  *      status: String?
  *  }
- * 
+ *
  * Response: {message: String} | {error: String}
  * Response status: 200 - OK, else error
  * }
@@ -216,13 +240,13 @@ adminRouter.patch("/patchSinglePrescriberPrescription", express.json(), async (r
 
 /**
  * Delete a single prescriber prescription.
- * 
+ *
  * Needs to be authorized (use middleware adminRoute).
- * 
+ *
  * Expected body: {
  *  search: Object
  * }
- * 
+ *
  * Response: { message: String } | {error: String}
  * Response Status: 200 - OK, else error
  */
@@ -243,13 +267,13 @@ adminRouter.post("/deletePrescriberPrescription", express.json(), async (req, re
 
 /**
  * Get a single patient prescription.
- * 
+ *
  * Needs to be authorized (use middleware adminRoute).
- * 
+ *
  * Expected body: {
  *  search: Object
  * }
- * 
+ *
  * Response: { prescription: PatientPrescription } | {error: String}
  * Response Status: 200 - OK, else error
  */

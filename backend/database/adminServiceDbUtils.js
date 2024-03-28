@@ -8,6 +8,7 @@ import { prescriberSearchSchema, prescriberPatchSchema, adminPrescriberPrescript
 import { fillPrescriberPrescription } from "./prescriberServiceDbUtils.js";
 import { fillPatientPrescription } from "./patientServiceDbUtils.js";
 import { PRESCRIBER_PRESCRIPTION_STATUS, PATIENT_PRESCRIPTION_STATUS } from "../types/prescriptionTypes.js";
+import { createPrescriber, getExistingPrescriber } from "./verificationServiceDbUtils.js"
 
 /**
  * Get a page from all prescribers 
@@ -44,6 +45,22 @@ export async function patchSinglePrescriber(providerCode, patches) {
     return data.matchedCount === 1;
 }
 
+export async function addSinglePrescriber(prescriber) {
+    try {
+        if (await getExistingPrescriber(prescriber)) {
+            return { data: null, error: "Already added" };
+        }
+
+        if (!(await createPrescriber(prescriber))) {
+            return { data: null, error: "Failed to create prescriber" };
+        } else {
+            return { data: "Success", error: null }
+        }
+    } catch (error) {
+        console.error('Error adding patient:', error.message);
+        return { data: null, error: error };
+    }
+}
 /**
  * Get a page of prescriber prescriptions 
  * @param {Number} page the page number
@@ -124,7 +141,7 @@ export async function patchSinglePrescription(
         initial: initial,
         date: date,
     });
-    
+
     if (!altPrescription) {
         // No update to status, update other fields
         if (!("status" in patchObj) || patchObj["status"] === mainStatusEnum.NOT_LOGGED) {
