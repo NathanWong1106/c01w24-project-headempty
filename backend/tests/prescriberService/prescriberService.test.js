@@ -69,11 +69,11 @@ test("/prescriber/getPaginatedPrescriptions - wrong prescriber code check", asyn
 
 test("postSinglePrescription - should return success response", async () => {
     const providerCode = "ON-JC001";
-    const patches = [
-        { providerCode: "ON-JC001", date: "2021-10-01", initial: "JL", prescribed: true, status: ""},
-    ];
+    const prscn_date = "2021-10-01";
+    const patientInit = "JL";
+    const postObj = { providerCode: "ON-JC001", date: "2021-10-01", initial: "JL", prescribed: true, status: ""};
 
-    const res = await postSinglePrescription(providerCode, patches);
+    const res = await fetchAsPrescriber(prescriberToken, "/prescriber/postPrescription", "POST", { providerCode, prscn_date, patientInit, postObj });
 
     expect(res.status).toBe(200);
 });
@@ -81,16 +81,15 @@ test("postSinglePrescription - should return success response", async () => {
 test("postSinglePrescription - should return error response for missing initials", async () => {
     // Mock the necessary data
     const providerCode = "ON-JC000";
-    const patches = [
-        { providerCode: "ON-JC001", date: "2021-10-01", initial: "", prescribed: true, status: ""}
-    ];
+    const prscn_date = "";
+    const patientInit = "";
+    const postObj = { providerCode: "ON-JC001", date: "2021-10-01", initial: "", prescribed: true, status: ""};
 
     // Call the function being tested
-    const res = await postSinglePrescription(providerCode, patches);
+    const res = await fetchAsPrescriber(prescriberToken, "/prescriber/postPrescription", "POST", { providerCode, prscn_date, patientInit, postObj })
 
     // Assert the response
     expect(res.status).toBe(400);
     const responseBody = await res.json();
-    expect(responseBody.success).toBe(false);
-    expect(responseBody.error).toBe("A providerCode, date, and initial must be provided.");
+    expect(responseBody.error).toBe("Provider Code, Prescription Date and Patient Initials must be provided");
 });
