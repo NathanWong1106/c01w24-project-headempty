@@ -8,7 +8,10 @@ import { useSelector } from "react-redux";
 import { getPaginatedPrescriberPrescriptions } from "../../apiServices/prescriberService";
 import { prescriptionField2PrescriptionInfo, prescriptionFields } from "../../apiServices/types/prescriptionTypes";
 import PaginatedTableWithSearch from "../../components/PaginatedTableWithSearch";
+<<<<<<< HEAD
 import { PrescriptionLogForm } from "../../components/PrescriptionLogForm.js";
+=======
+>>>>>>> 31c4c9ee3f8afe094a8aa16e0bf25898433159d7
 import CustomizedPDF from "../../components/CustomizedPDF";
 
 const PAGE_SIZE = 20;
@@ -85,6 +88,7 @@ const PrescriberPrescriptions = () => {
     }
 
     return (
+<<<<<<< HEAD
 
         //GUYS THIS IS KILLING ME IF I USE ITEMS-CENTER ON THE HWOLE DIV THE PRESC/BUTTON GO TO THE CENTER BUT IF I DONT
         //THE TABLE IS OFF CENTER AND ANY OTHER WRAPPING MAKES THE TABLE WONKY PLS HELP PLSPLS
@@ -105,6 +109,23 @@ const PrescriberPrescriptions = () => {
                 </div>
             </div>
           </div>
+=======
+        <div className="flex flex-col h-screen justify-center items-center">
+            <div className="flex justify-between w-full">
+                <Typography variant="h3" className="mx-20">My Prescriptions</Typography>
+                <div className="mx-40">
+                    <CustomizedPDF auxInfo={{providerCode: providerCode}}/>
+                </div>
+            </div>
+            <PaginatedTableWithSearch
+                dataList={prescriptionList}
+                searchFn={searchFn}
+                searchForm={prescriptionSearchForm}
+                cols={[...prescriptionFields]}
+                createRow={createRow}
+                pageSize={PAGE_SIZE}
+            />
+>>>>>>> 31c4c9ee3f8afe094a8aa16e0bf25898433159d7
         </div>
             <PaginatedTableWithSearch
             dataList={prescriptionList}

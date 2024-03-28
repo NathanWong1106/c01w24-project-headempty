@@ -3,6 +3,7 @@ import { PatientPrescription } from "../types/prescriptionTypes.js";
 import { getDb } from "./dbConnection.js";
 import paginate from "./pagination.js";
 import { objWithFields } from "./utils/dbUtils.js";
+<<<<<<< HEAD
 
 import { patientPrescriptionFindSchema, patientPrescriptionSearchSchema, prescriberPrescriptionSearchSchema, patientPatchSchema } from "../schemas.js"; 
 import { ObjectId } from "mongodb";
@@ -16,6 +17,9 @@ export async function postSinglePatientPrescription(providerCode, posts) {
     return true;
 }
 
+=======
+import { patientPrescriptionSearchSchema, prescriberPrescriptionSearchSchema } from "../schemas.js"; 
+>>>>>>> 31c4c9ee3f8afe094a8aa16e0bf25898433159d7
 
 /**
  * Get a page from patient's prescriptions 
@@ -31,11 +35,15 @@ export async function getPaginatedPatientPrescription(page, pageSize, search) {
     return data.map(x => fillPatientPrescription(x));
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 31c4c9ee3f8afe094a8aa16e0bf25898433159d7
 export function fillPatientPrescription(x) {
     return new PatientPrescription(x.providerCode, x.date, x.initial, x.prescribed, x.status, x.email);
 }
 
+<<<<<<< HEAD
 /**
  * Check if there is a matching patient prescription in the database.
  * @param {string} providerCode - The provider code.
@@ -85,3 +93,5 @@ export async function patchPatientAddress(email, address, city, province) {
         { returnDocument: 'after' });
     return data
 }
+=======
+>>>>>>> 31c4c9ee3f8afe094a8aa16e0bf25898433159d7

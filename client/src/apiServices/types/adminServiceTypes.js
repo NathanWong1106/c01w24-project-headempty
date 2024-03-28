@@ -52,8 +52,12 @@ export const prescriberField2PrescriberInfo = {
     "Provider Code": "providerCode",
     "Licensing College": "licensingCollege",
     "Licence Number": "licenceNumber",
+<<<<<<< HEAD
     "Registered": "registered",
     "Password": "password"
+=======
+    "Registered": "registered"
+>>>>>>> 31c4c9ee3f8afe094a8aa16e0bf25898433159d7
 }
 
 export const patientFields = ["Email", "First Name", "Last Name", "Language", "City", "Province", "Address"]

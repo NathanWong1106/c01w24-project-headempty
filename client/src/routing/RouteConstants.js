@@ -18,11 +18,15 @@ export const ADMIN_ROUTES = {
     PRESCRIBER_VERIFICATION: `${ADMIN_ROUTE_BASE}/prescriberVerification`,
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 31c4c9ee3f8afe094a8aa16e0bf25898433159d7
 export const COORDINATOR_ROUTE_BASE = "/coordinator"
 export const COORDINATOR_ROUTES = {
     PATIENT_MNGMT: `${COORDINATOR_ROUTE_BASE}/patientManagement`,
     PATIENT_PRESCRIPTION_MNGMT: `${COORDINATOR_ROUTE_BASE}/patientPrescriptionManagement`,
+<<<<<<< HEAD
 }
 
 export const PRESCRIBER_ROUTE_BASE = '/prescriber'
@@ -32,12 +36,24 @@ export const PRESCRIBER_ROUTES = {
     PRESC_FORM: `${PRESCRIBER_ROUTE_BASE}/prescriptionForm`
 }
 
+=======
+}
+
+export const PRESCRIBER_ROUTE_BASE = '/prescriber'
+export const PRESCRIBER_ROUTES = {
+    PRESCRIPTIONS: `${PRESCRIBER_ROUTE_BASE}/myPrescriptions`
+}
+
+>>>>>>> 31c4c9ee3f8afe094a8aa16e0bf25898433159d7
 export const PATIENT_ROUTE_BASE = '/patient'
 export const PATIENT_ROUTES = {
     PRESCRIPTIONS: `${PATIENT_ROUTE_BASE}/myPrescriptions`
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 31c4c9ee3f8afe094a8aa16e0bf25898433159d7
 
 /* Below is for use in the sidebar / drawer */
 const COMMON_LINKS = [

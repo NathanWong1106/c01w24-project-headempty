@@ -8,7 +8,10 @@ import { prescriberSearchSchema, prescriberPatchSchema, adminPrescriberPrescript
 import { fillPrescriberPrescription } from "./prescriberServiceDbUtils.js";
 import { fillPatientPrescription } from "./patientServiceDbUtils.js";
 import { PRESCRIBER_PRESCRIPTION_STATUS, PATIENT_PRESCRIPTION_STATUS } from "../types/prescriptionTypes.js";
+<<<<<<< HEAD
 import { createPrescriber, getExistingPrescriber } from "./verificationServiceDbUtils.js"
+=======
+>>>>>>> 31c4c9ee3f8afe094a8aa16e0bf25898433159d7
 
 /**
  * Get a page from all prescribers 
@@ -45,6 +48,7 @@ export async function patchSinglePrescriber(providerCode, patches) {
     return data.matchedCount === 1;
 }
 
+<<<<<<< HEAD
 export async function addSinglePrescriber(prescriber) {
     try {
         if (await getExistingPrescriber(prescriber)) {
@@ -61,6 +65,8 @@ export async function addSinglePrescriber(prescriber) {
         return { data: null, error: error };
     }
 }
+=======
+>>>>>>> 31c4c9ee3f8afe094a8aa16e0bf25898433159d7
 /**
  * Get a page of prescriber prescriptions 
  * @param {Number} page the page number
@@ -141,7 +147,11 @@ export async function patchSinglePrescription(
         initial: initial,
         date: date,
     });
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 31c4c9ee3f8afe094a8aa16e0bf25898433159d7
     if (!altPrescription) {
         // No update to status, update other fields
         if (!("status" in patchObj) || patchObj["status"] === mainStatusEnum.NOT_LOGGED) {

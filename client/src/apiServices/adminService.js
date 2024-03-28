@@ -45,6 +45,7 @@ export const patchPrescriber = async (providerCode, patches) => {
     return res.status == 200;
 }
 
+<<<<<<< HEAD
 export const addPrescriber = async (prescriber) => {
     const res = await callProtectedEndpoint(
         SERVER_PATHS.ADMIN_SERVICE.ADD_PRESCRIBER,
@@ -60,6 +61,8 @@ export const addPrescriber = async (prescriber) => {
     const result = await res.json()
     return { data: result.data, error: null }
 }
+=======
+>>>>>>> 31c4c9ee3f8afe094a8aa16e0bf25898433159d7
 /**
  * Gets a paginated list of prescriber prescriptions
  * 

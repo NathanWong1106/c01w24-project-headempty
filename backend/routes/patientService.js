@@ -3,6 +3,7 @@
  */
 
 import express from "express";
+<<<<<<< HEAD
 import { postSinglePatientPrescription } from "../database/patientServiceDbUtils.js";
 import { getPaginatedPatientPrescription } from "../database/patientServiceDbUtils.js";
 import { getMatchingPrescriberPrescription, patchPrescriberPrescriptionStatus } from "../database/prescriberServiceDbUtils.js";
@@ -64,6 +65,11 @@ patientRouter.post("/postPrescription", express.json(), async (req, res) => {
 
 
 
+=======
+import { getPaginatedPatientPrescription } from "../database/patientServiceDbUtils.js";
+export const patientRouter = express.Router();
+
+>>>>>>> 31c4c9ee3f8afe094a8aa16e0bf25898433159d7
 /**
  * Get a paginated list of all prescriptions for a patient.
  * 
@@ -96,6 +102,7 @@ patientRouter.post("/getPaginatedPrescriptions", express.json(), async (req, res
     } catch (err) {
         return res.status(500).json({ error: err.message });
     }
+<<<<<<< HEAD
 })
 
 /**
@@ -129,4 +136,6 @@ patientRouter.patch("/patchAddress", express.json(), async (req, res) => {
     } catch (err) {
         return res.status(500).json({ error: err.message });
     }
+=======
+>>>>>>> 31c4c9ee3f8afe094a8aa16e0bf25898433159d7
 })

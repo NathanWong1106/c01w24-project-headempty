@@ -44,7 +44,11 @@ const PaginatedTableWithSearch = ({ dataList, searchFn, searchForm, cols, create
 
     return (
         <Card className="h-5/6 w-11/12 mx-20 my-5">
+<<<<<<< HEAD
             <CardHeader floated={false} shadow={false} className="my-0 px-6 rounded-none h-fit">
+=======
+            <CardHeader floated={false} shadow={false} className="my-0 px-6  rounded-none h-fit">
+>>>>>>> 31c4c9ee3f8afe094a8aa16e0bf25898433159d7
                 <div className="flex flex-row mt-4 mb-14">
                     {searchForm}
                     <div className="flex flex-grow flex-row-reverse w-1/6 items-center justify-center">

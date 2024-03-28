@@ -11,7 +11,10 @@ import {
     patchSinglePrescriber,
     patchSinglePrescription,
     deletePrescription,
+<<<<<<< HEAD
     addSinglePrescriber
+=======
+>>>>>>> 31c4c9ee3f8afe094a8aa16e0bf25898433159d7
 } from "../database/adminServiceDbUtils.js";
 import { adminPrescriberPrescriptionPatchSchema } from "../schemas.js";
 import { PATIENT_PRESCRIPTION_STATUS, PRESCRIBER_PRESCRIPTION_STATUS } from "../types/prescriptionTypes.js";
@@ -104,6 +107,7 @@ adminRouter.patch("/patchPrescriber", express.json(), async (req, res) => {
     }
 })
 
+<<<<<<< HEAD
 adminRouter.post("/addPrescriber", express.json(), async (req, res) => {
     try {
         const { prescriber } = req.body;
@@ -132,12 +136,23 @@ adminRouter.post("/addPrescriber", express.json(), async (req, res) => {
  *
  * Needs to be authorized (use middleware adminRoute).
  *
+=======
+/**
+ * Get a paginated list of all prescriber prescriptions.
+ * 
+ * Needs to be authorized (use middleware adminRoute).
+ * 
+>>>>>>> 31c4c9ee3f8afe094a8aa16e0bf25898433159d7
  * Expected body: {
  *  page: Number (1-indexed)
  *  pageSize: Number
  *  search: Object
  * }
+<<<<<<< HEAD
  *
+=======
+ * 
+>>>>>>> 31c4c9ee3f8afe094a8aa16e0bf25898433159d7
  * Response: { list: PrescriberPrescription[] } | {error: String}
  * Response Status: 200 - OK, else error
  */
@@ -163,6 +178,7 @@ adminRouter.post("/getAdminPaginatedPrescriberPrescription", express.json(), asy
 
 /**
  * Get a single prescriber prescription.
+<<<<<<< HEAD
  *
  * Needs to be authorized (use middleware adminRoute).
  *
@@ -170,6 +186,15 @@ adminRouter.post("/getAdminPaginatedPrescriberPrescription", express.json(), asy
  *  search: Object
  * }
  *
+=======
+ * 
+ * Needs to be authorized (use middleware adminRoute).
+ * 
+ * Expected body: {
+ *  search: Object
+ * }
+ * 
+>>>>>>> 31c4c9ee3f8afe094a8aa16e0bf25898433159d7
  * Response: { prescription: PrescriberPrescription } | {error: String}
  * Response Status: 200 - OK, else error
  */
@@ -189,12 +214,21 @@ adminRouter.post("/getAdminSinglePrescriberPrescription", express.json(), async 
 })
 
 /**
+<<<<<<< HEAD
  * Patch a single prescriber's prescription.
  * Valid fields for patch can be found in adminDbUtils.
  * Any other fields passed through patches will be ignored.
  *
  * Needs to be authorized (use middleware adminRoute).
  *
+=======
+ * Patch a single prescriber's prescription. 
+ * Valid fields for patch can be found in adminDbUtils. 
+ * Any other fields passed through patches will be ignored.
+ * 
+ * Needs to be authorized (use middleware adminRoute).
+ * 
+>>>>>>> 31c4c9ee3f8afe094a8aa16e0bf25898433159d7
  * Expected body: {
  *  providerCode: String
  *  initial: String
@@ -207,7 +241,11 @@ adminRouter.post("/getAdminSinglePrescriberPrescription", express.json(), async 
  *      prescribed: Boolean?
  *      status: String?
  *  }
+<<<<<<< HEAD
  *
+=======
+ * 
+>>>>>>> 31c4c9ee3f8afe094a8aa16e0bf25898433159d7
  * Response: {message: String} | {error: String}
  * Response status: 200 - OK, else error
  * }
@@ -240,6 +278,7 @@ adminRouter.patch("/patchSinglePrescriberPrescription", express.json(), async (r
 
 /**
  * Delete a single prescriber prescription.
+<<<<<<< HEAD
  *
  * Needs to be authorized (use middleware adminRoute).
  *
@@ -247,6 +286,15 @@ adminRouter.patch("/patchSinglePrescriberPrescription", express.json(), async (r
  *  search: Object
  * }
  *
+=======
+ * 
+ * Needs to be authorized (use middleware adminRoute).
+ * 
+ * Expected body: {
+ *  search: Object
+ * }
+ * 
+>>>>>>> 31c4c9ee3f8afe094a8aa16e0bf25898433159d7
  * Response: { message: String } | {error: String}
  * Response Status: 200 - OK, else error
  */
@@ -267,6 +315,7 @@ adminRouter.post("/deletePrescriberPrescription", express.json(), async (req, re
 
 /**
  * Get a single patient prescription.
+<<<<<<< HEAD
  *
  * Needs to be authorized (use middleware adminRoute).
  *
@@ -274,6 +323,15 @@ adminRouter.post("/deletePrescriberPrescription", express.json(), async (req, re
  *  search: Object
  * }
  *
+=======
+ * 
+ * Needs to be authorized (use middleware adminRoute).
+ * 
+ * Expected body: {
+ *  search: Object
+ * }
+ * 
+>>>>>>> 31c4c9ee3f8afe094a8aa16e0bf25898433159d7
  * Response: { prescription: PatientPrescription } | {error: String}
  * Response Status: 200 - OK, else error
  */

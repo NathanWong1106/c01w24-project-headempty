@@ -1,6 +1,10 @@
 import { PatientPrescription } from "./types/prescriptionTypes";
+<<<<<<< HEAD
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { callProtectedEndpoint, callEndpoint } from "./utils/apiUtils"
+=======
+import { callProtectedEndpoint } from "./utils/apiUtils"
+>>>>>>> 31c4c9ee3f8afe094a8aa16e0bf25898433159d7
 import { SERVER_PATHS } from "./utils/constants"
 
 /**
@@ -23,6 +27,7 @@ export const getPaginatedPatientPrescriptions = async (page, pageSize, search) =
     )
 
     return res.status != 200 ? null : (await res.json())['list'];
+<<<<<<< HEAD
 }
 
 export const postPatientPrescription = async (providerCode, prscn_date, patientInit, checked, postObj) => {
@@ -66,3 +71,6 @@ export const patchAddress = createAsyncThunk(
         }
     }
 )
+=======
+}
+>>>>>>> 31c4c9ee3f8afe094a8aa16e0bf25898433159d7
