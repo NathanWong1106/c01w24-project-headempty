@@ -29,5 +29,6 @@ export const SERVER_PATHS = {
     PATIENT_SERVICE: {
         GET_PAGINATED_PRESCRIPTIONS: "/patient/getPaginatedPrescriptions",
         POST_PRESCRIPTION: "/patient/postPrescription",
+        PATCH_ADDRESS: "/patient/patchAddress"
     }
 }
