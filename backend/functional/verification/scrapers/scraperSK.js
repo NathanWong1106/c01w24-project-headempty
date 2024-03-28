@@ -108,7 +108,7 @@ export class ScraperSK extends BaseScraper {
         return status === ScraperSK.activeStatus;
       }
     } catch (err) {
-      console.error(`Error trying to verify: ${prescriber.firstName} ${prescriber.lastName} Licence Number: ${prescriber.licenceNumber}. ${e}`);
+      console.error(`Error trying to verify: ${prescriber.firstName} ${prescriber.lastName} Licence Number: ${prescriber.licenceNumber}. ${err}`);
       return null;
     }
   }
