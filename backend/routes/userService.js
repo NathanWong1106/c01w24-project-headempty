@@ -114,7 +114,7 @@ userRouter.post("/register/patient", express.json(), async (req, res) => {
         const { email, password, accountType, fName, lName, initials, address, city, province, preferredLanguage } = req.body;
 
         // Check if any required field is null
-        const requiredFields = ['email', 'password', 'accountType', 'fName', 'lName', 'initials', 'address', 'city', 'province', 'preferredLanguage'];
+        const requiredFields = ['email', 'password', 'accountType', 'fName', 'lName', 'initials', 'preferredLanguage'];
         if (requiredFields.some((field) => req.body[field] == null)) {
             const missingFields = requiredFields.filter(field => req.body[field] == null);
             return res.status(400).json({ error: `${missingFields.join(', ')} is/are required.` });
