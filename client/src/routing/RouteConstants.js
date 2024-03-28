@@ -18,6 +18,7 @@ export const ADMIN_ROUTES = {
     PRESCRIBER_VERIFICATION: `${ADMIN_ROUTE_BASE}/prescriberVerification`,
 }
 
+
 export const COORDINATOR_ROUTE_BASE = "/coordinator"
 export const COORDINATOR_ROUTES = {
     PATIENT_MNGMT: `${COORDINATOR_ROUTE_BASE}/patientManagement`,
@@ -25,14 +26,17 @@ export const COORDINATOR_ROUTES = {
 }
 
 export const PRESCRIBER_ROUTE_BASE = '/prescriber'
+
 export const PRESCRIBER_ROUTES = {
-    PRESCRIPTIONS: `${PRESCRIBER_ROUTE_BASE}/myPrescriptions`
+    PRESCRIPTIONS: `${PRESCRIBER_ROUTE_BASE}/myPrescriptions`,
+    PRESC_FORM: `${PRESCRIBER_ROUTE_BASE}/prescriptionForm`
 }
 
 export const PATIENT_ROUTE_BASE = '/patient'
 export const PATIENT_ROUTES = {
     PRESCRIPTIONS: `${PATIENT_ROUTE_BASE}/myPrescriptions`
 }
+
 
 
 /* Below is for use in the sidebar / drawer */

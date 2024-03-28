@@ -3,7 +3,19 @@ import { PatientPrescription } from "../types/prescriptionTypes.js";
 import { getDb } from "./dbConnection.js";
 import paginate from "./pagination.js";
 import { objWithFields } from "./utils/dbUtils.js";
-import { patientPrescriptionSearchSchema, prescriberPrescriptionSearchSchema } from "../schemas.js"; 
+
+import { patientPrescriptionFindSchema, patientPrescriptionSearchSchema, prescriberPrescriptionSearchSchema, patientPatchSchema } from "../schemas.js"; 
+import { ObjectId } from "mongodb";
+
+
+
+export async function postSinglePatientPrescription(providerCode, posts) {
+    const postObj = await objWithFields(posts, patientPrescriptionSearchSchema);
+    const collection = getDb().collection(COLLECTIONS.PATIENT_PRESCRIPTIONS);
+    const data = await collection.insertOne(postObj);
+    return true;
+}
+
 
 /**
  * Get a page from patient's prescriptions 
@@ -19,7 +31,57 @@ export async function getPaginatedPatientPrescription(page, pageSize, search) {
     return data.map(x => fillPatientPrescription(x));
 }
 
+
 export function fillPatientPrescription(x) {
     return new PatientPrescription(x.providerCode, x.date, x.initial, x.prescribed, x.status, x.email);
 }
 
+/**
+ * Check if there is a matching patient prescription in the database.
+ * @param {string} providerCode - The provider code.
+ * @param {Date} date - The date of the prescription.
+ * @param {string} initial - The initial of the prescription.
+ * @returns {boolean} - True if a matching patient prescription exists, false otherwise.
+ */
+export async function getMatchingPatientPrescription(providerCode, date, initial) {
+    const search = {
+        providerCode: providerCode,
+        date: date,
+        initial: initial
+    };
+
+    const searchObj = await objWithFields(search, patientPrescriptionFindSchema);
+    const collection = getDb().collection(COLLECTIONS.PATIENT_PRESCRIPTIONS);
+    const data = await collection.findOne(searchObj);
+    if (data !== null) {
+        return [true, data._id]
+    }
+    return [false, null];
+}
+
+export async function patchPatientPrescriptionStatus(id, checked, patStatus) {
+    const collection = getDb().collection(COLLECTIONS.PATIENT_PRESCRIPTIONS);
+    const data = await collection.updateOne({ _id: new ObjectId(id) }, { $set: { status: patStatus, prescribed: checked} });
+
+    if (data.matchedCount === 1) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/**
+ * Patch a single patient with patches
+ * @param {string} email email of the patient
+ * @param {String} address updated address
+ * @param {String} city updated city
+ * @param {String} province updated province
+ * @returns {Object} return updated patient document
+ */
+export async function patchPatientAddress(email, address, city, province) {
+    const collection = getDb().collection(COLLECTIONS.PATIENT);
+    const data = await collection.findOneAndUpdate({ email: email },  
+        { $set: { address, city, province } },
+        { returnDocument: 'after' });
+    return data
+}

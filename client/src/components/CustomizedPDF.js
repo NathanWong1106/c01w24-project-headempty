@@ -71,7 +71,7 @@ function CustomizedPDF( auxInfo ) {
   return (
     <>
       <Button
-        className='bg-moss-green text-white p-4'
+        className='mt-6 bg-white text-moss-green hover:bg-moss-green hover:text-white border-2 border-moss-green'
         onClick={handleDownload}>
         <u>Download Customized PDF</u></Button>
       <div className="mb-16 absolute bottom-0">

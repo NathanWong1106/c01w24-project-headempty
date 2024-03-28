@@ -16,6 +16,7 @@ import HomePage from './pages/HomePage';
 import PrescriberRegistration from './pages/Registration/PrescriberRegistration';
 import PatientRegistration from './pages/Registration/PatientRegistration';
 import PrivateRoute from './routing/PrivateRoute';
+
 import GreenResourcesMap from './pages/GreenResourcesMap';
 import { ADMIN_ROUTE_BASE, ADMIN_ROUTES, PRESCRIBER_ROUTE_BASE, PRESCRIBER_ROUTES, REGISTRATION_ROUTE_BASE, REGISTRATION_ROUTES, ROUTES, PATIENT_ROUTE_BASE, PATIENT_ROUTES, COORDINATOR_ROUTE_BASE, COORDINATOR_ROUTES } from './routing/RouteConstants';
 import AdminRoute from './routing/AdminRoute';
